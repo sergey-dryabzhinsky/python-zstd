@@ -10,6 +10,6 @@
  git clone https://github.com/sergey-dryabzhinsky/python-zstd
  git submodule update --init
  apt-get install python-dev python3-dev python-setuptools python3-setuptools
- python setup.py build; python setyp.py clean
- python3 setup.py build; python3 setyp.py clean
+ python setup.py build; python setup.py clean
+ python3 setup.py build; python3 setup.py clean
 ```
