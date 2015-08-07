@@ -23,6 +23,8 @@ setup(
             "-Wall",
             "-W",
             "-Wundef",
+#           Debug, all warnings are errors
+#            "-Werror",
             "-Izstd/lib",
 #           try fortification
 #            "-DFORTIFY_SOURCE=2", "-fstack-protector",
