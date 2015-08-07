@@ -2,7 +2,7 @@
 
 from setuptools import setup, find_packages, Extension
 
-VERSION = (0, 0, 2)
+VERSION = (0, 0, 2, 1)
 
 setup(
     name='zstd',
@@ -27,7 +27,7 @@ setup(
 #           try fortification
 #            "-DFORTIFY_SOURCE=2", "-fstack-protector",
 #           try hard CPU optimization
-#            "-march=native",
+            "-march=native",
 #           try Graphite
 #            "-floop-interchange", "-floop-block", "-floop-strip-mine", "-ftree-loop-distribution",
         ])
