@@ -2,8 +2,8 @@
 python-zstd
 =============
 
-.. image:: https://travis-ci.org/sigman78/python-zstd.svg?branch=master
-    :target: https://travis-ci.org/sigman78/python-zstd
+.. image:: https://travis-ci.org/sergey-dryabzhinsky/python-zstd.svg?branch=master
+    :target: https://travis-ci.org/sergey-dryabzhinsky/python-zstd
 
 Python bindings to Yann Collet ZSTD compression library
 
