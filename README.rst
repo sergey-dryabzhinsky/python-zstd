@@ -7,7 +7,10 @@ python-zstd
 
 Python bindings to Yann Collet ZSTD compression library
 
-**Zstd**, short for Zstandard, is a new lossless compression algorithm, which provides both good compression ratio _and_ speed for your standard compression needs. "Standard" translates into everyday situations which neither look for highest possible ratio (which LZMA and ZPAQ cover) nor extreme speeds (which LZ4 covers).
+**Zstd**, short for Zstandard, is a new lossless compression algorithm,
+ which provides both good compression ratio _and_ speed for your standard compression needs.
+ "Standard" translates into everyday situations which neither look for highest possible ratio
+ (which LZMA and ZPAQ cover) nor extreme speeds (which LZ4 covers).
 
 It is provided as a BSD-license package, hosted on [Github https://github.com/Cyan4973/zstd].
 
