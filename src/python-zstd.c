@@ -29,13 +29,16 @@
 
 #include <Python.h>
 #include <stdlib.h>
-#include <stdint.h>
-#include "zstd.h"
 #include "python-zstd.h"
+#include "zstd.h"
+#include "zstdhc.h"
 
-static PyObject *py_zstd_compress(PyObject *self, PyObject *args) {
+// workaround
+#if !(defined(__clang__) || defined(__GNUC__))
+#include "fse.c"
+#endif
 
-    DISCARD_PARAMETER self;
+static PyObject *py_zstd_compress(PyObject* self, PyObject *args) {
 
     PyObject *result;
     const char *source;
@@ -44,14 +47,18 @@ static PyObject *py_zstd_compress(PyObject *self, PyObject *args) {
     uint32_t dest_size;
     uint32_t header_size;
     size_t cSize;
+    uint32_t level = 0;
 
 #if PY_MAJOR_VERSION >= 3
-    if (!PyArg_ParseTuple(args, "y#", &source, &source_size))
+    if (!PyArg_ParseTuple(args, "y#|i", &source, &source_size, &level))
         return NULL;
 #else
-    if (!PyArg_ParseTuple(args, "s#", &source, &source_size))
+    if (!PyArg_ParseTuple(args, "s#|i", &source, &source_size, &level))
         return NULL;
 #endif
+
+    if (level <= 0) level=1;
+    if (level > 20) level=20;
 
     header_size = sizeof(source_size);
 
@@ -67,17 +74,20 @@ static PyObject *py_zstd_compress(PyObject *self, PyObject *args) {
     dest += header_size;
 
     if (source_size > 0) {
-        cSize = ZSTD_compress(dest, dest_size, source, source_size);
+        // Low level == old version
+        if (level == 1) {
+            cSize = ZSTD_compress(dest, dest_size, source, source_size);
+        } else {
+            cSize = ZSTD_HC_compress(dest, dest_size, source, source_size, level);
+        }
         if (ZSTD_isError(cSize))
-            PyErr_Format(PyExc_ValueError, "Compression error: %s", ZSTD_getErrorName(cSize));
+            PyErr_Format(ZstdError, "Compression error: %s", ZSTD_getErrorName(cSize));
         Py_SIZE(result) = cSize + sizeof(source_size);
     }
     return result;
 }
 
-static PyObject *py_zstd_uncompress(PyObject *self, PyObject *args) {
-
-    DISCARD_PARAMETER self;
+static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args) {
 
     PyObject *result;
     const char *source;
@@ -106,7 +116,7 @@ static PyObject *py_zstd_uncompress(PyObject *self, PyObject *args) {
 
         cSize = ZSTD_decompress(dest, dest_size, source, source_size - header_size);
         if (ZSTD_isError(cSize))
-            PyErr_Format(PyExc_ValueError, "Decompression error: %s", ZSTD_getErrorName(cSize));
+            PyErr_Format(ZstdError, "Decompression error: %s", ZSTD_getErrorName(cSize));
     }
 
     return result;
@@ -131,8 +141,7 @@ struct module_state {
 #if PY_MAJOR_VERSION >= 3
 #define GETSTATE(m) ((struct module_state*)PyModule_GetState(m))
 #else
-#define GETSTATE(m) (&_state)
-static struct module_state _state;
+/* not needed */
 #endif
 
 #if PY_MAJOR_VERSION >= 3
@@ -174,18 +183,17 @@ void initzstd(void)
 #else
     PyObject *module = Py_InitModule("zstd", ZstdMethods);
 #endif
-    struct module_state *st = NULL;
-
     if (module == NULL) {
         INITERROR;
     }
-    st = GETSTATE(module);
 
-    st->error = PyErr_NewException("zstd.Error", NULL, NULL);
-    if (st->error == NULL) {
+    ZstdError = PyErr_NewException("zstd.Error", NULL, NULL);
+    if (ZstdError == NULL) {
         Py_DECREF(module);
         INITERROR;
     }
+    Py_INCREF(ZstdError);
+    PyModule_AddObject(module, "Error", ZstdError);
 
 #if PY_MAJOR_VERSION >= 3
     return module;
