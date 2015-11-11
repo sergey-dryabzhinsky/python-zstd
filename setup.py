@@ -27,7 +27,11 @@ setup(
     long_description=open('README.md', 'r').read(),
     author='Sergey Dryabzhinsky',
     author_email='sergey.dryabzhinsky@gmail.com',
+    maintainer='Sergey Dryabzhinsky',
+    maintainer_email='sergey.dryabzhinsky@gmail.com',
     url='https://github.com/sergey-dryabzhinsky/python-zstd',
+    keywords='zstd, zstandard, compression',
+    license='BSD',
     packages=find_packages('src'),
     package_dir={'': 'src'},
     ext_modules=[
@@ -45,6 +49,8 @@ setup(
     classifiers=[
         'License :: OSI Approved :: BSD License',
         'Intended Audience :: Developers',
+        'Development Status :: 4 - Beta',
+        'Operating System :: POSIX',
         'Programming Language :: C',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.6',
