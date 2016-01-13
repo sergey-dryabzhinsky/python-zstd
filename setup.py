@@ -47,6 +47,7 @@ setup(
         ])
     ],
     cmdclass = {'build_ext': build_ext_subclass },
+    test_suite="tests",
     classifiers=[
         'License :: OSI Approved :: BSD License',
         'Intended Audience :: Developers',
