@@ -31,7 +31,6 @@
 #include <stdlib.h>
 #include "python-zstd.h"
 #include "zstd.h"
-#include "zstdhc.h"
 
 // workaround
 #if !(defined(__clang__) || defined(__GNUC__))
@@ -75,11 +74,7 @@ static PyObject *py_zstd_compress(PyObject* self, PyObject *args) {
 
     if (source_size > 0) {
         // Low level == old version
-        if (level == 1) {
-            cSize = ZSTD_compress(dest, dest_size, source, source_size);
-        } else {
-            cSize = ZSTD_HC_compress(dest, dest_size, source, source_size, level);
-        }
+        cSize = ZSTD_compress(dest, dest_size, source, source_size, level);
         if (ZSTD_isError(cSize))
             PyErr_Format(ZstdError, "Compression error: %s", ZSTD_getErrorName(cSize));
         Py_SIZE(result) = cSize + sizeof(source_size);

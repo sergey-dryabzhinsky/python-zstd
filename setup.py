@@ -3,7 +3,7 @@
 from setuptools import setup, find_packages, Extension
 from setuptools.command.build_ext import build_ext
 
-VERSION = (0, 3, 6)
+VERSION = (0, 4, 6)
 VERSION_STR = ".".join([str(x) for x in VERSION])
 
 COPT =  {'msvc': ['/Ox', '/Izstd\\lib', '/Izstd\\lib\\legacy', '/DVERSION=\"\\\"%s\\\"\"' % VERSION_STR],
@@ -40,8 +40,9 @@ setup(
             'zstd/lib/fse.c',
             'zstd/lib/legacy/zstd_v01.c',
             'zstd/lib/legacy/zstd_v02.c',
-            'zstd/lib/zstd.c',
-            'zstd/lib/zstdhc.c',
+            'zstd/lib/legacy/zstd_v03.c',
+            'zstd/lib/zstd_compress.c',
+            'zstd/lib/zstd_decompress.c',
             'src/python-zstd.c'
         ])
     ],
