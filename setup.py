@@ -3,14 +3,36 @@
 from setuptools import setup, find_packages, Extension
 from setuptools.command.build_ext import build_ext
 
-VERSION = (0, 4, 7)
+VERSION = (0, 6, 1)
 VERSION_STR = ".".join([str(x) for x in VERSION])
 
-COPT =  {'msvc': ['/Ox', '/Izstd\\lib', '/Izstd\\lib\\legacy', '/DVERSION=\"\\\"%s\\\"\"' % VERSION_STR, '/DZSTD_LEGACY_SUPPORT=1'],
-     'mingw32' : ['-O3', '-Izstd/lib', '-Izstd/lib/legacy', '-DVERSION="%s"' % VERSION_STR, '-DZSTD_LEGACY_SUPPORT=1'],
-     'unix' : ['-O3', '-Izstd/lib', '-Izstd/lib/legacy', '-DVERSION="%s"' % VERSION_STR, '-DZSTD_LEGACY_SUPPORT=1'],
-     'clang' : ['-O3', '-Izstd/lib', '-Izstd/lib/legacy', '-DVERSION="%s"' % VERSION_STR, '-DZSTD_LEGACY_SUPPORT=1'],
-     'gcc' : ['-O3', '-Izstd/lib', '-Izstd/lib/legacy', '-DVERSION="%s"' % VERSION_STR, '-DZSTD_LEGACY_SUPPORT=1']}
+COPT = {
+    'msvc': [
+                '/Ox',
+                '/Izstd\\lib\\common', '/Izstd\\lib\\compress', '/Izstd\\lib\\decompress',  '/Izstd\\lib\\legacy',
+                '/DVERSION=\"\\\"%s\\\"\"' % VERSION_STR, '/DZSTD_LEGACY_SUPPORT=1'
+            ],
+    'mingw32':  [
+                    '-O3',
+                    '-Izstd/lib/common', '-Izstd/lib/compress', '-Izstd/lib/decompress', '-Izstd/lib/legacy',
+                    '-DVERSION="%s"' % VERSION_STR, '-DZSTD_LEGACY_SUPPORT=1'
+                ],
+    'unix': [
+                '-O3',
+                '-Izstd/lib/common', '-Izstd/lib/compress', '-Izstd/lib/decompress', '-Izstd/lib/legacy',
+                '-DVERSION="%s"' % VERSION_STR, '-DZSTD_LEGACY_SUPPORT=1'
+            ],
+    'clang':    [
+                    '-O3',
+                    '-Izstd/lib/common', '-Izstd/lib/compress', '-Izstd/lib/decompress', '-Izstd/lib/legacy',
+                    '-DVERSION="%s"' % VERSION_STR, '-DZSTD_LEGACY_SUPPORT=1'
+                ],
+    'gcc':  [
+                '-O3',
+                '-Izstd/lib/common', '-Izstd/lib/compress', '-Izstd/lib/decompress', '-Izstd/lib/legacy',
+                '-DVERSION="%s"' % VERSION_STR, '-DZSTD_LEGACY_SUPPORT=1'
+            ]
+}
 
 class build_ext_subclass( build_ext ):
     def build_extensions(self):
@@ -19,6 +41,18 @@ class build_ext_subclass( build_ext ):
            for e in self.extensions:
                e.extra_compile_args = COPT[c]
         build_ext.build_extensions(self)
+
+zstdFiles = []
+for f in [
+        'compress/zstd_compress.c', 'compress/fse_compress.c', 'compress/huf_compress.c', 'compress/zbuff_compress.c',
+        'decompress/zstd_decompress.c', 'common/fse_decompress.c', 'decompress/huf_decompress.c', 'decompress/zbuff_decompress.c',
+#        'dictBuilder/zdict.c', 'dictBuilder/divsufsort.c',
+        'common/entropy_common.c', 'common/zstd_common.c',
+        'legacy/zstd_v01.c', 'legacy/zstd_v02.c', 'legacy/zstd_v03.c', 'legacy/zstd_v04.c', 'legacy/zstd_v05.c',
+    ]:
+    zstdFiles.append('zstd/lib/'+f)
+
+zstdFiles.append('src/python-zstd.c')
 
 setup(
     name='zstd',
@@ -35,16 +69,7 @@ setup(
     packages=find_packages('src'),
     package_dir={'': 'src'},
     ext_modules=[
-        Extension('zstd', [
-            'zstd/lib/huff0.c',
-            'zstd/lib/fse.c',
-            'zstd/lib/legacy/zstd_v01.c',
-            'zstd/lib/legacy/zstd_v02.c',
-            'zstd/lib/legacy/zstd_v03.c',
-            'zstd/lib/zstd_compress.c',
-            'zstd/lib/zstd_decompress.c',
-            'src/python-zstd.c'
-        ])
+        Extension('zstd', zstdFiles)
     ],
     cmdclass = {'build_ext': build_ext_subclass },
     test_suite="tests",
@@ -60,5 +85,6 @@ setup(
         'Programming Language :: Python :: 3.2',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
     ],
 )

@@ -32,9 +32,11 @@
 #include "python-zstd.h"
 #include "zstd.h"
 
-// workaround
-#if !(defined(__clang__) || defined(__GNUC__))
-#include "fse.c"
+#ifndef ZSTD_DEFAULT_CLEVEL
+/*-=====  Pre-defined compression levels  =====-*/
+
+#define ZSTD_DEFAULT_CLEVEL 5
+#define ZSTD_MAX_CLEVEL     22
 #endif
 
 static PyObject *py_zstd_compress(PyObject* self, PyObject *args) {
@@ -46,7 +48,7 @@ static PyObject *py_zstd_compress(PyObject* self, PyObject *args) {
     uint32_t dest_size;
     uint32_t header_size;
     size_t cSize;
-    uint32_t level = 0;
+    uint32_t level = ZSTD_DEFAULT_CLEVEL;
 
 #if PY_MAJOR_VERSION >= 3
     if (!PyArg_ParseTuple(args, "y#|i", &source, &source_size, &level))
@@ -56,8 +58,8 @@ static PyObject *py_zstd_compress(PyObject* self, PyObject *args) {
         return NULL;
 #endif
 
-    if (level <= 0) level=1;
-    if (level > 20) level=20;
+    if (level <= 0) level=ZSTD_DEFAULT_CLEVEL;
+    if (level > ZSTD_MAX_CLEVEL) level=ZSTD_MAX_CLEVEL;
 
     header_size = sizeof(source_size);
 
@@ -77,7 +79,7 @@ static PyObject *py_zstd_compress(PyObject* self, PyObject *args) {
         cSize = ZSTD_compress(dest, dest_size, source, source_size, level);
         if (ZSTD_isError(cSize))
             PyErr_Format(ZstdError, "Compression error: %s", ZSTD_getErrorName(cSize));
-        Py_SIZE(result) = cSize + sizeof(source_size);
+        Py_SIZE(result) = cSize + header_size;
     }
     return result;
 }

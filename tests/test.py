@@ -1,11 +1,15 @@
 # -*- coding: utf8 -*-
 
-import zstd
-import sys
-
-
-import unittest
 import os
+import sys
+import logging
+import unittest
+
+import zstd
+
+logging.basicConfig(level=logging.INFO)
+log = logging.getLogger('ZSTD')
+log.info("Python version: %s" % sys.version)
 
 class TestZSTD(unittest.TestCase):
 
@@ -61,5 +65,3 @@ class TestZSTD(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-
-
