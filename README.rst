@@ -24,3 +24,13 @@ Build from source
    >>> apt-get install python-dev python3-dev python-setuptools python3-setuptools
    >>> python setup.py build clean
    >>> python3 setup.py build clean
+
+Install from pypi
+-----------------
+
+   >>> # for Python 2.6+
+   >>> pip install zstd
+   >>> # or for Python 3.2+
+   >>> pip3 install zstd
+
+
