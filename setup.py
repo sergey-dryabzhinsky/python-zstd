@@ -3,7 +3,7 @@
 from setuptools import setup, find_packages, Extension
 from setuptools.command.build_ext import build_ext
 
-VERSION = (0, 6, 1)
+VERSION = (0, 6, 1, 1)
 VERSION_STR = ".".join([str(x) for x in VERSION])
 
 COPT = {

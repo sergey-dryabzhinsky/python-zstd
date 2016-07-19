@@ -39,6 +39,24 @@
 #define ZSTD_MAX_CLEVEL     22
 #endif
 
+/* Macros and other changes from python-lz4.c
+ * Copyright (c) 2012-2013, Steeve Morin
+ * All rights reserved. */
+
+static inline void store_le32(char *c, uint32_t x) {
+    c[0] = x & 0xff;
+    c[1] = (x >> 8) & 0xff;
+    c[2] = (x >> 16) & 0xff;
+    c[3] = (x >> 24) & 0xff;
+}
+
+static inline uint32_t load_le32(const char *c) {
+    const uint8_t *d = (const uint8_t *)c;
+    return d[0] | (d[1] << 8) | (d[2] << 16) | (d[3] << 24);
+}
+
+static const int hdr_size = sizeof(uint32_t);
+
 static PyObject *py_zstd_compress(PyObject* self, PyObject *args) {
 
     PyObject *result;
@@ -46,7 +64,6 @@ static PyObject *py_zstd_compress(PyObject* self, PyObject *args) {
     uint32_t source_size;
     char *dest;
     uint32_t dest_size;
-    uint32_t header_size;
     size_t cSize;
     uint32_t level = ZSTD_DEFAULT_CLEVEL;
 
@@ -61,25 +78,26 @@ static PyObject *py_zstd_compress(PyObject* self, PyObject *args) {
     if (level <= 0) level=ZSTD_DEFAULT_CLEVEL;
     if (level > ZSTD_MAX_CLEVEL) level=ZSTD_MAX_CLEVEL;
 
-    header_size = sizeof(source_size);
-
     dest_size = ZSTD_compressBound(source_size);
-    result = PyBytes_FromStringAndSize(NULL, header_size + dest_size);
+    result = PyBytes_FromStringAndSize(NULL, hdr_size + dest_size);
     if (result == NULL) {
         return NULL;
     }
     dest = PyBytes_AS_STRING(result);
 
-    memcpy(dest, &source_size, header_size);
-
-    dest += header_size;
-
+    store_le32(dest, source_size);
     if (source_size > 0) {
-        // Low level == old version
-        cSize = ZSTD_compress(dest, dest_size, source, source_size, level);
-        if (ZSTD_isError(cSize))
+
+        Py_BEGIN_ALLOW_THREADS
+        cSize = ZSTD_compress(dest + hdr_size, dest_size, source, source_size, level);
+        Py_END_ALLOW_THREADS
+
+        if (ZSTD_isError(cSize)) {
             PyErr_Format(ZstdError, "Compression error: %s", ZSTD_getErrorName(cSize));
-        Py_SIZE(result) = cSize + header_size;
+            Py_CLEAR(result);
+        } else {
+            Py_SIZE(result) = cSize + hdr_size;
+        }
     }
     return result;
 }
@@ -90,7 +108,6 @@ static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args) {
     const char *source;
     uint32_t source_size;
     uint32_t dest_size;
-    uint32_t header_size;
     size_t cSize;
 
 #if PY_MAJOR_VERSION >= 3
@@ -101,19 +118,31 @@ static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args) {
         return NULL;
 #endif
 
-    header_size = sizeof(dest_size);
-
-    memcpy(&dest_size, source, header_size);
+    if (source_size < hdr_size) {
+        PyErr_SetString(PyExc_ValueError, "input too short");
+        return NULL;
+    }
+    dest_size = load_le32(source);
+    if (dest_size > INT_MAX) {
+        PyErr_Format(PyExc_ValueError, "invalid size in header: 0x%x", dest_size);
+        return NULL;
+    }
     result = PyBytes_FromStringAndSize(NULL, dest_size);
-
-    source += header_size;
 
     if (result != NULL && dest_size > 0) {
         char *dest = PyBytes_AS_STRING(result);
 
-        cSize = ZSTD_decompress(dest, dest_size, source, source_size - header_size);
-        if (ZSTD_isError(cSize))
+        Py_BEGIN_ALLOW_THREADS
+        cSize = ZSTD_decompress(dest, dest_size, source + hdr_size, source_size - hdr_size);
+        Py_END_ALLOW_THREADS
+
+        if (ZSTD_isError(cSize)) {
             PyErr_Format(ZstdError, "Decompression error: %s", ZSTD_getErrorName(cSize));
+            Py_CLEAR(result);
+        } else if (cSize != dest_size) {
+            PyErr_Format(ZstdError, "Decompression error: length mismatch - %d [Dcp] != %d [Hdr]", (uint32_t)cSize, dest_size);
+            Py_CLEAR(result);
+        }
     }
 
     return result;
