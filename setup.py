@@ -3,7 +3,7 @@
 from setuptools import setup, find_packages, Extension
 from setuptools.command.build_ext import build_ext
 
-VERSION = (0, 7, 5)
+VERSION = (0, 7, 5, 1)
 VERSION_STR = ".".join([str(x) for x in VERSION])
 
 COPT = {
@@ -47,8 +47,8 @@ for f in [
         'compress/zstd_compress.c', 'compress/fse_compress.c', 'compress/huf_compress.c', 'compress/zbuff_compress.c',
         'decompress/zstd_decompress.c', 'common/fse_decompress.c', 'decompress/huf_decompress.c', 'decompress/zbuff_decompress.c',
 #        'dictBuilder/zdict.c', 'dictBuilder/divsufsort.c',
-        'common/entropy_common.c', 'common/zstd_common.c',
-        'legacy/zstd_v01.c', 'legacy/zstd_v02.c', 'legacy/zstd_v03.c', 'legacy/zstd_v04.c', 'legacy/zstd_v05.c', 'legacy/zstd_v06.c', 'legacy/zstd_v08.c',
+        'common/entropy_common.c', 'common/zstd_common.c', 'common/xxhash.c',
+        'legacy/zstd_v01.c', 'legacy/zstd_v02.c', 'legacy/zstd_v03.c', 'legacy/zstd_v04.c', 'legacy/zstd_v05.c', 'legacy/zstd_v06.c', 'legacy/zstd_v08.c'
     ]:
     zstdFiles.append('zstd/lib/'+f)
 
