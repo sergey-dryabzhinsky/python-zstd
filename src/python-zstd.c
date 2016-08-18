@@ -35,7 +35,7 @@
 #ifndef ZSTD_DEFAULT_CLEVEL
 /*-=====  Pre-defined compression levels  =====-*/
 
-#define ZSTD_DEFAULT_CLEVEL 5
+#define ZSTD_DEFAULT_CLEVEL 1
 #define ZSTD_MAX_CLEVEL     22
 #endif
 

@@ -19,8 +19,7 @@ It is provided as a BSD-license package, hosted on GitHub_.
 TODO
 ----
 
-1. Set default compression level to ``1`` like in ``zstd`` library. Current value is ``5``.
-2. Support dictionary training. Current status is ``not supported``.
+1. Support dictionary training. Current status is ``not supported``.
 
 
 Build from source
