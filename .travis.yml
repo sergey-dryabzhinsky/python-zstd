@@ -7,6 +7,12 @@ python:
   - 3.4
   - 3.5
 
+addons:
+  apt:
+    sources:
+    - deadsnakes
+    - sourceline: 'ppa:sergey-dryabzhinsky/packages'
+
 install: sudo apt-get install libzstd-dev
 script:
 - python setup.py test
