@@ -35,7 +35,16 @@ Note: legacy format support disabled by default.
 To build with legacy support - pass ``--legacy`` option to setup.py script:
 
    >>> python setup.py build_ext --legacy clean
-   >>> python3 setup.py build_ext --legacy clean
+
+If you want to build with existing distribution of libzstd just add ``--external`` option.
+But beware! Legacy formats support is unknown in this case.
+
+   >>> python setup.py build_ext --external clean
+
+If paths to header file ``zstd.h`` and libraries is unkommon - use common ``build`` params:
+--libraries --include-dirs --library-dirs.
+
+   >>> python setup.py build_ext --external --include-dirs /opt/zstd/usr/include --libraries zstd --library-dirs /opt/zstd/lib clean
 
 
 Install from pypi
