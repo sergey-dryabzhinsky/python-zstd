@@ -14,7 +14,7 @@ Python bindings to Yann Collet ZSTD compression library
 
 It is provided as a BSD-license package, hosted on GitHub_.
 
-.. _GitHub: https://github.com/Cyan4973/zstd
+.. _GitHub: https://github.com/facebook/zstd
 
 TODO
 ----
@@ -28,8 +28,15 @@ Build from source
    >>> git clone https://github.com/sergey-dryabzhinsky/python-zstd
    >>> git submodule update --init
    >>> apt-get install python-dev python3-dev python-setuptools python3-setuptools
-   >>> python setup.py build clean
-   >>> python3 setup.py build clean
+   >>> python setup.py build_ext clean
+   >>> python3 setup.py build_ext clean
+
+Note: legacy format support disabled by default.
+To build with legacy support - pass ``--legacy`` option to setup.py script:
+
+   >>> python setup.py build_ext --legacy clean
+   >>> python3 setup.py build_ext --legacy clean
+
 
 Install from pypi
 -----------------
@@ -38,5 +45,4 @@ Install from pypi
    >>> pip install zstd
    >>> # or for Python 3.2+
    >>> pip3 install zstd
-
 
