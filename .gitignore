@@ -1,0 +1,9 @@
+build
+sdist
+dist
+
+*.so
+
+*.egg-info
+
+*.py[oc]

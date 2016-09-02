@@ -93,6 +93,10 @@ if not SUP_EXTERNAL:
 
 zstdFiles.append('src/python-zstd.c')
 
+tests="tests.generic"
+if SUP_LEGACY:
+    tests="tests.legacy"
+
 setup(
     name='zstd',
     version=PKG_VERSION_STR,
@@ -111,7 +115,7 @@ setup(
         Extension('zstd', zstdFiles, libraries=ext_libraries)
     ],
     cmdclass = {'build_ext': ZstdBuildExt },
-    test_suite="tests",
+    test_suite=tests,
     classifiers=[
         'License :: OSI Approved :: BSD License',
         'Intended Audience :: Developers',
