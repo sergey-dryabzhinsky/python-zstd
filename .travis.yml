@@ -15,9 +15,8 @@ addons:
     - sourceline: 'ppa:sergey-dryabzhinsky/packages'
 
 install:
-- sudo apt-get update
-- sudo apt-get upgrade -y
-- sudo apt-get install -y libzstd-dev
+- sudo apt-get update -qq
+- sudo apt-get install -qq libzstd-dev
 
 script:
 - python setup.py test
