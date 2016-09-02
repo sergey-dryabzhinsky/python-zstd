@@ -41,7 +41,7 @@ But beware! Legacy formats support is unknown in this case.
 
    >>> python setup.py build_ext --external clean
 
-If paths to header file ``zstd.h`` and libraries is unkommon - use common ``build`` params:
+If paths to header file ``zstd.h`` and libraries is uncommon - use common ``build`` params:
 --libraries --include-dirs --library-dirs.
 
    >>> python setup.py build_ext --external --include-dirs /opt/zstd/usr/include --libraries zstd --library-dirs /opt/zstd/lib clean
