@@ -1,0 +1,4 @@
+graft zstd/lib/common
+graft zstd/lib/compress
+graft zstd/lib/decompress
+graft zstd/lib/legacy
