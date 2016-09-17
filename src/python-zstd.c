@@ -58,6 +58,111 @@ static inline uint32_t load_le32(const char *c) {
 static const int hdr_size = sizeof(uint32_t);
 
 static PyObject *py_zstd_compress(PyObject* self, PyObject *args) {
+/**
+ * New more interoperable function
+ * Uses origin zstd header, nothing more
+ * Simple version: not for streaming, no dict support, full block compression
+ */
+
+    PyObject *result;
+    const char *source;
+    uint32_t source_size;
+    char *dest;
+    uint32_t dest_size;
+    size_t cSize;
+    uint32_t level = ZSTD_DEFAULT_CLEVEL;
+
+#if PY_MAJOR_VERSION >= 3
+    if (!PyArg_ParseTuple(args, "y#|i", &source, &source_size, &level))
+        return NULL;
+#else
+    if (!PyArg_ParseTuple(args, "s#|i", &source, &source_size, &level))
+        return NULL;
+#endif
+
+    if (level <= 0) level=ZSTD_DEFAULT_CLEVEL;
+    if (level > ZSTD_MAX_CLEVEL) level=ZSTD_MAX_CLEVEL;
+
+    dest_size = ZSTD_compressBound(source_size);
+    result = PyBytes_FromStringAndSize(NULL, dest_size);
+    if (result == NULL) {
+        return NULL;
+    }
+
+    if (source_size > 0) {
+        dest = PyBytes_AS_STRING(result);
+
+        Py_BEGIN_ALLOW_THREADS
+        cSize = ZSTD_compress(dest, dest_size, source, source_size, level);
+        Py_END_ALLOW_THREADS
+
+        if (ZSTD_isError(cSize)) {
+            PyErr_Format(ZstdError, "Compression error: %s", ZSTD_getErrorName(cSize));
+            Py_CLEAR(result);
+            return NULL;
+        }
+        Py_SIZE(result) = cSize;
+    }
+    return result;
+}
+
+static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args) {
+/**
+ * New more interoperable function
+ * Uses origin zstd header, nothing more
+ * Simple version: not for streaming, no dict support, full block decompression
+ */
+
+    PyObject    *result;
+    const char  *source;
+    uint32_t    source_size;
+    uint64_t    dest_size;
+    char        error = 0;
+    size_t      cSize;
+
+#if PY_MAJOR_VERSION >= 3
+    if (!PyArg_ParseTuple(args, "y#", &source, &source_size))
+        return NULL;
+#else
+    if (!PyArg_ParseTuple(args, "s#", &source, &source_size))
+        return NULL;
+#endif
+
+    dest_size = (uint64_t) ZSTD_getDecompressedSize(source, source_size);
+    if (dest_size == 0) {
+        PyErr_Format(PyExc_ValueError, "input data invalid or missing content size in frame header");
+        return NULL;
+    }
+    result = PyBytes_FromStringAndSize(NULL, dest_size);
+
+    if (result != NULL) {
+        char *dest = PyBytes_AS_STRING(result);
+
+        Py_BEGIN_ALLOW_THREADS
+        cSize = ZSTD_decompress(dest, dest_size, source, source_size);
+        Py_END_ALLOW_THREADS
+
+        if (ZSTD_isError(cSize)) {
+            PyErr_Format(ZstdError, "Decompression error: %s", ZSTD_getErrorName(cSize));
+            error = 1;
+        } else if (cSize != dest_size) {
+            PyErr_Format(ZstdError, "Decompression error: length mismatch -> decomp %d != %d [header]", (uint64_t)cSize, dest_size);
+            error = 1;
+        }
+    }
+
+    if (error) {
+        Py_CLEAR(result);
+        return = NULL;
+    }
+
+    return result;
+}
+
+static PyObject *py_zstd_compress_old(PyObject* self, PyObject *args) {
+/**
+ * Old format with custom header
+ */
 
     PyObject *result;
     const char *source;
@@ -102,7 +207,10 @@ static PyObject *py_zstd_compress(PyObject* self, PyObject *args) {
     return result;
 }
 
-static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args) {
+static PyObject *py_zstd_uncompress_old(PyObject* self, PyObject *args) {
+/**
+ * Old format with custom header
+ */
 
     PyObject *result;
     const char *source;
@@ -156,6 +264,8 @@ static PyMethodDef ZstdMethods[] = {
     {"decompress",  py_zstd_uncompress, METH_VARARGS, UNCOMPRESS_DOCSTRING},
     {"dumps",  py_zstd_compress, METH_VARARGS, COMPRESS_DOCSTRING},
     {"loads",  py_zstd_uncompress, METH_VARARGS, UNCOMPRESS_DOCSTRING},
+    {"compress_old",  py_zstd_compress_old, METH_VARARGS, COMPRESS_OLD_DOCSTRING},
+    {"decompress_old",  py_zstd_uncompress_old, METH_VARARGS, UNCOMPRESS_OLD_DOCSTRING},
     {NULL, NULL, 0, NULL}
 };
 

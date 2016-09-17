@@ -38,11 +38,17 @@ static PyObject *ZstdError;
 static PyObject *py_zstd_compress(PyObject* self, PyObject *args);
 static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args);
 
+static PyObject *py_zstd_compress_old(PyObject* self, PyObject *args);
+static PyObject *py_zstd_uncompress_old(PyObject* self, PyObject *args);
+
+#if PY_MAJOR_VERSION < 3
 PyMODINIT_FUNC initzstd(void);
+#endif
 
 #define COMPRESS_DOCSTRING      "Compress string, returning the compressed data.\nRaises an exception if any error occurs."
-#define COMPRESSHC_DOCSTRING    COMPRESS_DOCSTRING "\n\nCompared to compress, this gives a better compression ratio, but is much slower."
 #define UNCOMPRESS_DOCSTRING    "Decompress string, returning the uncompressed data.\nRaises an exception if any error occurs."
+#define COMPRESS_OLD_DOCSTRING      "Compress string, old version, returning the compressed data in custom format.\nNot compatible with streaming or origin compression tools.\nRaises an exception if any error occurs."
+#define UNCOMPRESS_OLD_DOCSTRING    "Decompress string, old version, returning the uncompressed data.\nUses custom format from `compress_old` fucntion.\nNot compatible with streaming or origin compression tools.\nRaises an exception if any error occurs."
 
 /**************************************
 *  Basic Types
