@@ -13,6 +13,8 @@ log.info("Python version: %s" % sys.version)
 
 class BaseTestZSTD(unittest.TestCase):
 
+    LEGACY = False
+
     def helper_compression_random(self):
         DATA = os.urandom(128 * 1024)  # Read 128kb
         self.assertEqual(DATA, zstd.loads(zstd.dumps(DATA)))
@@ -62,6 +64,3 @@ class BaseTestZSTD(unittest.TestCase):
             CDATA = b'\xa1\x00\x00\x00$\xb5/\xfd\x00\x00\x00\x97\x14\x02\xc0\x0f\x00#\x909\x01@\x06+X8\xaaG\xc1k\\\x1eVfA\xfb3\x13R\xaa\xdf?\x85\xd30\xb8T\xc4\x1d\xd4\xcc+\x04\x15\x00\x17\x00\x15\x00\x1a\xdd\xe0\x8b\xe2\xbaAu\xa6(\x11N\xc6q\xa5\xc7\xfb\xbc\xcf\x19\x02\x8aR\x18\x98\tX\x80\x01\x0c\xf5m\x137\xe1\x89q\x93\xbb\x19A\x8f\x1e\x02\x8b\x9b\xb9\xd8`:vMR\x98\xde\xf8\x9c\x90:\x82\xd7Z\xcb\xb2\x04\x8cq\xc7\xabG\x0e9u\xc5\xc4\xd5\x1b\xafN]\xf2\xc7\xa9;\x05\x00T\x00\x80\r\x00\x80\xb3\x18Th\x00l$@\xc5\x11\x0c*\xc0\x00\x00'
             DATA = b'This is must be very very long string to be compressed by zstd version 0.4.6. AAAAAAAAAAARGGHHH!!! Just hope its enough length.' + ' И немного юникода.'.encode()
         self.assertEqual(DATA, zstd.decompress_old(CDATA))
-
-# if __name__ == '__main__':
-#    unittest.main()
