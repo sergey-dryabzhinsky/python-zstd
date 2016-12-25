@@ -1,10 +1,13 @@
 # Tests
 
-from ..common.test import BaseTestZSTD
+import os
+from .base import BaseTestZSTD
 
-class TestZSTDGeneric(BaseTestZSTD):
+class TestZSTD(BaseTestZSTD):
 
-    LEGACY = False
+    def setUp(self):
+        if os.getenv("LEGACY"):
+            self.LEGACY = True
 
     def test_compression_random(self):
         BaseTestZSTD.helper_compression_random(self)
@@ -20,6 +23,14 @@ class TestZSTDGeneric(BaseTestZSTD):
 
     def test_compression_level20(self):
         BaseTestZSTD.helper_compression_level20(self)
+
+    def test_decompression_v036(self):
+        if self.LEGACY:
+            BaseTestZSTD.helper_decompression_v036(self)
+
+    def test_decompression_v046(self):
+        if self.LEGACY:
+            BaseTestZSTD.helper_decompression_v046(self)
 
 if __name__ == '__main__':
     unittest.main()

@@ -5,11 +5,11 @@ import sys
 from setuptools import setup, find_packages, Extension
 from setuptools.command.build_ext import build_ext
 
-VERSION = (1, 0, 0)
+VERSION = (1, 1, 2)
 VERSION_STR = ".".join([str(x) for x in VERSION])
 
 # Minor versions
-PKG_VERSION = VERSION + (99, 1,)
+PKG_VERSION = VERSION
 PKG_VERSION_STR = ".".join([str(x) for x in PKG_VERSION])
 
 ###
@@ -78,10 +78,10 @@ zstdFiles = []
 if not SUP_EXTERNAL:
 
     for f in [
-            'compress/zstd_compress.c', 'compress/fse_compress.c', 'compress/huf_compress.c', 'compress/zbuff_compress.c',
-            'decompress/zstd_decompress.c', 'common/fse_decompress.c', 'decompress/huf_decompress.c', 'decompress/zbuff_decompress.c',
+            'compress/zstd_compress.c', 'compress/fse_compress.c', 'compress/huf_compress.c',
+            'decompress/zstd_decompress.c', 'common/fse_decompress.c', 'decompress/huf_decompress.c',
 #            'dictBuilder/zdict.c', 'dictBuilder/divsufsort.c',
-            'common/entropy_common.c', 'common/zstd_common.c', 'common/xxhash.c',
+            'common/entropy_common.c', 'common/zstd_common.c', 'common/xxhash.c', 'common/error_private.c',
         ]:
         zstdFiles.append('zstd/lib/'+f)
 
@@ -93,9 +93,10 @@ if not SUP_EXTERNAL:
 
 zstdFiles.append('src/python-zstd.c')
 
-tests="tests.generic"
-if SUP_LEGACY:
-    tests="tests.legacy"
+#tests="tests.generic"
+#if SUP_LEGACY:
+#    tests="tests.legacy"
+tests="tests"
 
 setup(
     name='zstd',
@@ -129,5 +130,6 @@ setup(
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
-    ],
+        'Programming Language :: Python :: 3.6'
+    ]
 )
