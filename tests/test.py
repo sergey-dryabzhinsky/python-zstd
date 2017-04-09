@@ -31,11 +31,11 @@ class TestZSTD(BaseTestZSTD):
         BaseTestZSTD.helper_compression_level20(self)
 
     def test_decompression_v036(self):
-        if self.LEGACY:
+        if self.LEGACY and self.PYZSTD_LEGACY:
             BaseTestZSTD.helper_decompression_v036(self)
 
     def test_decompression_v046(self):
-        if self.LEGACY:
+        if self.LEGACY and self.PYZSTD_LEGACY:
             BaseTestZSTD.helper_decompression_v046(self)
 
 if __name__ == '__main__':
