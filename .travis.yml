@@ -14,7 +14,7 @@ os: linux
 addons:
   apt:
     sources:
-    - trusty
+    - xenial
     - deadsnakes
     - sourceline: 'ppa:sergey-dryabzhinsky/packages'
 
