@@ -5,7 +5,7 @@ import sys
 from setuptools import setup, find_packages, Extension
 from setuptools.command.build_ext import build_ext
 
-VERSION = (1, 1, 3)
+VERSION = (1, 1, 4)
 VERSION_STR = ".".join([str(x) for x in VERSION])
 
 # Minor versions

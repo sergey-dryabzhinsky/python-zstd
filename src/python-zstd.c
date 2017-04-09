@@ -146,7 +146,7 @@ static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args) {
             PyErr_Format(ZstdError, "Decompression error: %s", ZSTD_getErrorName(cSize));
             error = 1;
         } else if (cSize != dest_size) {
-            PyErr_Format(ZstdError, "Decompression error: length mismatch -> decomp %ul != %ul [header]", (uint64_t)cSize, dest_size);
+            PyErr_Format(ZstdError, "Decompression error: length mismatch -> decomp %lu != %lu [header]", (uint64_t)cSize, dest_size);
             error = 1;
         }
     }
@@ -248,7 +248,7 @@ static PyObject *py_zstd_uncompress_old(PyObject* self, PyObject *args) {
             PyErr_Format(ZstdError, "Decompression error: %s", ZSTD_getErrorName(cSize));
             Py_CLEAR(result);
         } else if (cSize != dest_size) {
-            PyErr_Format(ZstdError, "Decompression error: length mismatch - %d [Dcp] != %d [Hdr]", (uint32_t)cSize, dest_size);
+            PyErr_Format(ZstdError, "Decompression error: length mismatch - %u [Dcp] != %u [Hdr]", (uint32_t)cSize, dest_size);
             Py_CLEAR(result);
         }
     }
