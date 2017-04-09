@@ -29,7 +29,26 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef _PYTHON_ZSTD_H_
+#define _PYTHON_ZSTD_H_
+
+
 #include "Python.h"
+
+
+#ifndef PYZSTD_LEGACY
+/*-=====  Do you need legacy old-format functions?  =====-*/
+#define PYZSTD_LEGACY 0
+#endif
+
+
+#ifndef ZSTD_DEFAULT_CLEVEL
+/*-=====  Pre-defined compression levels  =====-*/
+
+#define ZSTD_DEFAULT_CLEVEL 1
+#define ZSTD_MAX_CLEVEL     22
+#endif
+
 
 #define DISCARD_PARAMETER (void)
 
@@ -38,17 +57,23 @@ static PyObject *ZstdError;
 static PyObject *py_zstd_compress(PyObject* self, PyObject *args);
 static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args);
 
+#if PYZSTD_LEGACY > 0
 static PyObject *py_zstd_compress_old(PyObject* self, PyObject *args);
 static PyObject *py_zstd_uncompress_old(PyObject* self, PyObject *args);
+#endif
 
 #if PY_MAJOR_VERSION < 3
 PyMODINIT_FUNC initzstd(void);
 #endif
 
+
 #define COMPRESS_DOCSTRING      "Compress string, returning the compressed data.\nRaises an exception if any error occurs."
 #define UNCOMPRESS_DOCSTRING    "Decompress string, returning the uncompressed data.\nRaises an exception if any error occurs."
+
+#if PYZSTD_LEGACY > 0
 #define COMPRESS_OLD_DOCSTRING      "Compress string, old version, returning the compressed data in custom format.\nNot compatible with streaming or origin compression tools.\nRaises an exception if any error occurs."
 #define UNCOMPRESS_OLD_DOCSTRING    "Decompress string, old version, returning the uncompressed data.\nUses custom format from `compress_old` fucntion.\nNot compatible with streaming or origin compression tools.\nRaises an exception if any error occurs."
+#endif
 
 /**************************************
 *  Basic Types
@@ -89,3 +114,5 @@ typedef unsigned long long  U64;
 #ifdef __linux
 #define inline __inline
 #endif
+
+#endif // _PYTHON_ZSTD_H_

@@ -8,12 +8,18 @@ class TestZSTD(BaseTestZSTD):
     def setUp(self):
         if os.getenv("LEGACY"):
             self.LEGACY = True
+        if os.getenv("PYZSTD_LEGACY"):
+            self.PYZSTD_LEGACY = True
 
     def test_compression_random(self):
         BaseTestZSTD.helper_compression_random(self)
 
     def test_compression_default_level(self):
         BaseTestZSTD.helper_compression_default_level(self)
+
+    def test_compression_old_default_level(self):
+        if self.PYZSTD_LEGACY:
+            BaseTestZSTD.helper_compression_old_default_level(self)
 
     def test_compression_level1(self):
         BaseTestZSTD.helper_compression_level1(self)

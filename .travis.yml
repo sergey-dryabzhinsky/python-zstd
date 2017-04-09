@@ -8,6 +8,9 @@ python:
   - 3.5
   - 3.6
 
+dist: xenial
+os: linux
+
 addons:
   apt:
     sources:
@@ -23,6 +26,8 @@ script:
 - python setup.py test
 - python setup.py clean -a
 - env LEGACY=1 python setup.py --legacy test
+- python setup.py clean -a
+- python setup.py --pyzstd-legacy test
 - python setup.py clean -a
 - python setup.py --external test
 - python setup.py clean -a

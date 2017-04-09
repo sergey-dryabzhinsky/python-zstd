@@ -14,6 +14,7 @@ log.info("Python version: %s" % sys.version)
 class BaseTestZSTD(unittest.TestCase):
 
     LEGACY = False
+    PYZSTD_LEGACY = False
 
     def helper_compression_random(self):
         DATA = os.urandom(128 * 1024)  # Read 128kb
@@ -25,6 +26,13 @@ class BaseTestZSTD(unittest.TestCase):
         else:
             DATA = b'This is must be very very long string to be compressed by zstd. AAAAAAAAAAARGGHHH!!! Just hope its enough length.' + ' И немного юникода.'.encode()
         self.assertEqual(DATA, zstd.decompress(zstd.compress(DATA)))
+
+    def helper_compression_old_default_level(self):
+        if sys.hexversion < 0x03000000:
+            DATA = 'This is must be very very long string to be compressed by zstd. AAAAAAAAAAARGGHHH!!! Just hope its enough length. И немного юникода.'
+        else:
+            DATA = b'This is must be very very long string to be compressed by zstd. AAAAAAAAAAARGGHHH!!! Just hope its enough length.' + ' И немного юникода.'.encode()
+        self.assertEqual(DATA, zstd.decompress_old(zstd.compress_old(DATA)))
 
     def helper_compression_level1(self):
         if sys.hexversion < 0x03000000:

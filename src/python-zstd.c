@@ -32,30 +32,6 @@
 #include "python-zstd.h"
 #include "zstd.h"
 
-#ifndef ZSTD_DEFAULT_CLEVEL
-/*-=====  Pre-defined compression levels  =====-*/
-
-#define ZSTD_DEFAULT_CLEVEL 1
-#define ZSTD_MAX_CLEVEL     22
-#endif
-
-/* Macros and other changes from python-lz4.c
- * Copyright (c) 2012-2013, Steeve Morin
- * All rights reserved. */
-
-static inline void store_le32(char *c, uint32_t x) {
-    c[0] = x & 0xff;
-    c[1] = (x >> 8) & 0xff;
-    c[2] = (x >> 16) & 0xff;
-    c[3] = (x >> 24) & 0xff;
-}
-
-static inline uint32_t load_le32(const char *c) {
-    const uint8_t *d = (const uint8_t *)c;
-    return d[0] | (d[1] << 8) | (d[2] << 16) | (d[3] << 24);
-}
-
-static const int hdr_size = sizeof(uint32_t);
 
 static PyObject *py_zstd_compress(PyObject* self, PyObject *args) {
 /**
@@ -159,6 +135,27 @@ static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args) {
     return result;
 }
 
+#if PYZSTD_LEGACY > 0
+
+/* Macros and other changes from python-lz4.c
+ * Copyright (c) 2012-2013, Steeve Morin
+ * All rights reserved. */
+
+static inline void store_le32(char *c, uint32_t x) {
+    c[0] = x & 0xff;
+    c[1] = (x >> 8) & 0xff;
+    c[2] = (x >> 16) & 0xff;
+    c[3] = (x >> 24) & 0xff;
+}
+
+static inline uint32_t load_le32(const char *c) {
+    const uint8_t *d = (const uint8_t *)c;
+    return d[0] | (d[1] << 8) | (d[2] << 16) | (d[3] << 24);
+}
+
+static const uint32_t hdr_size = sizeof(uint32_t);
+
+
 static PyObject *py_zstd_compress_old(PyObject* self, PyObject *args) {
 /**
  * Old format with custom header
@@ -256,6 +253,9 @@ static PyObject *py_zstd_uncompress_old(PyObject* self, PyObject *args) {
     return result;
 }
 
+#endif // PYZSTD_LEGACY
+
+
 static PyMethodDef ZstdMethods[] = {
     {"ZSTD_compress",  py_zstd_compress, METH_VARARGS, COMPRESS_DOCSTRING},
     {"ZSTD_uncompress",  py_zstd_uncompress, METH_VARARGS, UNCOMPRESS_DOCSTRING},
@@ -264,8 +264,10 @@ static PyMethodDef ZstdMethods[] = {
     {"decompress",  py_zstd_uncompress, METH_VARARGS, UNCOMPRESS_DOCSTRING},
     {"dumps",  py_zstd_compress, METH_VARARGS, COMPRESS_DOCSTRING},
     {"loads",  py_zstd_uncompress, METH_VARARGS, UNCOMPRESS_DOCSTRING},
+#if PYZSTD_LEGACY > 0
     {"compress_old",  py_zstd_compress_old, METH_VARARGS, COMPRESS_OLD_DOCSTRING},
     {"decompress_old",  py_zstd_uncompress_old, METH_VARARGS, UNCOMPRESS_OLD_DOCSTRING},
+#endif
     {NULL, NULL, 0, NULL}
 };
 
