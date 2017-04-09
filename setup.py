@@ -5,7 +5,7 @@ import sys
 from setuptools import setup, find_packages, Extension
 from setuptools.command.build_ext import build_ext
 
-VERSION = (1, 1, 3)
+VERSION = (1, 1, 4)
 VERSION_STR = ".".join([str(x) for x in VERSION])
 
 # Minor versions
@@ -20,6 +20,11 @@ SUP_LEGACY=0
 if "--legacy" in sys.argv:
     SUP_LEGACY=1
     sys.argv.remove("--legacy")
+
+SUP_PYZSTD_LEGACY=0
+if "--pyzstd-legacy" in sys.argv:
+    SUP_PYZSTD_LEGACY=1
+    sys.argv.remove("--pyzstd-legacy")
 
 SUP_EXTERNAL=0
 ext_libraries=[]
@@ -62,6 +67,13 @@ if SUP_LEGACY:
             COPT[comp].extend(['/Izstd\\lib\\legacy', '/DZSTD_LEGACY_SUPPORT=1'])
         else:
             COPT[comp].extend(['-Izstd/lib/legacy', '-DZSTD_LEGACY_SUPPORT=1'])
+
+if SUP_PYZSTD_LEGACY:
+    for comp in COPT:
+        if comp == 'msvc':
+            COPT[comp].extend(['/DPYZSTD_LEGACY=1'])
+        else:
+            COPT[comp].extend(['-DPYZSTD_LEGACY=1'])
 
 
 class ZstdBuildExt( build_ext ):

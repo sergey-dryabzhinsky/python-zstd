@@ -28,6 +28,8 @@ As of 1.0.0.99.1 version it uses standard Zstd output, not modified.
 To prevent data loss there is two functions now: ```compress_old``` and ```decompress_old```.
 They are works just like in old versions prior to 1.0.0.99.1.
 
+As of 1.1.4 version module build without them by default.
+
 
 LINKS
 -----
