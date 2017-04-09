@@ -21,6 +21,7 @@ addons:
 install:
 - sudo apt-get update -qq
 - sudo apt-get install -qq libzstd-dev
+- sudo apt-get install -qq python-unittest2
 
 script:
 - python setup.py test
