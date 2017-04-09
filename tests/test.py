@@ -1,7 +1,7 @@
 # Tests
 
 import os
-from .base import BaseTestZSTD, unittest
+from .base import BaseTestZSTD, raise_skip
 
 class TestZSTD(BaseTestZSTD):
 
@@ -19,7 +19,7 @@ class TestZSTD(BaseTestZSTD):
 
     def test_compression_old_default_level(self):
         if not self.PYZSTD_LEGACY:
-            raise unittest.SkipTest("PyZstd was build without legacy functions support")
+            return raise_skip("PyZstd was build without legacy functions support")
         BaseTestZSTD.helper_compression_old_default_level(self)
 
     def test_compression_level1(self):
@@ -35,13 +35,13 @@ class TestZSTD(BaseTestZSTD):
         if self.LEGACY and self.PYZSTD_LEGACY:
             BaseTestZSTD.helper_decompression_v036(self)
         else:
-            raise unittest.SkipTest("PyZstd was build without legacy zstd format and functions support")
+            return raise_skip("PyZstd was build without legacy zstd format and functions support")
 
     def test_decompression_v046(self):
         if self.LEGACY and self.PYZSTD_LEGACY:
             BaseTestZSTD.helper_decompression_v046(self)
         else:
-            raise unittest.SkipTest("PyZstd was build without legacy zstd format and functions support")
+            return raise_skip("PyZstd was build without legacy zstd format and functions support")
 
 if __name__ == '__main__':
     unittest.main()
