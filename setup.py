@@ -5,7 +5,7 @@ import sys
 from setuptools import setup, find_packages, Extension
 from setuptools.command.build_ext import build_ext
 
-VERSION = (1, 1, 4)
+VERSION = (1, 2, 0)
 VERSION_STR = ".".join([str(x) for x in VERSION])
 
 # Minor versions
@@ -18,11 +18,13 @@ PKG_VERSION_STR = ".".join([str(x) for x in PKG_VERSION])
 
 SUP_LEGACY=0
 if "--legacy" in sys.argv:
+    # Support legacy output format functions
     SUP_LEGACY=1
     sys.argv.remove("--legacy")
 
 SUP_PYZSTD_LEGACY=0
 if "--pyzstd-legacy" in sys.argv:
+    # Support ZSTD legacy format
     SUP_PYZSTD_LEGACY=1
     sys.argv.remove("--pyzstd-legacy")
 
