@@ -5,7 +5,7 @@ import sys
 from setuptools import setup, find_packages, Extension
 from setuptools.command.build_ext import build_ext
 
-VERSION = (1, 2, 0)
+VERSION = (1, 3, 0)
 VERSION_STR = ".".join([str(x) for x in VERSION])
 
 # Minor versions
@@ -122,7 +122,7 @@ setup(
     maintainer='Sergey Dryabzhinsky',
     maintainer_email='sergey.dryabzhinsky@gmail.com',
     url='https://github.com/sergey-dryabzhinsky/python-zstd',
-    keywords='zstd, zstandard, compression',
+    keywords=['zstd', 'zstandard', 'compression'],
     license='BSD',
     packages=find_packages('src'),
     package_dir={'': 'src'},
