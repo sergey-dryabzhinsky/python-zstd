@@ -1,7 +1,8 @@
 # Tests
 
 import os
-from .base import BaseTestZSTD, raise_skip
+
+from tests.base import BaseTestZSTD, raise_skip
 
 class TestZSTD(BaseTestZSTD):
 

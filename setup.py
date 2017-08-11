@@ -92,10 +92,10 @@ zstdFiles = []
 if not SUP_EXTERNAL:
 
     for f in [
-            'compress/zstd_compress.c', 'compress/fse_compress.c', 'compress/huf_compress.c',
+            'compress/zstd_compress.c', 'compress/zstdmt_compress.c', 'compress/fse_compress.c', 'compress/huf_compress.c',
             'decompress/zstd_decompress.c', 'common/fse_decompress.c', 'decompress/huf_decompress.c',
 #            'dictBuilder/zdict.c', 'dictBuilder/divsufsort.c',
-            'common/entropy_common.c', 'common/zstd_common.c', 'common/xxhash.c', 'common/error_private.c',
+            'common/entropy_common.c', 'common/zstd_common.c', 'common/xxhash.c', 'common/error_private.c', 'common/pool.c',
         ]:
         zstdFiles.append('zstd/lib/'+f)
 
@@ -107,10 +107,12 @@ if not SUP_EXTERNAL:
 
 zstdFiles.append('src/python-zstd.c')
 
-#tests="tests.generic"
-#if SUP_LEGACY:
-#    tests="tests.legacy"
-tests="tests"
+# Another dirty hack
+def my_test_suite():
+    import unittest
+    test_loader = unittest.TestLoader()
+    test_suite = test_loader.discover('tests', pattern='test_*.py')
+    return test_suite
 
 setup(
     name='zstd',
@@ -130,7 +132,7 @@ setup(
         Extension('zstd', zstdFiles, libraries=ext_libraries)
     ],
     cmdclass = {'build_ext': ZstdBuildExt },
-    test_suite=tests,
+    test_suite='setup.my_test_suite',
     classifiers=[
         'License :: OSI Approved :: BSD License',
         'Intended Audience :: Developers',
