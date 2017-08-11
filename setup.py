@@ -10,7 +10,7 @@ VERSION = (1, 3, 0)
 VERSION_STR = ".".join([str(x) for x in VERSION])
 
 # Minor versions
-PKG_VERSION = VERSION
+PKG_VERSION = VERSION+("post1",)
 PKG_VERSION_STR = ".".join([str(x) for x in PKG_VERSION])
 
 ###
