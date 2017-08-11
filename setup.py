@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import os
 import sys
 
 from setuptools import setup, find_packages, Extension
@@ -110,8 +111,11 @@ zstdFiles.append('src/python-zstd.c')
 # Another dirty hack
 def my_test_suite():
     import unittest
-    test_loader = unittest.TestLoader()
-    test_suite = test_loader.discover('tests', pattern='test_*.py')
+    # Python 2.6 compat
+    test_suite = unittest.TestSuite()
+    for test in os.listdir('tests'):
+        if test.startswith("test_") and test.endswith(".py"):
+            test_suite.addTest(unittest.defaultTestLoader.loadTestsFromName("tests."+test.replace(".py","")))
     return test_suite
 
 setup(
