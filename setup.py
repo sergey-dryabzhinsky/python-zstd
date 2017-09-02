@@ -6,11 +6,12 @@ import sys
 from setuptools import setup, find_packages, Extension
 from setuptools.command.build_ext import build_ext
 
-VERSION = (1, 3, 0)
+VERSION = (1, 3, 1)
 VERSION_STR = ".".join([str(x) for x in VERSION])
 
 # Minor versions
-PKG_VERSION = VERSION+("2",)
+PKG_VERSION = VERSION
+#PKG_VERSION += ("1",)
 PKG_VERSION_STR = ".".join([str(x) for x in PKG_VERSION])
 
 ###
