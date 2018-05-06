@@ -47,11 +47,11 @@ if "--external" in sys.argv:
 
 
 COPT = {
-    'msvc':     [ '/Ox', ],
-    'mingw32':  [ '-O2', ],
-    'unix':     [ '-O2', ],
-    'clang':    [ '-O2', ],
-    'gcc':      [ '-O2', ]
+    'msvc':     [ '/Ox', '/DVERSION=\"\\\"%s\\\"\"' % PKG_VERSION_STR ],
+    'mingw32':  [ '-O2', '-DVERSION="%s"' % PKG_VERSION_STR ],
+    'unix':     [ '-O2', '-DVERSION="%s"' % PKG_VERSION_STR],
+    'clang':    [ '-O2', '-DVERSION="%s"' % PKG_VERSION_STR],
+    'gcc':      [ '-O2', '-DVERSION="%s"' % PKG_VERSION_STR]
 }
 
 if not SUP_EXTERNAL:
@@ -59,12 +59,10 @@ if not SUP_EXTERNAL:
         if comp == 'msvc':
             COPT[comp].extend([
                 '/Izstd\\lib', '/Izstd\\lib\\common', '/Izstd\\lib\\compress', '/Izstd\\lib\\decompress',
-                '/DVERSION=\"\\\"%s\\\"\"' % PKG_VERSION_STR,
             ])
         else:
             COPT[comp].extend([
                 '-Izstd/lib', '-Izstd/lib/common', '-Izstd/lib/compress', '-Izstd/lib/decompress',
-                '-DVERSION="%s"' % PKG_VERSION_STR,
             ])
 
 if SUP_LEGACY:
