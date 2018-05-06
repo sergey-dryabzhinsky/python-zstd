@@ -33,6 +33,8 @@ They are works just like in old versions prior to 1.0.0.99.1.
 
 As of 1.1.4 version module build without them by default.
 
+As of 1.3.4 version these functions are deprecated and will be removed in future releases.
+
 
 LINKS
 -----

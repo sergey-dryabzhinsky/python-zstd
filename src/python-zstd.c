@@ -33,12 +33,13 @@
 #include "zstd.h"
 
 
-static PyObject *py_zstd_compress(PyObject* self, PyObject *args) {
 /**
  * New more interoperable function
  * Uses origin zstd header, nothing more
  * Simple version: not for streaming, no dict support, full block compression
  */
+static PyObject *py_zstd_compress(PyObject* self, PyObject *args)
+{
 
     PyObject *result;
     const char *source;
@@ -46,7 +47,7 @@ static PyObject *py_zstd_compress(PyObject* self, PyObject *args) {
     char *dest;
     uint32_t dest_size;
     size_t cSize;
-    uint32_t level = ZSTD_DEFAULT_CLEVEL;
+    int32_t level = ZSTD_DEFAULT_CLEVEL;
 
 #if PY_MAJOR_VERSION >= 3
     if (!PyArg_ParseTuple(args, "y#|i", &source, &source_size, &level))
@@ -56,7 +57,13 @@ static PyObject *py_zstd_compress(PyObject* self, PyObject *args) {
         return NULL;
 #endif
 
+#if ZSTD_VERSION_NUMBER >= 1003004
+    /* Fast levels (zstd >= 1.3.4) */
+    if (level < ZSTD_MIN_CLEVEL) level=ZSTD_MIN_CLEVEL;
+    if (level = 0) level=ZSTD_DEFAULT_CLEVEL;
+#else
     if (level <= 0) level=ZSTD_DEFAULT_CLEVEL;
+#endif
     if (level > ZSTD_MAX_CLEVEL) level=ZSTD_MAX_CLEVEL;
 
     dest_size = ZSTD_compressBound(source_size);
@@ -82,12 +89,13 @@ static PyObject *py_zstd_compress(PyObject* self, PyObject *args) {
     return result;
 }
 
-static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args) {
 /**
  * New more interoperable function
  * Uses origin zstd header, nothing more
  * Simple version: not for streaming, no dict support, full block decompression
  */
+static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args)
+{
 
     PyObject    *result;
     const char  *source;
@@ -135,7 +143,31 @@ static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args) {
     return result;
 }
 
+/**
+ * Returns this module version as string
+ */
+static PyObject *py_zstd_module_version(PyObject* self)
+{
+    PyObject    *result;
+    result = PyBytes_FromStringAndSize(VERSION, strlen(VERSION));
+    return result;
+}
+
+/**
+ * Returns ZSTD library version as string
+ */
+static PyObject *py_zstd_library_version(PyObject* self)
+{
+    PyObject    *result;
+    const char  *zstd_version;
+    zstd_version = ZSTD_versionString();
+    result = PyBytes_FromStringAndSize(zstd_version, strlen(zstd_version));
+    return result;
+}
+
 #if PYZSTD_LEGACY > 0
+
+#pragma message "Old style functions are deprecated since 2018-05-06 and may be removed any time!"
 
 /* Macros and other changes from python-lz4.c
  * Copyright (c) 2012-2013, Steeve Morin
@@ -177,7 +209,13 @@ static PyObject *py_zstd_compress_old(PyObject* self, PyObject *args) {
         return NULL;
 #endif
 
+#if ZSTD_VERSION_NUMBER >= 1003004
+    /* Fast levels (zstd >= 1.3.4) */
+    if (level < ZSTD_MIN_CLEVEL) level=ZSTD_MIN_CLEVEL;
+    if (level = 0) level=ZSTD_DEFAULT_CLEVEL;
+#else
     if (level <= 0) level=ZSTD_DEFAULT_CLEVEL;
+#endif
     if (level > ZSTD_MAX_CLEVEL) level=ZSTD_MAX_CLEVEL;
 
     dest_size = ZSTD_compressBound(source_size);
@@ -264,6 +302,8 @@ static PyMethodDef ZstdMethods[] = {
     {"decompress",  py_zstd_uncompress, METH_VARARGS, UNCOMPRESS_DOCSTRING},
     {"dumps",  py_zstd_compress, METH_VARARGS, COMPRESS_DOCSTRING},
     {"loads",  py_zstd_uncompress, METH_VARARGS, UNCOMPRESS_DOCSTRING},
+    {"version",  py_zstd_module_version, 0, VERSION_DOCSTRING},
+    {"ZSTD_version",  py_zstd_library_version, 0, ZSTD_VERSION_DOCSTRING},
 #if PYZSTD_LEGACY > 0
     {"compress_old",  py_zstd_compress_old, METH_VARARGS, COMPRESS_OLD_DOCSTRING},
     {"decompress_old",  py_zstd_uncompress_old, METH_VARARGS, UNCOMPRESS_OLD_DOCSTRING},

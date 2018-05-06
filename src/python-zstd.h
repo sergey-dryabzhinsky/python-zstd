@@ -36,19 +36,29 @@
 #include "Python.h"
 
 
-#ifndef PYZSTD_LEGACY
 /*-=====  Do you need legacy old-format functions?  =====-*/
+#ifndef PYZSTD_LEGACY
 #define PYZSTD_LEGACY 0
 #endif
 
 
-#ifndef ZSTD_DEFAULT_CLEVEL
 /*-=====  Pre-defined compression levels  =====-*/
+#ifndef ZSTD_DEFAULT_CLEVEL
+#define ZSTD_DEFAULT_CLEVEL 3
+#endif
 
-#define ZSTD_DEFAULT_CLEVEL 1
+#ifndef ZSTD_MAX_CLEVEL
 #define ZSTD_MAX_CLEVEL     22
 #endif
 
+/* --== Negative fast compression levels only since 1.3.4 ==-- */
+#if ZSTD_VERSION_NUMBER >= 1003004
+
+#ifndef ZSTD_MIN_CLEVEL
+#define ZSTD_MIN_CLEVEL     -5
+#endif
+
+#endif
 
 #define DISCARD_PARAMETER (void)
 
@@ -56,6 +66,8 @@ static PyObject *ZstdError;
 
 static PyObject *py_zstd_compress(PyObject* self, PyObject *args);
 static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args);
+static PyObject *py_zstd_module_version(PyObject* self);
+static PyObject *py_zstd_library_version(PyObject* self);
 
 #if PYZSTD_LEGACY > 0
 static PyObject *py_zstd_compress_old(PyObject* self, PyObject *args);
@@ -69,6 +81,8 @@ PyMODINIT_FUNC initzstd(void);
 
 #define COMPRESS_DOCSTRING      "Compress string, returning the compressed data.\nRaises an exception if any error occurs."
 #define UNCOMPRESS_DOCSTRING    "Decompress string, returning the uncompressed data.\nRaises an exception if any error occurs."
+#define VERSION_DOCSTRING       "This module version string."
+#define ZSTD_VERSION_DOCSTRING  "ZSTD library version string."
 
 #if PYZSTD_LEGACY > 0
 #define COMPRESS_OLD_DOCSTRING      "Compress string, old version, returning the compressed data in custom format.\nNot compatible with streaming or origin compression tools.\nRaises an exception if any error occurs."
