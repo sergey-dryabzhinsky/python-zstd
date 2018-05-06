@@ -210,7 +210,7 @@ static PyObject *py_zstd_compress_old(PyObject* self, PyObject *args) {
     char *dest;
     uint32_t dest_size;
     size_t cSize;
-    uint32_t level = ZSTD_DEFAULT_CLEVEL;
+    int32_t level = ZSTD_DEFAULT_CLEVEL;
 
 #if PY_MAJOR_VERSION >= 3
     if (!PyArg_ParseTuple(args, "y#|i", &source, &source_size, &level))
