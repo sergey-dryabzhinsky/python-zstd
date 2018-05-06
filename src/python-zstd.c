@@ -150,9 +150,9 @@ static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args)
 static PyObject *py_zstd_module_version(PyObject* self)
 {
 #if PY_MAJOR_VERSION >= 3
-    return PyUnicode_FromStringAndSize(VERSION, strlen(VERSION));
+    return PyUnicode_FromFormat("%s", VERSION);
 #else
-    return PyString_FromStringAndSize(VERSION, strlen(VERSION));
+    return PyString_FromFormat("%s", VERSION);
 #endif
 }
 
