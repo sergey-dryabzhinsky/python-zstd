@@ -6,12 +6,14 @@ import sys
 from setuptools import setup, find_packages, Extension
 from setuptools.command.build_ext import build_ext
 
+# ZSTD version
 VERSION = (1, 3, 4)
 VERSION_STR = ".".join([str(x) for x in VERSION])
 
-# Minor versions
+# Package version
 PKG_VERSION = VERSION
-#PKG_VERSION += ("1",)
+# Minor versions
+PKG_VERSION += ("1",)
 PKG_VERSION_STR = ".".join([str(x) for x in PKG_VERSION])
 
 ###
@@ -45,11 +47,11 @@ if "--external" in sys.argv:
 
 
 COPT = {
-    'msvc':     [ '/Ox', ],
-    'mingw32':  [ '-O2', ],
-    'unix':     [ '-O2', ],
-    'clang':    [ '-O2', ],
-    'gcc':      [ '-O2', ]
+    'msvc':     [ '/Ox', '/DVERSION=\"\\\"%s\\\"\"' % PKG_VERSION_STR ],
+    'mingw32':  [ '-O2', '-DVERSION="%s"' % PKG_VERSION_STR ],
+    'unix':     [ '-O2', '-DVERSION="%s"' % PKG_VERSION_STR],
+    'clang':    [ '-O2', '-DVERSION="%s"' % PKG_VERSION_STR],
+    'gcc':      [ '-O2', '-DVERSION="%s"' % PKG_VERSION_STR]
 }
 
 if not SUP_EXTERNAL:
@@ -57,12 +59,10 @@ if not SUP_EXTERNAL:
         if comp == 'msvc':
             COPT[comp].extend([
                 '/Izstd\\lib', '/Izstd\\lib\\common', '/Izstd\\lib\\compress', '/Izstd\\lib\\decompress',
-                '/DVERSION=\"\\\"%s\\\"\"' % VERSION_STR,
             ])
         else:
             COPT[comp].extend([
                 '-Izstd/lib', '-Izstd/lib/common', '-Izstd/lib/compress', '-Izstd/lib/decompress',
-                '-DVERSION="%s"' % VERSION_STR,
             ])
 
 if SUP_LEGACY:
@@ -116,6 +116,8 @@ zstdFiles.append('src/python-zstd.c')
 def my_test_suite():
     import unittest
     # Python 2.6 compat
+    os.environ["VERSION"] = VERSION_STR
+    os.environ["PKG_VERSION"] = PKG_VERSION_STR
     test_suite = unittest.TestSuite()
     for test in os.listdir('tests'):
         if test.startswith("test_") and test.endswith(".py"):

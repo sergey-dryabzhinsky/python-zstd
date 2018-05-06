@@ -25,6 +25,18 @@ class BaseTestZSTD(unittest.TestCase):
 
     LEGACY = False
     PYZSTD_LEGACY = False
+    VERSION = ""
+    VERSION_INT = 0
+    PKG_VERSION = ""
+
+    def helper_version(self):
+        self.assertEqual(self.PKG_VERSION, zstd.version())
+
+    def helper_zstd_version(self):
+        self.assertEqual(self.VERSION, zstd.ZSTD_version())
+
+    def helper_zstd_version_number(self):
+        self.assertEqual(self.VERSION_INT, zstd.ZSTD_version_number())
 
     def helper_compression_random(self):
         DATA = os.urandom(128 * 1024)  # Read 128kb
@@ -36,6 +48,16 @@ class BaseTestZSTD(unittest.TestCase):
         else:
             DATA = b'This is must be very very long string to be compressed by zstd. AAAAAAAAAAARGGHHH!!! Just hope its enough length.' + ' И немного юникода.'.encode()
         self.assertEqual(DATA, zstd.decompress(zstd.compress(DATA)))
+
+    def helper_compression_negative_level(self):
+        if zstd.ZSTD_version_number() < 10304:
+            return raise_skip("PyZstd was build with old version of ZSTD library (%s) without support of negative compression levels." % zstd.ZSTD_version())
+
+        if sys.hexversion < 0x03000000:
+            DATA = 'This is must be very very long string to be compressed by zstd. AAAAAAAAAAARGGHHH!!! Just hope its enough length. И немного юникода.'
+        else:
+            DATA = b'This is must be very very long string to be compressed by zstd. AAAAAAAAAAARGGHHH!!! Just hope its enough length.' + ' И немного юникода.'.encode()
+        self.assertEqual(DATA, zstd.decompress(zstd.compress(DATA, -1)))
 
     def helper_compression_old_default_level(self):
         if sys.hexversion < 0x03000000:
