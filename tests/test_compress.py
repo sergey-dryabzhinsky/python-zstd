@@ -13,10 +13,10 @@ class TestZSTD(BaseTestZSTD):
             self.PYZSTD_LEGACY = True
         v = [int(n) for n in os.getenv("VERSION").split(".")]
         sorted(v, reverse=True)
-        self.VERSION = 0
+        self.VERSION_INT = 0
         i = 0
         for n in v:
-            self.VERSION += n * 100**i
+            self.VERSION_INT += n * 100**i
             i += 1
 
     def test_compression_random(self):
@@ -26,7 +26,7 @@ class TestZSTD(BaseTestZSTD):
         BaseTestZSTD.helper_compression_default_level(self)
 
     def test_compression_negative_level(self):
-        if self.VERSION >= 1003004:
+        if self.VERSION_INT >= 1003004:
             return raise_skip("PyZstd was build with old version of ZSTD library without support of negative compression levels.")
         BaseTestZSTD.helper_compression_negative_level(self)
 

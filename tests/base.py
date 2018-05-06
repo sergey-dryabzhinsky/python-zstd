@@ -26,6 +26,7 @@ class BaseTestZSTD(unittest.TestCase):
     LEGACY = False
     PYZSTD_LEGACY = False
     VERSION = ""
+    VERSION_INT = 0
     PKG_VERSION = ""
 
     def helper_version(self):
