@@ -68,6 +68,7 @@ static PyObject *py_zstd_compress(PyObject* self, PyObject *args);
 static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args);
 static PyObject *py_zstd_module_version(PyObject* self);
 static PyObject *py_zstd_library_version(PyObject* self);
+static PyObject *py_zstd_library_version_int(PyObject* self);
 
 #if PYZSTD_LEGACY > 0
 static PyObject *py_zstd_compress_old(PyObject* self, PyObject *args);
@@ -81,8 +82,9 @@ PyMODINIT_FUNC initzstd(void);
 
 #define COMPRESS_DOCSTRING      "Compress string, returning the compressed data.\nRaises an exception if any error occurs."
 #define UNCOMPRESS_DOCSTRING    "Decompress string, returning the uncompressed data.\nRaises an exception if any error occurs."
-#define VERSION_DOCSTRING       "This module version string."
-#define ZSTD_VERSION_DOCSTRING  "ZSTD library version string."
+#define VERSION_DOCSTRING       "This module version as string."
+#define ZSTD_VERSION_DOCSTRING  "ZSTD library version as string."
+#define ZSTD_INT_VERSION_DOCSTRING  "ZSTD library version as integer = (major * 100*100 + minor * 100 + release)."
 
 #if PYZSTD_LEGACY > 0
 #define COMPRESS_OLD_DOCSTRING      "Compress string, old version, returning the compressed data in custom format.\nNot compatible with streaming or origin compression tools.\nRaises an exception if any error occurs."

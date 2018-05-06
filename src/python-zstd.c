@@ -148,9 +148,7 @@ static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args)
  */
 static PyObject *py_zstd_module_version(PyObject* self)
 {
-    PyObject    *result;
-    result = PyBytes_FromStringAndSize(VERSION, strlen(VERSION));
-    return result;
+    return PyBytes_FromStringAndSize(VERSION, strlen(VERSION));
 }
 
 /**
@@ -158,11 +156,17 @@ static PyObject *py_zstd_module_version(PyObject* self)
  */
 static PyObject *py_zstd_library_version(PyObject* self)
 {
-    PyObject    *result;
     const char  *zstd_version;
     zstd_version = ZSTD_versionString();
-    result = PyBytes_FromStringAndSize(zstd_version, strlen(zstd_version));
-    return result;
+    return PyBytes_FromStringAndSize(zstd_version, strlen(zstd_version));
+}
+
+/**
+ * Returns ZSTD library version as int (major * 100*100 + minor * 100 + release)
+ */
+static PyObject *py_zstd_library_version_int(PyObject* self)
+{
+    return Py_BuildValue("i", ZSTD_VERSION_NUMBER);
 }
 
 #if PYZSTD_LEGACY > 0
@@ -302,8 +306,9 @@ static PyMethodDef ZstdMethods[] = {
     {"decompress",  py_zstd_uncompress, METH_VARARGS, UNCOMPRESS_DOCSTRING},
     {"dumps",  py_zstd_compress, METH_VARARGS, COMPRESS_DOCSTRING},
     {"loads",  py_zstd_uncompress, METH_VARARGS, UNCOMPRESS_DOCSTRING},
-    {"version",  py_zstd_module_version, 0, VERSION_DOCSTRING},
-    {"ZSTD_version",  py_zstd_library_version, 0, ZSTD_VERSION_DOCSTRING},
+    {"version",  py_zstd_module_version, METH_NOARGS, VERSION_DOCSTRING},
+    {"ZSTD_version",  py_zstd_library_version, METH_NOARGS, ZSTD_VERSION_DOCSTRING},
+    {"ZSTD_version_number",  py_zstd_library_version_int, METH_NOARGS, ZSTD_INT_VERSION_DOCSTRING},
 #if PYZSTD_LEGACY > 0
     {"compress_old",  py_zstd_compress_old, METH_VARARGS, COMPRESS_OLD_DOCSTRING},
     {"decompress_old",  py_zstd_uncompress_old, METH_VARARGS, UNCOMPRESS_OLD_DOCSTRING},

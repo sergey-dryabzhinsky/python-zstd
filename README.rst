@@ -81,3 +81,24 @@ Install from pypi
    >>> # or for Python 3.2+
    >>> pip3 install zstd
 
+
+Use
+___
+
+Module has simple API:
+
+```
+>>> import zstd
+>>> dir(zstd)
+['Error', 'ZSTD_compress', 'ZSTD_uncompress', 'ZSTD_version', 'ZSTD_version_number', '__doc__', '__file__', '__name__', '__package__', 'compress', 'decompress', 'dumps', 'loads', 'uncompress', 'version']
+>>> zstd.version()
+'1.3.4.1'
+>>> zstd.ZSTD_version()
+'1.3.4'
+>>> zstd.ZSTD_version_number()
+10304
+>>> data = "123456qwert"
+>>> cdata = zstd.compress(data, 1)
+>>> data == zstd.decompress(cdata)
+True
+```
