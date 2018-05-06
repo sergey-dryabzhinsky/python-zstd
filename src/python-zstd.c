@@ -27,9 +27,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <Python.h>
 #include <stdlib.h>
+#include <Python.h>
 #include "python-zstd.h"
+#include "bytesobject.h"
 #include "zstd.h"
 
 
@@ -148,7 +149,11 @@ static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args)
  */
 static PyObject *py_zstd_module_version(PyObject* self)
 {
-    return PyBytes_FromStringAndSize(VERSION, strlen(VERSION));
+#if PY_MAJOR_VERSION >= 3
+    return PyUnicode_FromStringAndSize(VERSION, strlen(VERSION));
+#else
+    return PyString_FromStringAndSize(VERSION, strlen(VERSION));
+#endif
 }
 
 /**
@@ -156,9 +161,11 @@ static PyObject *py_zstd_module_version(PyObject* self)
  */
 static PyObject *py_zstd_library_version(PyObject* self)
 {
-    const char  *zstd_version;
-    zstd_version = ZSTD_versionString();
-    return PyBytes_FromStringAndSize(zstd_version, strlen(zstd_version));
+#if PY_MAJOR_VERSION >= 3
+    return PyUnicode_FromFormat("%s", ZSTD_versionString());
+#else
+    return PyString_FromFormat("%s", ZSTD_versionString());
+#endif
 }
 
 /**

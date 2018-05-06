@@ -79,7 +79,6 @@ static PyObject *py_zstd_uncompress_old(PyObject* self, PyObject *args);
 PyMODINIT_FUNC initzstd(void);
 #endif
 
-
 #define COMPRESS_DOCSTRING      "Compress string, returning the compressed data.\nRaises an exception if any error occurs."
 #define UNCOMPRESS_DOCSTRING    "Decompress string, returning the uncompressed data.\nRaises an exception if any error occurs."
 #define VERSION_DOCSTRING       "This module version as string."
