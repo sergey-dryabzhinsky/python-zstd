@@ -43,8 +43,8 @@
 
 
 /*-=====  Pre-defined compression levels  =====-*/
-#ifndef ZSTD_DEFAULT_CLEVEL
-#define ZSTD_DEFAULT_CLEVEL 3
+#ifndef ZSTD_CLEVEL_DEFAULT
+#define ZSTD_CLEVEL_DEFAULT 3
 #endif
 
 #ifndef ZSTD_MAX_CLEVEL
@@ -52,7 +52,7 @@
 #endif
 
 /* --== Negative fast compression levels only since 1.3.4 ==-- */
-#if ZSTD_VERSION_NUMBER >= 1003004
+#if ZSTD_VERSION_NUMBER >= 10304
 
 #ifndef ZSTD_MIN_CLEVEL
 #define ZSTD_MIN_CLEVEL     -5
