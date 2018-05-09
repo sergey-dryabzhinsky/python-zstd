@@ -45,7 +45,15 @@ if "--external" in sys.argv:
     # Wee need pkg-config here!
     pkgconf = "/usr/bin/pkg-config"
     if os.path.exists(pkgconf):
-        VERSION_STR = subprocess.check_output([pkgconf, "libzstd", "--modversion"])
+        cmd = [pkgconf, "libzstd", "--modversion"]
+        if sys.hexversion >= 0x02070000:
+            VERSION_STR = subprocess.check_output(cmd)
+        else:
+            # Pure Python 2.6
+            VERSION_STR = subprocess.Popen(cmd, stdout=subprocess.PIPE).communicate()[0]
+        if sys.hexversion >= 0x03000000:
+            # It's bytes in PY3
+            VERSION_STR = VERSION_STR.decode()
         VERSION = tuple(int(v) for v in VERSION_STR.split("."))
     if "--libraries" not in sys.argv:
         # Add something default
