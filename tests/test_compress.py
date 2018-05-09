@@ -18,8 +18,17 @@ class TestZSTD(BaseTestZSTD):
     def test_compression_default_level(self):
         BaseTestZSTD.helper_compression_default_level(self)
 
+    def test_compression_default_level_zero(self):
+        BaseTestZSTD.helper_compression_default_level_zero(self)
+
+    def test_compression_default_level_default(self):
+        BaseTestZSTD.helper_compression_default_level_default(self)
+
     def test_compression_negative_level(self):
         BaseTestZSTD.helper_compression_negative_level(self)
+
+    def test_compression_negative_level_notdefault(self):
+        BaseTestZSTD.helper_compression_negative_level_notdefault(self)
 
     def test_compression_old_default_level(self):
         if not self.PYZSTD_LEGACY:

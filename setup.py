@@ -2,6 +2,7 @@
 
 import os
 import sys
+import subprocess
 
 from setuptools import setup, find_packages, Extension
 from setuptools.command.build_ext import build_ext
@@ -13,7 +14,7 @@ VERSION_STR = ".".join([str(x) for x in VERSION])
 # Package version
 PKG_VERSION = VERSION
 # Minor versions
-PKG_VERSION += ("3",)
+PKG_VERSION += ("4",)
 PKG_VERSION_STR = ".".join([str(x) for x in PKG_VERSION])
 
 ###
@@ -41,6 +42,19 @@ if "--external" in sys.argv:
     # You should add external library by option: --libraries zstd
     # And probably include paths by option: --include-dirs /usr/include/zstd
     # And probably library paths by option: --library-dirs /usr/lib/i386-linux-gnu
+    # Wee need pkg-config here!
+    pkgconf = "/usr/bin/pkg-config"
+    if os.path.exists(pkgconf):
+        cmd = [pkgconf, "libzstd", "--modversion"]
+        if sys.hexversion >= 0x02070000:
+            VERSION_STR = subprocess.check_output(cmd)
+        else:
+            # Pure Python 2.6
+            VERSION_STR = subprocess.Popen(cmd, stdout=subprocess.PIPE).communicate()[0]
+        if sys.hexversion >= 0x03000000:
+            # It's bytes in PY3
+            VERSION_STR = VERSION_STR.decode()
+        VERSION = tuple(int(v) for v in VERSION_STR.split("."))
     if "--libraries" not in sys.argv:
         # Add something default
         ext_libraries=["zstd"]
@@ -118,6 +132,10 @@ def my_test_suite():
     # Python 2.6 compat
     os.environ["VERSION"] = VERSION_STR
     os.environ["PKG_VERSION"] = PKG_VERSION_STR
+    if SUP_LEGACY:
+        os.environ["LEGACY"] = 1
+    if SUP_PYZSTD_LEGACY:
+        os.environ["PYZSTD_LEGACY"] = 1
     test_suite = unittest.TestSuite()
     for test in os.listdir('tests'):
         if test.startswith("test_") and test.endswith(".py"):

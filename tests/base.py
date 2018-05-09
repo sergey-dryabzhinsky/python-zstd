@@ -21,6 +21,23 @@ logging.basicConfig(level=logging.INFO)
 log = logging.getLogger('ZSTD')
 log.info("Python version: %s" % sys.version)
 
+# Classic lorem ipsum
+# + За словесными горами
+bDATA = 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.'+\
+    ' Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.'+\
+    ' Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan'+\
+    ' et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.'
+uDATA =\
+    ' И немного юникода.'+\
+    ' Далеко-далеко за словесными горами в стране гласных и согласных живут рыбные тексты.'+\
+    ' Вдали от всех живут они в буквенных домах на берегу Семантика большого языкового океана.'+\
+    ' Маленький ручеек Даль журчит по всей стране и обеспечивает ее всеми необходимыми правилами.'+\
+    ' Эта парадигматическая страна, в которой жаренные члены предложения залетают прямо в рот.'+\
+    ' Даже всемогущая пунктуация не имеет власти над рыбными текстами, ведущими безорфографичный образ жизни.'
+tDATA = bDATA + uDATA
+if sys.hexversion >= 0x03000000:
+    tDATA = tDATA.encode()
+
 class BaseTestZSTD(unittest.TestCase):
 
     LEGACY = False
@@ -43,21 +60,30 @@ class BaseTestZSTD(unittest.TestCase):
         self.assertEqual(DATA, zstd.loads(zstd.dumps(DATA)))
 
     def helper_compression_default_level(self):
-        if sys.hexversion < 0x03000000:
-            DATA = 'This is must be very very long string to be compressed by zstd. AAAAAAAAAAARGGHHH!!! Just hope its enough length. И немного юникода.'
-        else:
-            DATA = b'This is must be very very long string to be compressed by zstd. AAAAAAAAAAARGGHHH!!! Just hope its enough length.' + ' И немного юникода.'.encode()
-        self.assertEqual(DATA, zstd.decompress(zstd.compress(DATA)))
+        CDATA = zstd.compress(tDATA)
+        self.assertEqual(tDATA, zstd.decompress(CDATA))
+
+    def helper_compression_default_level_zero(self):
+        CDATA = zstd.compress(tDATA)
+        self.assertEqual(CDATA, zstd.compress(tDATA, 0))
+
+    def helper_compression_default_level_default(self):
+        CDATA = zstd.compress(tDATA)
+        self.assertEqual(CDATA, zstd.compress(tDATA, 3))
 
     def helper_compression_negative_level(self):
         if zstd.ZSTD_version_number() < 10304:
             return raise_skip("PyZstd was build with old version of ZSTD library (%s) without support of negative compression levels." % zstd.ZSTD_version())
 
-        if sys.hexversion < 0x03000000:
-            DATA = 'This is must be very very long string to be compressed by zstd. AAAAAAAAAAARGGHHH!!! Just hope its enough length. И немного юникода.'
-        else:
-            DATA = b'This is must be very very long string to be compressed by zstd. AAAAAAAAAAARGGHHH!!! Just hope its enough length.' + ' И немного юникода.'.encode()
-        self.assertEqual(DATA, zstd.decompress(zstd.compress(DATA, -1)))
+        CDATA = zstd.compress(tDATA, -1)
+        self.assertEqual(tDATA, zstd.decompress(CDATA))
+
+    def helper_compression_negative_level_notdefault(self):
+        if zstd.ZSTD_version_number() < 10304:
+            return raise_skip("PyZstd was build with old version of ZSTD library (%s) without support of negative compression levels." % zstd.ZSTD_version())
+
+        CDATA = zstd.compress(tDATA, -1)
+        self.assertNotEqual(CDATA, zstd.compress(tDATA, 0))
 
     def helper_compression_old_default_level(self):
         if sys.hexversion < 0x03000000:

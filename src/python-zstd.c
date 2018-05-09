@@ -1,6 +1,6 @@
 /*
  * ZSTD Library Python bindings
- * Copyright (c) 2015, Sergey Dryabzhinsky
+ * Copyright (c) 2015-2018, Sergey Dryabzhinsky
  * All rights reserved.
  *
  * BSD License
@@ -29,9 +29,9 @@
 
 #include <stdlib.h>
 #include <Python.h>
-#include "python-zstd.h"
 #include "bytesobject.h"
 #include "zstd.h"
+#include "python-zstd.h"
 
 
 /**
@@ -48,7 +48,7 @@ static PyObject *py_zstd_compress(PyObject* self, PyObject *args)
     char *dest;
     uint32_t dest_size;
     size_t cSize;
-    int32_t level = ZSTD_DEFAULT_CLEVEL;
+    int32_t level = ZSTD_CLEVEL_DEFAULT;
 
 #if PY_MAJOR_VERSION >= 3
     if (!PyArg_ParseTuple(args, "y#|i", &source, &source_size, &level))
@@ -58,12 +58,12 @@ static PyObject *py_zstd_compress(PyObject* self, PyObject *args)
         return NULL;
 #endif
 
-#if ZSTD_VERSION_NUMBER >= 1003004
+#if ZSTD_VERSION_NUMBER >= 10304
     /* Fast levels (zstd >= 1.3.4) */
     if (level < ZSTD_MIN_CLEVEL) level=ZSTD_MIN_CLEVEL;
-    if (level = 0) level=ZSTD_DEFAULT_CLEVEL;
+    if (0 == level) level=ZSTD_CLEVEL_DEFAULT;
 #else
-    if (level <= 0) level=ZSTD_DEFAULT_CLEVEL;
+    if (level <= 0) level=ZSTD_CLEVEL_DEFAULT;
 #endif
     if (level > ZSTD_MAX_CLEVEL) level=ZSTD_MAX_CLEVEL;
 
@@ -210,7 +210,7 @@ static PyObject *py_zstd_compress_old(PyObject* self, PyObject *args) {
     char *dest;
     uint32_t dest_size;
     size_t cSize;
-    int32_t level = ZSTD_DEFAULT_CLEVEL;
+    int32_t level = ZSTD_CLEVEL_DEFAULT;
 
 #if PY_MAJOR_VERSION >= 3
     if (!PyArg_ParseTuple(args, "y#|i", &source, &source_size, &level))
@@ -220,12 +220,12 @@ static PyObject *py_zstd_compress_old(PyObject* self, PyObject *args) {
         return NULL;
 #endif
 
-#if ZSTD_VERSION_NUMBER >= 1003004
+#if ZSTD_VERSION_NUMBER >= 10304
     /* Fast levels (zstd >= 1.3.4) */
     if (level < ZSTD_MIN_CLEVEL) level=ZSTD_MIN_CLEVEL;
-    if (level = 0) level=ZSTD_DEFAULT_CLEVEL;
+    if (0 == level) level=ZSTD_CLEVEL_DEFAULT;
 #else
-    if (level <= 0) level=ZSTD_DEFAULT_CLEVEL;
+    if (level <= 0) level=ZSTD_CLEVEL_DEFAULT;
 #endif
     if (level > ZSTD_MAX_CLEVEL) level=ZSTD_MAX_CLEVEL;
 
