@@ -56,7 +56,7 @@
 
 #ifndef ZSTD_MIN_CLEVEL
 #define ZSTD_MIN_CLEVEL     -5
-#define ZSTD_134_DOCSTR "Also supports ultra-fast levels from -5 (fastest) to -1 (less fast) since module compiled with ZSTD 1.3.4+."
+#define ZSTD_134_DOCSTR "Also supports ultra-fast levels from -5 (fastest) to -1 (less fast) since module compiled with ZSTD 1.3.4+.\n"
 #else
 #define ZSTD_MIN_CLEVEL     0
 #define ZSTD_134_DOCSTR ""
@@ -91,7 +91,7 @@ PyMODINIT_FUNC initzstd(void);
 
 #define COMPRESS_DOCSTRING      "compress(string[, level]): "PY_BYTESTR_TYPE" -- Returns compressed string.\n\n\
 Optional arg level is the compression level, from 1 (fastest) to 22 (slowest). The default value is 3.\n\
-"ZSTD_134_DOCSTR"\n\nRaises a zstd.Error exception if any error occurs."
+"ZSTD_134_DOCSTR"\nRaises a zstd.Error exception if any error occurs."
 
 #define UNCOMPRESS_DOCSTRING    "decompress("PY_BYTESTR_TYPE"): string -- Returns uncompressed string.\n\nRaises a zstd.Error exception if any error occurs."
 
