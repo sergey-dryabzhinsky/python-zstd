@@ -40,7 +40,7 @@ if sys.hexversion >= 0x03000000:
 
 class BaseTestZSTD(unittest.TestCase):
 
-    EXTERNAL = False
+    ZSTD_EXTERNAL = False
     LEGACY = False
     PYZSTD_LEGACY = False
     VERSION = ""
@@ -52,12 +52,12 @@ class BaseTestZSTD(unittest.TestCase):
         self.assertEqual(self.PKG_VERSION, zstd.version())
 
     def helper_zstd_version(self):
-        if self.EXTERNAL:
+        if self.ZSTD_EXTERNAL:
             return raise_skip("PyZstd was build with external version of ZSTD library (%s). It can be any version. Almost." % zstd.ZSTD_version())
         self.assertEqual(self.VERSION, zstd.ZSTD_version())
 
     def helper_zstd_version_number(self):
-        if self.EXTERNAL:
+        if self.ZSTD_EXTERNAL:
             self.assertLessEqual(self.VERSION_INT_MIN, zstd.ZSTD_version_number(), msg="PyZstd %s require external library version >= 1.0.0!" % zstd.version())
         else:
             self.assertEqual(self.VERSION_INT, zstd.ZSTD_version_number())
