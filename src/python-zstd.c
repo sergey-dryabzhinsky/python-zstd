@@ -58,14 +58,19 @@ static PyObject *py_zstd_compress(PyObject* self, PyObject *args)
         return NULL;
 #endif
 
-#if ZSTD_VERSION_NUMBER >= 10304
-    /* Fast levels (zstd >= 1.3.4) */
-    if (level < ZSTD_MIN_CLEVEL) level=ZSTD_MIN_CLEVEL;
     if (0 == level) level=ZSTD_CLEVEL_DEFAULT;
-#else
-    if (level <= 0) level=ZSTD_CLEVEL_DEFAULT;
-#endif
-    if (level > ZSTD_MAX_CLEVEL) level=ZSTD_MAX_CLEVEL;
+    /* Fast levels (zstd >= 1.3.4) - [-1..-5] */
+    /* Usual levels                - [ 1..22] */
+    /* If level less than -5 or 1 - raise Error, level 0 handled before. */
+    if (level < ZSTD_MIN_CLEVEL) {
+        PyErr_Format(ZstdError, "Bad compression level - less than %d: %d", ZSTD_MIN_CLEVEL, level);
+        return NULL;
+    }
+    /* If level more than 22 - raise Error. */
+    if (level > ZSTD_MAX_CLEVEL) {
+        PyErr_Format(ZstdError, "Bad compression level - more than %d: %d", ZSTD_MAX_CLEVEL, level);
+        return NULL;
+    }
 
     dest_size = ZSTD_compressBound(source_size);
     result = PyBytes_FromStringAndSize(NULL, dest_size);
@@ -115,7 +120,7 @@ static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args)
 
     dest_size = (uint64_t) ZSTD_getDecompressedSize(source, source_size);
     if (dest_size == 0) {
-        PyErr_Format(PyExc_ValueError, "input data invalid or missing content size in frame header");
+        PyErr_Format(ZstdError, "Input data invalid or missing content size in frame header.");
         return NULL;
     }
     result = PyBytes_FromStringAndSize(NULL, dest_size);
@@ -202,6 +207,7 @@ static const uint32_t hdr_size = sizeof(uint32_t);
 static PyObject *py_zstd_compress_old(PyObject* self, PyObject *args) {
 /**
  * Old format with custom header
+ * @deprecated
  */
 
     PyObject *result;
@@ -220,6 +226,7 @@ static PyObject *py_zstd_compress_old(PyObject* self, PyObject *args) {
         return NULL;
 #endif
 
+    /* This is old version function - no Error raising here. */
 #if ZSTD_VERSION_NUMBER >= 10304
     /* Fast levels (zstd >= 1.3.4) */
     if (level < ZSTD_MIN_CLEVEL) level=ZSTD_MIN_CLEVEL;
@@ -256,6 +263,7 @@ static PyObject *py_zstd_compress_old(PyObject* self, PyObject *args) {
 static PyObject *py_zstd_uncompress_old(PyObject* self, PyObject *args) {
 /**
  * Old format with custom header
+ * @deprecated
  */
 
     PyObject *result;

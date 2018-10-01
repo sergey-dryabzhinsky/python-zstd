@@ -56,6 +56,10 @@
 
 #ifndef ZSTD_MIN_CLEVEL
 #define ZSTD_MIN_CLEVEL     -5
+#define ZSTD_134_DOCSTR "Also supports ultra-fast levels from -5 (fastest) to -1 (less fast) since module compiled with ZSTD 1.3.4+.\n"
+#else
+#define ZSTD_MIN_CLEVEL     0
+#define ZSTD_134_DOCSTR ""
 #endif
 
 #endif
@@ -79,15 +83,25 @@ static PyObject *py_zstd_uncompress_old(PyObject* self, PyObject *args);
 PyMODINIT_FUNC initzstd(void);
 #endif
 
-#define COMPRESS_DOCSTRING      "Compress string, returning the compressed data.\nRaises an exception if any error occurs."
-#define UNCOMPRESS_DOCSTRING    "Decompress string, returning the uncompressed data.\nRaises an exception if any error occurs."
-#define VERSION_DOCSTRING       "This module version as string."
-#define ZSTD_VERSION_DOCSTRING  "ZSTD library version as string."
-#define ZSTD_INT_VERSION_DOCSTRING  "ZSTD library version as integer = (major * 100*100 + minor * 100 + release)."
+#if PY_MAJOR_VERSION < 3
+#define PY_BYTESTR_TYPE "string"
+#else
+#define PY_BYTESTR_TYPE "bytes"
+#endif
+
+#define COMPRESS_DOCSTRING      "compress(string[, level]): "PY_BYTESTR_TYPE" -- Returns compressed string.\n\n\
+Optional arg level is the compression level, from 1 (fastest) to 22 (slowest). The default value is 3.\n\
+"ZSTD_134_DOCSTR"\nRaises a zstd.Error exception if any error occurs."
+
+#define UNCOMPRESS_DOCSTRING    "decompress("PY_BYTESTR_TYPE"): string -- Returns uncompressed string.\n\nRaises a zstd.Error exception if any error occurs."
+
+#define VERSION_DOCSTRING       "version(): string -- Returns this module version as string."
+#define ZSTD_VERSION_DOCSTRING  "ZSTD_version(): string -- Returns ZSTD library version as string."
+#define ZSTD_INT_VERSION_DOCSTRING  "ZSTD_version_number(): int -- Returns ZSTD library version as integer.\n Format of the number is: major * 100*100 + minor * 100 + release."
 
 #if PYZSTD_LEGACY > 0
-#define COMPRESS_OLD_DOCSTRING      "Compress string, old version, returning the compressed data in custom format.\nNot compatible with streaming or origin compression tools.\nRaises an exception if any error occurs."
-#define UNCOMPRESS_OLD_DOCSTRING    "Decompress string, old version, returning the uncompressed data.\nUses custom format from `compress_old` fucntion.\nNot compatible with streaming or origin compression tools.\nRaises an exception if any error occurs."
+#define COMPRESS_OLD_DOCSTRING      "compress_old(string[, level]): "PY_BYTESTR_TYPE" -- Compress string, old version, returning the compressed data.\n\nUses custom format. Not compatible with streaming or origin compression tools.\n\nRaises a zstd.Error exception if any error occurs.\n\n@deprecated"
+#define UNCOMPRESS_OLD_DOCSTRING    "decompress_old("PY_BYTESTR_TYPE"): string -- Decompress string, old version, returning the uncompressed data.\n\nUses custom format from `compress_old` fucntion.\nNot compatible with streaming or origin compression tools.\n\nRaises a zstd.Error exception if any error occurs.\n\n@deprecated"
 #endif
 
 /**************************************

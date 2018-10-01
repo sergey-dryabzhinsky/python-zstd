@@ -85,6 +85,9 @@ class BaseTestZSTD(unittest.TestCase):
         CDATA = zstd.compress(tDATA, -1)
         self.assertNotEqual(CDATA, zstd.compress(tDATA, 0))
 
+    def helper_compression_wrong_level(self):
+        self.assertRaises(zstd.Error, zstd.compress, tDATA, 100)
+
     def helper_compression_old_default_level(self):
         if sys.hexversion < 0x03000000:
             DATA = 'This is must be very very long string to be compressed by zstd. AAAAAAAAAAARGGHHH!!! Just hope its enough length. И немного юникода.'
