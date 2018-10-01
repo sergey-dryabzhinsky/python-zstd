@@ -111,6 +111,7 @@ if not SUP_EXTERNAL:
             'compress/zstd_compress.c', 'compress/zstdmt_compress.c',
             'compress/zstd_fast.c', 'compress/zstd_double_fast.c', 'compress/zstd_lazy.c', 'compress/zstd_opt.c', 'compress/zstd_ldm.c',
             'compress/fse_compress.c', 'compress/huf_compress.c',
+            'compress/hist.c',
 
             'decompress/zstd_decompress.c', 'common/fse_decompress.c', 'decompress/huf_decompress.c',
 
