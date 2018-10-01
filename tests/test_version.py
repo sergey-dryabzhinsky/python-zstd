@@ -7,6 +7,8 @@ from tests.base import BaseTestZSTD, raise_skip
 class TestZSTD(BaseTestZSTD):
 
     def setUp(self):
+        if os.getenv("EXTERNAL"):
+            self.EXTERNAL = True
         self.VERSION = os.getenv("VERSION")
         self.PKG_VERSION = os.getenv("PKG_VERSION")
         v = [int(n) for n in self.VERSION.split(".")]

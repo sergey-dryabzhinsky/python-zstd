@@ -45,7 +45,7 @@ class BaseTestZSTD(unittest.TestCase):
     PYZSTD_LEGACY = False
     VERSION = ""
     VERSION_INT = 0
-    VERSION_INT_MIN = 1 * 100*100
+    VERSION_INT_MIN = 1 * 100*100 + 0 * 100 + 0
     PKG_VERSION = ""
 
     def helper_version(self):
