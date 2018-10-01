@@ -135,6 +135,8 @@ def my_test_suite():
     os.environ["PKG_VERSION"] = PKG_VERSION_STR
     if SUP_LEGACY:
         os.environ["LEGACY"] = 1
+    if SUP_EXTERNAL:
+        os.environ["EXTERNAL"] = 1
     if SUP_PYZSTD_LEGACY:
         os.environ["PYZSTD_LEGACY"] = 1
     test_suite = unittest.TestSuite()
