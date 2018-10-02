@@ -8,13 +8,13 @@ from setuptools import setup, find_packages, Extension
 from setuptools.command.build_ext import build_ext
 
 # ZSTD version
-VERSION = (1, 3, 4)
+VERSION = (1, 3, 5,)
 VERSION_STR = ".".join([str(x) for x in VERSION])
 
 # Package version
 PKG_VERSION = VERSION
 # Minor versions
-PKG_VERSION += ("5",)
+PKG_VERSION += ("0",)
 PKG_VERSION_STR = ".".join([str(x) for x in PKG_VERSION])
 
 ###
@@ -111,6 +111,7 @@ if not SUP_EXTERNAL:
             'compress/zstd_compress.c', 'compress/zstdmt_compress.c',
             'compress/zstd_fast.c', 'compress/zstd_double_fast.c', 'compress/zstd_lazy.c', 'compress/zstd_opt.c', 'compress/zstd_ldm.c',
             'compress/fse_compress.c', 'compress/huf_compress.c',
+            'compress/hist.c',
 
             'decompress/zstd_decompress.c', 'common/fse_decompress.c', 'decompress/huf_decompress.c',
 
@@ -126,16 +127,20 @@ if not SUP_EXTERNAL:
 
 zstdFiles.append('src/python-zstd.c')
 
+# Python 2.6 compat
+os.environ["VERSION"] = VERSION_STR
+os.environ["PKG_VERSION"] = PKG_VERSION_STR
+if SUP_LEGACY:
+    os.environ["LEGACY"] = "1"
+if SUP_EXTERNAL:
+    os.environ["ZSTD_EXTERNAL"] = "1"
+if SUP_PYZSTD_LEGACY:
+    os.environ["PYZSTD_LEGACY"] = "1"
+
 # Another dirty hack
 def my_test_suite():
     import unittest
-    # Python 2.6 compat
-    os.environ["VERSION"] = VERSION_STR
-    os.environ["PKG_VERSION"] = PKG_VERSION_STR
-    if SUP_LEGACY:
-        os.environ["LEGACY"] = 1
-    if SUP_PYZSTD_LEGACY:
-        os.environ["PYZSTD_LEGACY"] = 1
+
     test_suite = unittest.TestSuite()
     for test in os.listdir('tests'):
         if test.startswith("test_") and test.endswith(".py"):
