@@ -58,7 +58,8 @@ class BaseTestZSTD(unittest.TestCase):
 
     def helper_zstd_version_number(self):
         if self.ZSTD_EXTERNAL:
-            self.assertLessEqual(self.VERSION_INT_MIN, zstd.ZSTD_version_number(), msg="PyZstd %s require external library version >= 1.0.0!" % zstd.version())
+            # Python 2.6 unittest missing assertLessEqual
+            self.failIf(self.VERSION_INT_MIN > zstd.ZSTD_version_number(), msg="PyZstd %s require external library version >= 1.0.0!" % zstd.version())
         else:
             self.assertEqual(self.VERSION_INT, zstd.ZSTD_version_number())
 
