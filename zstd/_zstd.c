@@ -385,56 +385,89 @@ static PyObject *py_zstd_decompress_old(PyObject* self, PyObject *args)
 
 #endif // PYZSTD_LEGACY
 
-#define S(x) S_(x)
 #define S_(x) #x
+#define S(x) S_(x)
+#define SZL S(ZSTD_CLEVEL_MIN)
+#define SZD S(ZSTD_CLEVEL_DEFAULT)
+#define SZH S(ZSTD_CLEVEL_MAX)
+
+PyDoc_STRVAR(compress_doc,
+    "compress(data, level="SZD")\n"
+    "--\n\n"
+    "Compress data and return the compressed form.\n"
+    "The compression level may be from "SZL" (fastest) to "SZH" (slowest).\n"
+    "The default is "SZD".  level=0 is the same as level="SZD".\n"
+    "\n"
+    "Raises a zstd.Error exception if any error occurs.");
+
+PyDoc_STRVAR(decompress_doc,
+    "decompress(data)\n"
+    "--\n\n"
+    "Decompress data and return the uncompressed form.\n"
+    "Raises a zstd.Error exception if any error occurs.");
+
+#if defined PYZSTD_LEGACY && PYZSTD_LEGACY > 0
+PyDoc_STRVAR(compress_old_doc,
+    "compress_old(data, level="SZD")\n"
+    "--\n\n"
+    "Compress data and return the compressed form.\n\n"
+    "Produces a custom compressed format that is not compatible with\n"
+    "the standard .zst file format.  Deprecated.\n\n"
+    "Raises a zstd.Error exception if any error occurs.");
+
+PyDoc_STRVAR(decompress_old_doc,
+    "decompress_old(data)\n"
+    "--\n\n"
+    "Decompress data and return the uncompressed form.\n\n"
+    "Expects a custom compressed format that is not compatible with\n"
+    "the standard .zst file format.  Deprecated.\n\n"
+    "Raises a zstd.Error exception if any error occurs.");
+#endif
+
+PyDoc_STRVAR(version_doc,
+    "version()\n"
+    "--\n\n"
+    "Return the version of the Python bindings as a string.");
+PyDoc_STRVAR(library_version_doc,
+    "library_version()\n"
+    "--\n\n"
+    "Return the version of the zstd library as a string.");
+PyDoc_STRVAR(library_version_int_doc,
+    "library_version_number()\n"
+    "--\n\n"
+    "Return the version of the zstd library as a number.\n"
+    "The format of the number is: major*100*100 + minor*100 + release.\n");
+
+#undef S_
+#undef S
+#undef SZL
+#undef SZD
+#undef SZH
 
 static PyMethodDef ZstdMethods[] = {
-    {"compress", py_zstd_compress, METH_VARARGS,
-     "compress(data[, level]): Compress data, return the compressed form.\n\n"
-     "The optional arg 'level' specifies the compression level.\n"
-     "It may be from " S(ZSTD_CLEVEL_MIN) " (fastest) to " S(ZSTD_CLEVEL_MAX)
-     " (slowest).  The default is " S(ZSTD_CLEVEL_DEFAULT) ".\n"
-     "Using level=0 is the same as using level=" S(ZSTD_CLEVEL_DEFAULT) ".\n\n"
-     "Raises a zstd.Error exception if any error occurs."
-    },
-    {"decompress", py_zstd_decompress, METH_VARARGS,
-     "decompress(data): Decompress data, return the uncompressed form.\n\n"
-     "Raises a zstd.Error exception if any error occurs."
-    },
-    {"version", (PyCFunction)py_zstd_module_version, METH_NOARGS,
-     "version(): Return the version of the Python bindings as a string."
-    },
+    {"compress", py_zstd_compress, METH_VARARGS, compress_doc},
+    {"decompress", py_zstd_decompress, METH_VARARGS, decompress_doc},
+    {"version", (PyCFunction)py_zstd_module_version, METH_NOARGS, version_doc},
     {"library_version", (PyCFunction)py_zstd_library_version, METH_NOARGS,
-     "library_version(): Return the version of the zstd library as a string."
-    },
+     library_version_doc},
     {"library_version_number", (PyCFunction)py_zstd_library_version_int,
-     METH_NOARGS,
-     "library_version_int(): Return the version of the zstd library"
-     " as a number.\n"
-     "The format of the number is: major*10000 + minor*100 + release.\n"
-     },
+     METH_NOARGS, library_version_int_doc},
 #if defined PYZSTD_LEGACY && PYZSTD_LEGACY > 0
-    {"compress_old", py_zstd_compress_old, METH_VARARGS,
-     "compress_old(data[, level]): Compress data, return the compressed"
-     " form.\n\n"
-     "Uses an custom format that is not compatible with the official .zst\n"
-     "file format.  Deprecated.\n\n"
-     "Raises a zstd.Error exception if any error occurs."
-    },
+    {"compress_old", py_zstd_compress_old, METH_VARARGS, compress_old_doc},
     {"decompress_old",  py_zstd_decompress_old, METH_VARARGS,
-     "decompress_old(data[, level]): Decompress data, return the uncompressed"
-     " form.\n\n"
-     "Uses an custom format that is not compatible with the official .zst\n"
-     "file format.  Deprecated.\n\n"
-     "Raises a zstd.Error exception if any error occurs."
-    },
+     decompress_old_doc},
 #endif
     {NULL, NULL, 0, NULL}
 };
 
-
-
 #if PY_MAJOR_VERSION >= 3
+
+PyDoc_STRVAR(zstd_error_doc,
+    "Zstd compression or decompression error.");
+
+PyDoc_STRVAR(zstd_module_doc,
+    "C extension wrapping libzstd.  Not meant to be used directly;\n"
+    "use the parent module instead.");
 
 static int zstd_traverse(PyObject *m, visitproc visit, void *arg)
 {
@@ -451,7 +484,7 @@ static int zstd_clear(PyObject *m)
 static struct PyModuleDef ZstdModuleDef = {
         PyModuleDef_HEAD_INIT,
         "_zstd",
-        NULL,
+        zstd_module_doc,
         sizeof(struct module_state),
         ZstdMethods,
         NULL,
@@ -460,36 +493,42 @@ static struct PyModuleDef ZstdModuleDef = {
         NULL
 };
 
-#define INITERROR return NULL
-PyObject *PyInit__zstd(void)
-
-#else
-#define INITERROR return
-PyMODINIT_FUNC init_zstd(void)
-
-#endif
+PyMODINIT_FUNC PyInit__zstd(void)
 {
-#if PY_MAJOR_VERSION >= 3
     PyObject *module = PyModule_Create(&ZstdModuleDef);
-#else
-    PyObject *module = Py_InitModule("_zstd", ZstdMethods);
-#endif
     if (module == NULL) {
-        INITERROR;
+        return NULL;
     }
 
-    PyObject *zstd_error = PyErr_NewException("_zstd.Error", NULL, NULL);
+    PyObject *zstd_error = PyErr_NewExceptionWithDoc(
+        "_zstd.Error", zstd_error_doc, NULL, NULL);
     if (zstd_error == NULL) {
         Py_DECREF(module);
-        INITERROR;
+        return NULL;
     }
+    GETSTATE(module)->error = zstd_error;
     Py_INCREF(zstd_error);
     PyModule_AddObject(module, "Error", zstd_error);
 
-#if PY_MAJOR_VERSION >= 3
-    GETSTATE(module)->error = zstd_error;
     return module;
-#else
-    ZstdError = zstd_error;
-#endif
 }
+
+#else
+
+PyMODINIT_FUNC init_zstd(void)
+{
+    PyObject *module = Py_InitModule("_zstd", ZstdMethods);
+    if (module == NULL) {
+        return;
+    }
+
+    ZstdError = PyErr_NewException("_zstd.Error", NULL, NULL);
+    if (ZstdError == NULL) {
+        Py_DECREF(module);
+        return;
+    }
+    Py_INCREF(ZstdError);
+    PyModule_AddObject(module, "Error", ZstdError);
+}
+
+#endif
