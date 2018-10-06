@@ -314,16 +314,11 @@ static PyObject *py_zstd_uncompress_old(PyObject* self, PyObject *args) {
 
 
 static PyMethodDef ZstdMethods[] = {
-    {"ZSTD_compress",  py_zstd_compress, METH_VARARGS, COMPRESS_DOCSTRING},
-    {"ZSTD_uncompress",  py_zstd_uncompress, METH_VARARGS, UNCOMPRESS_DOCSTRING},
     {"compress",  py_zstd_compress, METH_VARARGS, COMPRESS_DOCSTRING},
-    {"uncompress",  py_zstd_uncompress, METH_VARARGS, UNCOMPRESS_DOCSTRING},
     {"decompress",  py_zstd_uncompress, METH_VARARGS, UNCOMPRESS_DOCSTRING},
-    {"dumps",  py_zstd_compress, METH_VARARGS, COMPRESS_DOCSTRING},
-    {"loads",  py_zstd_uncompress, METH_VARARGS, UNCOMPRESS_DOCSTRING},
     {"version",  py_zstd_module_version, METH_NOARGS, VERSION_DOCSTRING},
-    {"ZSTD_version",  py_zstd_library_version, METH_NOARGS, ZSTD_VERSION_DOCSTRING},
-    {"ZSTD_version_number",  py_zstd_library_version_int, METH_NOARGS, ZSTD_INT_VERSION_DOCSTRING},
+    {"library_version",  py_zstd_library_version, METH_NOARGS, ZSTD_VERSION_DOCSTRING},
+    {"library_version_number",  py_zstd_library_version_int, METH_NOARGS, ZSTD_INT_VERSION_DOCSTRING},
 #if PYZSTD_LEGACY > 0
     {"compress_old",  py_zstd_compress_old, METH_VARARGS, COMPRESS_OLD_DOCSTRING},
     {"decompress_old",  py_zstd_uncompress_old, METH_VARARGS, UNCOMPRESS_OLD_DOCSTRING},
