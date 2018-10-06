@@ -53,19 +53,19 @@ class BaseTestZSTD(unittest.TestCase):
 
     def helper_zstd_version(self):
         if self.ZSTD_EXTERNAL:
-            return raise_skip("PyZstd was build with external version of ZSTD library (%s). It can be any version. Almost." % zstd.ZSTD_version())
-        self.assertEqual(self.VERSION, zstd.ZSTD_version())
+            return raise_skip("PyZstd was build with external version of ZSTD library (%s). It can be any version. Almost." % zstd.library_version())
+        self.assertEqual(self.VERSION, zstd.library_version())
 
     def helper_zstd_version_number(self):
         if self.ZSTD_EXTERNAL:
             # Python 2.6 unittest missing assertLessEqual
-            self.failIf(self.VERSION_INT_MIN > zstd.ZSTD_version_number(), msg="PyZstd %s require external library version >= 1.0.0!" % zstd.version())
+            self.assertFalse(self.VERSION_INT_MIN > zstd.library_version_number(), msg="PyZstd %s require external library version >= 1.0.0!" % zstd.version())
         else:
-            self.assertEqual(self.VERSION_INT, zstd.ZSTD_version_number())
+            self.assertEqual(self.VERSION_INT, zstd.library_version_number())
 
     def helper_compression_random(self):
         DATA = os.urandom(128 * 1024)  # Read 128kb
-        self.assertEqual(DATA, zstd.loads(zstd.dumps(DATA)))
+        self.assertEqual(DATA, zstd.decompress(zstd.compress(DATA)))
 
     def helper_compression_default_level(self):
         CDATA = zstd.compress(tDATA)
@@ -80,15 +80,15 @@ class BaseTestZSTD(unittest.TestCase):
         self.assertEqual(CDATA, zstd.compress(tDATA, 3))
 
     def helper_compression_negative_level(self):
-        if zstd.ZSTD_version_number() < 10304:
-            return raise_skip("PyZstd was build with old version of ZSTD library (%s) without support of negative compression levels." % zstd.ZSTD_version())
+        if zstd.library_version_number() < 10304:
+            return raise_skip("PyZstd was build with old version of ZSTD library (%s) without support of negative compression levels." % zstd.library_version())
 
         CDATA = zstd.compress(tDATA, -1)
         self.assertEqual(tDATA, zstd.decompress(CDATA))
 
     def helper_compression_negative_level_notdefault(self):
-        if zstd.ZSTD_version_number() < 10304:
-            return raise_skip("PyZstd was build with old version of ZSTD library (%s) without support of negative compression levels." % zstd.ZSTD_version())
+        if zstd.library_version_number() < 10304:
+            return raise_skip("PyZstd was build with old version of ZSTD library (%s) without support of negative compression levels." % zstd.library_version())
 
         CDATA = zstd.compress(tDATA, -1)
         self.assertNotEqual(CDATA, zstd.compress(tDATA, 0))

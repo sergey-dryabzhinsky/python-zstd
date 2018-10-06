@@ -47,28 +47,68 @@ library_version_number = _zstd.library_version_number
 
 Error = _zstd.Error
 
-# alternative names for compatibility
-ZSTD_compress = compress
-dumps = compress
-
-ZSTD_uncompress = decompress
-uncompress = decompress
-loads = decompress
-
-ZSTD_version = library_version
-ZSTD_version_number = library_version_number
-
-if hasattr(_zstd, "compress_old"):
-    compress_old = _zstd.compress_old
-    decompress_old = _zstd.decompress_old
-
 __all__ = [ "compress", "decompress",
             "version", "library_version", "library_version_number",
             "Error" ]
+
+# alternative names for compatibility
+def _warn_deprecated_alt(old, new):
+    import warnings
+    warnings.warn("%s is deprecated, use %s instead" % (old, new),
+                  DeprecationWarning)
+
+def ZSTD_compress(data, level=3):
+    "Deprecated alternative name for compress"
+    _warn_deprecated_alt("ZSTD_compress", "compress")
+    return compress(data, level)
+def dumps(data, level=3):
+    "Deprecated alternative name for compress"
+    _warn_deprecated_alt("dumps", "compress")
+    return compress(data, level)
+
+def ZSTD_uncompress(data):
+    "Deprecated alternative name for decompress"
+    _warn_deprecated_alt("ZSTD_uncompress", "decompress")
+    return decompress(data)
+def uncompress(data):
+    "Deprecated alternative name for decompress"
+    _warn_deprecated_alt("uncompress", "decompress")
+    return decompress(data)
+def loads(data):
+    "Deprecated alternative name for decompress"
+    _warn_deprecated_alt("loads", "decompress")
+    return decompress(data)
+
+def ZSTD_version():
+    "Deprecated alternative name for library_version"
+    _warn_deprecated_alt("ZSTD_version", "library_version")
+    return library_version()
+
+def ZSTD_version_number():
+    "Deprecated alternative name for library_version_number"
+    _warn_deprecated_alt("ZSTD_version_number", "library_version_number")
+    return library_version_number()
 
 __all__.extend([ "ZSTD_compress", "dumps",
                  "ZSTD_uncompress", "uncompress", "loads",
                  "ZSTD_version", "ZSTD_version_number" ])
 
+
 if hasattr(_zstd, "compress_old"):
+    def compress_old(data, level=3):
+        import warnings
+        warnings.warn(
+            "compress_old produces an incompatible compressed data format",
+            DeprecationWarning)
+        return _zstd.compress_old(data, level)
+    def decompress_old(data):
+        import warnings
+        warnings.warn(
+            "decompress_old expects an incompatible compressed data format",
+            DeprecationWarning)
+        return _zstd.decompress_old(data)
+
+    compress_old.__doc__ = _zstd.compress_old.__doc__
+    decompress_old.__doc__ = _zstd.decompress_old.__doc__
+
     __all__.extend([ "compress_old", "decompress_old" ])
