@@ -34,8 +34,13 @@
 #include <Python.h>
 #include "zstd.h"
 
-#if ZSTD_VERSION_NUMBER < (1*100*100 +0*100 +0)
-# error "python-zstd must be built using libzstd >= 1.0.0"
+#if ZSTD_VERSION_NUMBER < 10304
+# error "python-zstd must be built using libzstd >= 1.3.4"
+#endif
+
+#if (PY_MAJOR_VERSION == 2 && PY_MINOR_VERSION < 6) \
+ || (PY_MAJOR_VERSION == 3 && PY_MINOR_VERSION < 2)
+# error "python-zstd must be built using Python 2.(>=6) or 3.(>=2)"
 #endif
 
 /*
@@ -67,14 +72,8 @@ typedef unsigned int      uint32_t;
 # endif
 #endif
 
-/* Negative (ultra-fast) compression levels are only supported since library
-   version 1.3.4.  */
 #ifndef ZSTD_CLEVEL_MIN
-# if ZSTD_VERSION_NUMBER >= 10304
-#  define ZSTD_CLEVEL_MIN     -5
-# else
-#  define ZSTD_CLEVEL_MIN     1
-# endif
+# define ZSTD_CLEVEL_MIN     -5
 #endif
 
 #ifndef ZSTD_CLEVEL_MAX
@@ -297,13 +296,8 @@ static PyObject *py_zstd_compress_old(PyObject* self, PyObject *args)
 #endif
 
     /* This is old version function - no Error raising here. */
-#if ZSTD_VERSION_NUMBER >= 10304
-    /* Fast levels (zstd >= 1.3.4) */
-    if (level < ZSTD_CLEVEL_MIN) level=ZSTD_CLEVEL_MIN;
     if (0 == level) level=ZSTD_CLEVEL_DEFAULT;
-#else
-    if (level <= 0) level=ZSTD_CLEVEL_DEFAULT;
-#endif
+    if (level < ZSTD_CLEVEL_MIN) level=ZSTD_CLEVEL_MIN;
     if (level > ZSTD_CLEVEL_MAX) level=ZSTD_CLEVEL_MAX;
 
     dest_size = ZSTD_compressBound(source_size);
