@@ -72,19 +72,19 @@ if not SUP_EXTERNAL:
     for comp in COPT:
         if comp == 'msvc':
             COPT[comp].extend([
-                '/Izstd\\lib', '/Izstd\\lib\\common', '/Izstd\\lib\\compress', '/Izstd\\lib\\decompress',
+                '/Ilibzstd\\lib', '/Ilibzstd\\lib\\common', '/Ilibzstd\\lib\\compress', '/Ilibzstd\\lib\\decompress',
             ])
         else:
             COPT[comp].extend([
-                '-Izstd/lib', '-Izstd/lib/common', '-Izstd/lib/compress', '-Izstd/lib/decompress',
+                '-Ilibzstd/lib', '-Ilibzstd/lib/common', '-Ilibzstd/lib/compress', '-Ilibzstd/lib/decompress',
             ])
 
 if SUP_LEGACY:
     for comp in COPT:
         if comp == 'msvc':
-            COPT[comp].extend(['/Izstd\\lib\\legacy', '/DZSTD_LEGACY_SUPPORT=1'])
+            COPT[comp].extend(['/Ilibzstd\\lib\\legacy', '/DZSTD_LEGACY_SUPPORT=1'])
         else:
-            COPT[comp].extend(['-Izstd/lib/legacy', '-DZSTD_LEGACY_SUPPORT=1'])
+            COPT[comp].extend(['-Ilibzstd/lib/legacy', '-DZSTD_LEGACY_SUPPORT=1'])
 
 if SUP_PYZSTD_LEGACY:
     for comp in COPT:
@@ -117,15 +117,15 @@ if not SUP_EXTERNAL:
 
             'common/entropy_common.c', 'common/zstd_common.c', 'common/xxhash.c', 'common/error_private.c', 'common/pool.c',
         ]:
-        zstdFiles.append('zstd/lib/'+f)
+        zstdFiles.append('libzstd/lib/'+f)
 
     if SUP_LEGACY:
         for f in [
             'legacy/zstd_v01.c', 'legacy/zstd_v02.c', 'legacy/zstd_v03.c', 'legacy/zstd_v04.c', 'legacy/zstd_v05.c', 'legacy/zstd_v06.c', 'legacy/zstd_v07.c'
             ]:
-            zstdFiles.append('zstd/lib/'+f)
+            zstdFiles.append('libzstd/lib/'+f)
 
-zstdFiles.append('src/python-zstd.c')
+zstdFiles.append('zstd/_zstd.c')
 
 # Python 2.6 compat
 os.environ["VERSION"] = VERSION_STR
@@ -159,10 +159,9 @@ setup(
     url='https://github.com/sergey-dryabzhinsky/python-zstd',
     keywords=['zstd', 'zstandard', 'compression'],
     license='BSD',
-    packages=find_packages('src'),
-    package_dir={'': 'src'},
+    packages=find_packages(exclude="tests"),
     ext_modules=[
-        Extension('zstd', zstdFiles, libraries=ext_libraries)
+        Extension('zstd._zstd', zstdFiles, libraries=ext_libraries)
     ],
     cmdclass = {'build_ext': ZstdBuildExt },
     test_suite='setup.my_test_suite',

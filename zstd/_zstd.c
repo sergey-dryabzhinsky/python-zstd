@@ -31,7 +31,7 @@
 #include <Python.h>
 #include "bytesobject.h"
 #include "zstd.h"
-#include "python-zstd.h"
+#include "_zstd.h"
 
 
 /**
@@ -357,7 +357,7 @@ static int myextension_clear(PyObject *m) {
 
 static struct PyModuleDef moduledef = {
         PyModuleDef_HEAD_INIT,
-        "zstd",
+        "_zstd",
         NULL,
         sizeof(struct module_state),
         ZstdMethods,
@@ -368,24 +368,24 @@ static struct PyModuleDef moduledef = {
 };
 
 #define INITERROR return NULL
-PyObject *PyInit_zstd(void)
+PyObject *PyInit__zstd(void)
 
 #else
 #define INITERROR return
-void initzstd(void)
+void init_zstd(void)
 
 #endif
 {
 #if PY_MAJOR_VERSION >= 3
     PyObject *module = PyModule_Create(&moduledef);
 #else
-    PyObject *module = Py_InitModule("zstd", ZstdMethods);
+    PyObject *module = Py_InitModule("_zstd", ZstdMethods);
 #endif
     if (module == NULL) {
         INITERROR;
     }
 
-    ZstdError = PyErr_NewException("zstd.Error", NULL, NULL);
+    ZstdError = PyErr_NewException("_zstd.Error", NULL, NULL);
     if (ZstdError == NULL) {
         Py_DECREF(module);
         INITERROR;
