@@ -150,9 +150,9 @@ static PyObject *py_zstd_compress(PyObject* self, PyObject *args)
     if (source_size > 0) {
         dest = PyBytes_AS_STRING(result);
 
-        Py_BEGIN_ALLOW_THREADS
+        Py_BEGIN_ALLOW_THREADS;
         cSize = ZSTD_compress(dest, dest_size, source, source_size, level);
-        Py_END_ALLOW_THREADS
+        Py_END_ALLOW_THREADS;
 
         if (ZSTD_isError(cSize)) {
             PyErr_Format(ZstdError, "Compression error: %s",
@@ -160,7 +160,7 @@ static PyObject *py_zstd_compress(PyObject* self, PyObject *args)
             Py_CLEAR(result);
             return NULL;
         }
-        Py_SIZE(result) = cSize;
+        _PyBytes_Resize(&result, cSize);
     }
     return result;
 }
@@ -197,9 +197,9 @@ static PyObject *py_zstd_decompress(PyObject* self, PyObject *args)
     if (result != NULL) {
         char *dest = PyBytes_AS_STRING(result);
 
-        Py_BEGIN_ALLOW_THREADS
+        Py_BEGIN_ALLOW_THREADS;
         cSize = ZSTD_decompress(dest, dest_size, source, source_size);
-        Py_END_ALLOW_THREADS
+        Py_END_ALLOW_THREADS;
 
         if (ZSTD_isError(cSize)) {
             PyErr_Format(ZstdError, "Decompression error: %s",
@@ -310,17 +310,17 @@ static PyObject *py_zstd_compress_old(PyObject* self, PyObject *args)
     store_le32(dest, source_size);
     if (source_size > 0) {
 
-        Py_BEGIN_ALLOW_THREADS
+        Py_BEGIN_ALLOW_THREADS;
         cSize = ZSTD_compress(dest + hdr_size, dest_size, source,
                               source_size, level);
-        Py_END_ALLOW_THREADS
+        Py_END_ALLOW_THREADS;
 
         if (ZSTD_isError(cSize)) {
             PyErr_Format(ZstdError, "Compression error: %s",
                          ZSTD_getErrorName(cSize));
             Py_CLEAR(result);
         } else {
-            Py_SIZE(result) = cSize + hdr_size;
+            _PyBytes_Resize(&result, cSize + hdr_size);
         }
     }
     return result;
@@ -361,10 +361,10 @@ static PyObject *py_zstd_decompress_old(PyObject* self, PyObject *args)
     if (result != NULL && dest_size > 0) {
         char *dest = PyBytes_AS_STRING(result);
 
-        Py_BEGIN_ALLOW_THREADS
+        Py_BEGIN_ALLOW_THREADS;
         cSize = ZSTD_decompress(dest, dest_size, source + hdr_size,
                                 source_size - hdr_size);
-        Py_END_ALLOW_THREADS
+        Py_END_ALLOW_THREADS;
 
         if (ZSTD_isError(cSize)) {
             PyErr_Format(ZstdError, "Decompression error: %s",
