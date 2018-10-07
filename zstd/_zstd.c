@@ -136,7 +136,7 @@ PyDoc_STRVAR(compress_doc,
     "\n"
     "Raises a zstd.Error exception if any error occurs.");
 
-static PyObject *compress(PyObject* self, PyObject *args)
+static PyObject *compress(PyObject* self, PyObject *args, PyObject *kwds)
 {
     PyObject *result;
     const char *source;
@@ -146,7 +146,9 @@ static PyObject *compress(PyObject* self, PyObject *args)
     size_t cSize;
     int32_t level = ZSTD_CLEVEL_DEFAULT;
 
-    if (!PyArg_ParseTuple(args, CBUF"|i", &source, &source_size, &level))
+    static char *kwlist[] = {"data", "level", NULL};
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, CBUF"|i:compress", kwlist,
+                                     &source, &source_size, &level))
         return NULL;
 
     if (0 == level) level=ZSTD_CLEVEL_DEFAULT;
@@ -196,7 +198,7 @@ PyDoc_STRVAR(decompress_doc,
     "Decompress data and return the uncompressed form.\n"
     "Raises a zstd.Error exception if any error occurs.");
 
-static PyObject *decompress(PyObject* self, PyObject *args)
+static PyObject *decompress(PyObject* self, PyObject *args, PyObject *kwds)
 {
     PyObject    *result;
     const char  *source;
@@ -204,7 +206,9 @@ static PyObject *decompress(PyObject* self, PyObject *args)
     uint64_t    dest_size;
     size_t      cSize;
 
-    if (!PyArg_ParseTuple(args, CBUF, &source, &source_size))
+    static char *kwlist[] = {"data", NULL};
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, CBUF":decompress", kwlist,
+                                     &source, &source_size))
         return NULL;
 
     dest_size = (uint64_t) ZSTD_getDecompressedSize(source, source_size);
@@ -304,7 +308,7 @@ PyDoc_STRVAR(compress_old_doc,
     "the standard .zst file format.  Deprecated.\n\n"
     "Raises a zstd.Error exception if any error occurs.");
 
-static PyObject *compress_old(PyObject* self, PyObject *args)
+static PyObject *compress_old(PyObject* self, PyObject *args, PyObject *kwds)
 {
     PyObject *result;
     const char *source;
@@ -314,7 +318,9 @@ static PyObject *compress_old(PyObject* self, PyObject *args)
     size_t cSize;
     int32_t level = ZSTD_CLEVEL_DEFAULT;
 
-    if (!PyArg_ParseTuple(args, CBUF"|i", &source, &source_size, &level))
+    static char *kwlist[] = {"data", "level", NULL};
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, CBUF"|i:compress_old", kwlist,
+                                     &source, &source_size, &level))
         return NULL;
 
     /* This is old version function - no Error raising here. */
@@ -356,7 +362,7 @@ PyDoc_STRVAR(decompress_old_doc,
     "the standard .zst file format.  Deprecated.\n\n"
     "Raises a zstd.Error exception if any error occurs.");
 
-static PyObject *decompress_old(PyObject* self, PyObject *args)
+static PyObject *decompress_old(PyObject* self, PyObject *args, PyObject *kwds)
 {
     PyObject *result;
     const char *source;
@@ -364,7 +370,9 @@ static PyObject *decompress_old(PyObject* self, PyObject *args)
     uint32_t dest_size;
     size_t cSize;
 
-    if (!PyArg_ParseTuple(args, CBUF, &source, &source_size))
+    static char *kwlist[] = {"data", NULL};
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, CBUF":decompress_old", kwlist,
+                                     &source, &source_size))
         return NULL;
 
     if (source_size < hdr_size) {
@@ -407,16 +415,20 @@ static PyObject *decompress_old(PyObject* self, PyObject *args)
 #endif // PYZSTD_LEGACY > 0
 
 static PyMethodDef ZstdMethods[] = {
-    {"compress", compress, METH_VARARGS, compress_doc},
-    {"decompress", decompress, METH_VARARGS, decompress_doc},
+    {"compress", (PyCFunction)compress, METH_VARARGS|METH_KEYWORDS,
+     compress_doc},
+    {"decompress", (PyCFunction)decompress, METH_VARARGS|METH_KEYWORDS,
+     decompress_doc},
     {"version", (PyCFunction)version, METH_NOARGS, version_doc},
     {"library_version", (PyCFunction)library_version, METH_NOARGS,
      library_version_doc},
     {"library_version_number", (PyCFunction)library_version_number,
      METH_NOARGS, library_version_number_doc},
 #if defined PYZSTD_LEGACY && PYZSTD_LEGACY > 0
-    {"compress_old", compress_old, METH_VARARGS, compress_old_doc},
-    {"decompress_old", decompress_old, METH_VARARGS, decompress_old_doc},
+    {"compress_old", (PyCFunction)compress_old, METH_VARARGS|METH_KEYWORDS,
+     compress_old_doc},
+    {"decompress_old", (PyCFunction)decompress_old, METH_VARARGS|METH_KEYWORDS,
+     decompress_old_doc},
 #endif
     {NULL, NULL, 0, NULL}
 };
