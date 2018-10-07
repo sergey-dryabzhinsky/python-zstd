@@ -101,6 +101,24 @@ static PyObject *ZstdError;
 
 #endif
 
+/* Other Python 2/3 differences.  */
+#if PY_MAJOR_VERSION >= 3
+
+/* PyString_FromString is used in a few places where we specifically
+   want the "normal" string type: bytes for Py2, unicode for Py3.  */
+#define PlainString_FromString(s) PyUnicode_FromString(s)
+
+/* The argument-tuple code for a read-only character buffer changed in
+   Py3.  */
+#define CBUF "y#"
+
+#else
+
+#define PlainString_FromString(s) PyBytes_FromString(s)
+#define CBUF "t#"
+
+#endif
+
 /* For use in docstrings.  */
 #define S_(x) #x
 #define S(x) S_(x)
@@ -128,13 +146,8 @@ static PyObject *compress(PyObject* self, PyObject *args)
     size_t cSize;
     int32_t level = ZSTD_CLEVEL_DEFAULT;
 
-#if PY_MAJOR_VERSION >= 3
-    if (!PyArg_ParseTuple(args, "y#|i", &source, &source_size, &level))
+    if (!PyArg_ParseTuple(args, CBUF"|i", &source, &source_size, &level))
         return NULL;
-#else
-    if (!PyArg_ParseTuple(args, "s#|i", &source, &source_size, &level))
-        return NULL;
-#endif
 
     if (0 == level) level=ZSTD_CLEVEL_DEFAULT;
     /* Fast levels (zstd >= 1.3.4) - [-1..-5] */
@@ -191,13 +204,8 @@ static PyObject *decompress(PyObject* self, PyObject *args)
     uint64_t    dest_size;
     size_t      cSize;
 
-#if PY_MAJOR_VERSION >= 3
-    if (!PyArg_ParseTuple(args, "y#", &source, &source_size))
+    if (!PyArg_ParseTuple(args, CBUF, &source, &source_size))
         return NULL;
-#else
-    if (!PyArg_ParseTuple(args, "s#", &source, &source_size))
-        return NULL;
-#endif
 
     dest_size = (uint64_t) ZSTD_getDecompressedSize(source, source_size);
     if (dest_size == 0) {
@@ -237,11 +245,7 @@ PyDoc_STRVAR(version_doc,
 
 static PyObject *version(PyObject* self)
 {
-#if PY_MAJOR_VERSION >= 3
-    return PyUnicode_FromString(VERSION);
-#else
-    return PyString_FromString(VERSION);
-#endif
+    return PlainString_FromString(VERSION);
 }
 
 
@@ -252,11 +256,7 @@ PyDoc_STRVAR(library_version_doc,
 
 static PyObject *library_version(PyObject* self)
 {
-#if PY_MAJOR_VERSION >= 3
-    return PyUnicode_FromString(ZSTD_versionString());
-#else
-    return PyString_FromString(ZSTD_versionString());
-#endif
+    return PlainString_FromString(ZSTD_versionString());
 }
 
 
@@ -314,13 +314,8 @@ static PyObject *compress_old(PyObject* self, PyObject *args)
     size_t cSize;
     int32_t level = ZSTD_CLEVEL_DEFAULT;
 
-#if PY_MAJOR_VERSION >= 3
-    if (!PyArg_ParseTuple(args, "y#|i", &source, &source_size, &level))
+    if (!PyArg_ParseTuple(args, CBUF"|i", &source, &source_size, &level))
         return NULL;
-#else
-    if (!PyArg_ParseTuple(args, "s#|i", &source, &source_size, &level))
-        return NULL;
-#endif
 
     /* This is old version function - no Error raising here. */
     if (0 == level) level=ZSTD_CLEVEL_DEFAULT;
@@ -369,13 +364,8 @@ static PyObject *decompress_old(PyObject* self, PyObject *args)
     uint32_t dest_size;
     size_t cSize;
 
-#if PY_MAJOR_VERSION >= 3
-    if (!PyArg_ParseTuple(args, "y#", &source, &source_size))
+    if (!PyArg_ParseTuple(args, CBUF, &source, &source_size))
         return NULL;
-#else
-    if (!PyArg_ParseTuple(args, "s#", &source, &source_size))
-        return NULL;
-#endif
 
     if (source_size < hdr_size) {
         PyErr_SetString(ZstdError, "input too short");
