@@ -31,6 +31,7 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#define PY_SSIZE_T_CLEAN
 #include <Python.h>
 #include "zstd.h"
 
@@ -47,21 +48,6 @@
  * Portability headaches.
  */
 
-/* Python 2.x pyport.h will pull in stdint.h if it exists, but
-   3.x pyport.h won't.  */
-
-#if ((defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901L)   /* C99 */ \
-     || defined _MSC_VER && _MSC_VER >= 1600) /* MSVC w/o full C99 support */
-# include <stdint.h>
-#else
-typedef signed char       int8_t;
-typedef signed short      int16_t;
-typedef signed int        int32_t;
-typedef unsigned char     uint8_t;
-typedef unsigned short    uint16_t;
-typedef unsigned int      uint32_t;
-#endif
-
 /* Not all supported compilers understand the C99 'inline' keyword.  */
 
 #if !defined __STDC_VERSION__ || __STDC_VERSION < 199901L
@@ -73,7 +59,7 @@ typedef unsigned int      uint32_t;
 #endif
 
 #ifndef ZSTD_CLEVEL_MIN
-# define ZSTD_CLEVEL_MIN     -5
+# define ZSTD_CLEVEL_MIN -5
 #endif
 
 #ifndef ZSTD_CLEVEL_MAX
@@ -84,10 +70,10 @@ typedef unsigned int      uint32_t;
 # define ZSTD_CLEVEL_DEFAULT 3
 #endif
 
-/* Module data was added in Python 3.  */
-
+/* Python 2/3 differences.  */
 #if PY_MAJOR_VERSION >= 3
 
+/* Module data was added in Python 3.  */
 static struct PyModuleDef ZstdModuleDef;
 struct module_state {
     PyObject *error;
@@ -95,29 +81,37 @@ struct module_state {
 #define GETSTATE(m) ((struct module_state*)PyModule_GetState(m))
 #define ZstdError   (GETSTATE(PyState_FindModule(&ZstdModuleDef))->error)
 
+/* This is used in a few places where we specifically want the
+   "normal" string type: bytes for Py2, unicode for Py3.  */
+#define PlainString_FromString(s) PyUnicode_FromString(s)
+
 #else
 
 static PyObject *ZstdError;
+#define PlainString_FromString(s) PyString_FromString(s)
 
 #endif
 
-/* Other Python 2/3 differences.  */
-#if PY_MAJOR_VERSION >= 3
 
-/* PyString_FromString is used in a few places where we specifically
-   want the "normal" string type: bytes for Py2, unicode for Py3.  */
-#define PlainString_FromString(s) PyUnicode_FromString(s)
+/* This does what 3.x's "y*" argument tuple code would do, in a 2.x/3.x-
+   agnostic way.  Returns 0 on success, -1 on failure (in which case an
+   exception has been set).  As with "y*", caller is responsible for
+   calling PyBuffer_Release.  */
+static int
+obj_AsByteBuffer(PyObject *obj, Py_buffer *view)
+{
+    if (PyObject_GetBuffer(obj, view, PyBUF_SIMPLE) != 0) {
+        PyErr_SetString(PyExc_TypeError, "a bytes-like object is required");
+        return -1;
+    }
+    if (!PyBuffer_IsContiguous(view, 'C')) {
+        PyBuffer_Release(view);
+        PyErr_SetString(PyExc_TypeError, "a contiguous buffer is required");
+        return -1;
+    }
+    return 0;
+}
 
-/* The argument-tuple code for a read-only character buffer changed in
-   Py3.  */
-#define CBUF "y#"
-
-#else
-
-#define PlainString_FromString(s) PyBytes_FromString(s)
-#define CBUF "t#"
-
-#endif
 
 /* For use in docstrings.  */
 #define S_(x) #x
@@ -138,17 +132,17 @@ PyDoc_STRVAR(compress_doc,
 
 static PyObject *compress(PyObject* self, PyObject *args, PyObject *kwds)
 {
-    PyObject *result;
-    const char *source;
-    uint32_t source_size;
-    char *dest;
-    uint32_t dest_size;
-    size_t cSize;
-    int32_t level = ZSTD_CLEVEL_DEFAULT;
+    PyObject *src;
+    Py_buffer srcbuf;
+    PyObject *dst;
+    char *dst_ptr;
+    size_t dst_size;
+    size_t c_size;
+    int level = ZSTD_CLEVEL_DEFAULT;
 
     static char *kwlist[] = {"data", "level", NULL};
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, CBUF"|i:compress", kwlist,
-                                     &source, &source_size, &level))
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "O|i:compress", kwlist,
+                                     &src, &level))
         return NULL;
 
     if (0 == level) level=ZSTD_CLEVEL_DEFAULT;
@@ -167,28 +161,33 @@ static PyObject *compress(PyObject* self, PyObject *args, PyObject *kwds)
         return NULL;
     }
 
-    dest_size = ZSTD_compressBound(source_size);
-    result = PyBytes_FromStringAndSize(NULL, dest_size);
-    if (result == NULL) {
+    if (obj_AsByteBuffer(src, &srcbuf))
+        return NULL;
+
+    dst_size = ZSTD_compressBound(srcbuf.len);
+    dst = PyBytes_FromStringAndSize(NULL, dst_size);
+    if (dst == NULL) {
+        PyBuffer_Release(&srcbuf);
         return NULL;
     }
 
-    if (source_size > 0) {
-        dest = PyBytes_AS_STRING(result);
+    dst_ptr = PyBytes_AS_STRING(dst);
 
-        Py_BEGIN_ALLOW_THREADS;
-        cSize = ZSTD_compress(dest, dest_size, source, source_size, level);
-        Py_END_ALLOW_THREADS;
+    Py_BEGIN_ALLOW_THREADS;
+    c_size = ZSTD_compress(dst_ptr, dst_size, srcbuf.buf, srcbuf.len,
+                           level);
+    Py_END_ALLOW_THREADS;
 
-        if (ZSTD_isError(cSize)) {
-            PyErr_Format(ZstdError, "Compression error: %s",
-                         ZSTD_getErrorName(cSize));
-            Py_CLEAR(result);
-            return NULL;
-        }
-        _PyBytes_Resize(&result, cSize);
+    if (ZSTD_isError(c_size)) {
+        PyErr_Format(ZstdError, "Compression error: %s",
+                     ZSTD_getErrorName(c_size));
+        Py_CLEAR(dst);
+    } else {
+        _PyBytes_Resize(&dst, c_size);
     }
-    return result;
+
+    PyBuffer_Release(&srcbuf);
+    return dst;
 }
 
 
@@ -200,46 +199,66 @@ PyDoc_STRVAR(decompress_doc,
 
 static PyObject *decompress(PyObject* self, PyObject *args, PyObject *kwds)
 {
-    PyObject    *result;
-    const char  *source;
-    uint32_t    source_size;
-    uint64_t    dest_size;
-    size_t      cSize;
+    PyObject *src;
+    Py_buffer srcbuf;
+    PyObject *dst;
+    char *dst_ptr;
+    size_t dst_size;
+    size_t c_size;
+    unsigned long long raw_frame_size;
 
     static char *kwlist[] = {"data", NULL};
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, CBUF":decompress", kwlist,
-                                     &source, &source_size))
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "O:decompress", kwlist,
+                                     &src))
         return NULL;
 
-    dest_size = (uint64_t) ZSTD_getDecompressedSize(source, source_size);
-    if (dest_size == 0) {
-        PyErr_SetString(ZstdError,
-            "Input data invalid or missing content size in frame header.");
+    if (obj_AsByteBuffer(src, &srcbuf))
+        return NULL;
+
+    raw_frame_size = ZSTD_getFrameContentSize(srcbuf.buf, srcbuf.len);
+    if (raw_frame_size == ZSTD_CONTENTSIZE_ERROR) {
+        PyErr_SetString(ZstdError, "compressed data is invalid");
+        PyBuffer_Release(&srcbuf);
         return NULL;
     }
-    result = PyBytes_FromStringAndSize(NULL, dest_size);
+    if (raw_frame_size == ZSTD_CONTENTSIZE_UNKNOWN) {
+        PyErr_SetString(ZstdError,
+                        "decompress() cannot handle compressed data "
+                        "with unknown decompressed size");
+        PyBuffer_Release(&srcbuf);
+        return NULL;
+    }
+    if (raw_frame_size > (unsigned long long)PY_SSIZE_T_MAX) {
+        PyErr_SetString(ZstdError,
+                        "decompressed data is too large for a bytes object");
+        PyBuffer_Release(&srcbuf);
+        return NULL;
+    }
 
-    if (result != NULL) {
-        char *dest = PyBytes_AS_STRING(result);
+    dst_size = (size_t) raw_frame_size;
+    dst = PyBytes_FromStringAndSize(NULL, dst_size);
+
+    if (dst != NULL) {
+        dst_ptr = PyBytes_AS_STRING(dst);
 
         Py_BEGIN_ALLOW_THREADS;
-        cSize = ZSTD_decompress(dest, dest_size, source, source_size);
+        c_size = ZSTD_decompress(dst_ptr, dst_size, srcbuf.buf, srcbuf.len);
         Py_END_ALLOW_THREADS;
 
-        if (ZSTD_isError(cSize)) {
+        if (ZSTD_isError(c_size)) {
             PyErr_Format(ZstdError, "Decompression error: %s",
-                         ZSTD_getErrorName(cSize));
-            Py_CLEAR(result);
+                         ZSTD_getErrorName(c_size));
+            Py_CLEAR(dst);
 
-        } else if (cSize != dest_size) {
+        } else if (c_size != dst_size) {
             PyErr_Format(ZstdError, "Decompression error: length mismatch "
-                         "(expected %lu, got %lu bytes)",
-                         dest_size, (unsigned long)cSize);
-            Py_CLEAR(result);
-
+                         "(expected %zu, got %zu bytes)", dst_size, c_size);
+            Py_CLEAR(dst);
         }
     }
-    return result;
+
+    PyBuffer_Release(&srcbuf);
+    return dst;
 }
 
 PyDoc_STRVAR(version_doc,
@@ -285,19 +304,25 @@ static PyObject *library_version_number(PyObject* self)
  * Copyright (c) 2012-2013, Steeve Morin
  * All rights reserved. */
 
-static inline void store_le32(char *c, uint32_t x) {
-    c[0] = x & 0xff;
-    c[1] = (x >> 8) & 0xff;
+static const Py_ssize_t old_max_size = 0x7fffffff;
+static const size_t hdr_size = 4;
+
+static inline void store_le32(char *c, size_t x)
+{
+    c[0] = (x >>  0) & 0xff;
+    c[1] = (x >>  8) & 0xff;
     c[2] = (x >> 16) & 0xff;
     c[3] = (x >> 24) & 0xff;
 }
 
-static inline uint32_t load_le32(const char *c) {
-    const uint8_t *d = (const uint8_t *)c;
-    return d[0] | (d[1] << 8) | (d[2] << 16) | (d[3] << 24);
+static inline size_t load_le32(const char *c)
+{
+    return
+        (((size_t)(unsigned char) c[0]) <<  0) |
+        (((size_t)(unsigned char) c[1]) <<  8) |
+        (((size_t)(unsigned char) c[2]) << 16) |
+        (((size_t)(unsigned char) c[3]) << 24);
 }
-
-static const uint32_t hdr_size = sizeof(uint32_t);
 
 
 PyDoc_STRVAR(compress_old_doc,
@@ -310,17 +335,17 @@ PyDoc_STRVAR(compress_old_doc,
 
 static PyObject *compress_old(PyObject* self, PyObject *args, PyObject *kwds)
 {
-    PyObject *result;
-    const char *source;
-    uint32_t source_size;
-    char *dest;
-    uint32_t dest_size;
-    size_t cSize;
-    int32_t level = ZSTD_CLEVEL_DEFAULT;
+    PyObject *src;
+    Py_buffer srcbuf;
+    PyObject *dst;
+    char *dst_ptr;
+    size_t dst_size;
+    size_t c_size;
+    int level = ZSTD_CLEVEL_DEFAULT;
 
     static char *kwlist[] = {"data", "level", NULL};
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, CBUF"|i:compress_old", kwlist,
-                                     &source, &source_size, &level))
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "O|i:compress_old", kwlist,
+                                     &src, &level))
         return NULL;
 
     /* This is old version function - no Error raising here. */
@@ -328,30 +353,43 @@ static PyObject *compress_old(PyObject* self, PyObject *args, PyObject *kwds)
     if (level < ZSTD_CLEVEL_MIN) level=ZSTD_CLEVEL_MIN;
     if (level > ZSTD_CLEVEL_MAX) level=ZSTD_CLEVEL_MAX;
 
-    dest_size = ZSTD_compressBound(source_size);
-    result = PyBytes_FromStringAndSize(NULL, hdr_size + dest_size);
-    if (result == NULL) {
+    if (obj_AsByteBuffer(src, &srcbuf))
+        return NULL;
+
+    if (srcbuf.len > old_max_size) {
+        PyErr_Format(ZstdError, "input of %zd bytes is too large "
+                     "for old compressed format", srcbuf.len);
+        PyBuffer_Release(&srcbuf);
         return NULL;
     }
-    dest = PyBytes_AS_STRING(result);
 
-    store_le32(dest, source_size);
-    if (source_size > 0) {
+    dst_size = ZSTD_compressBound(srcbuf.len);
+    dst = PyBytes_FromStringAndSize(NULL, hdr_size + dst_size);
+    if (dst == NULL) {
+        PyBuffer_Release(&srcbuf);
+        return NULL;
+    }
+    dst_ptr = PyBytes_AS_STRING(dst);
+
+    store_le32(dst_ptr, srcbuf.len);
+    if (srcbuf.len > 0) {
 
         Py_BEGIN_ALLOW_THREADS;
-        cSize = ZSTD_compress(dest + hdr_size, dest_size, source,
-                              source_size, level);
+        c_size = ZSTD_compress(dst_ptr + hdr_size, dst_size,
+                               srcbuf.buf, srcbuf.len, level);
         Py_END_ALLOW_THREADS;
 
-        if (ZSTD_isError(cSize)) {
+        if (ZSTD_isError(c_size)) {
             PyErr_Format(ZstdError, "Compression error: %s",
-                         ZSTD_getErrorName(cSize));
-            Py_CLEAR(result);
+                         ZSTD_getErrorName(c_size));
+            Py_CLEAR(dst);
         } else {
-            _PyBytes_Resize(&result, cSize + hdr_size);
+            _PyBytes_Resize(&dst, c_size + hdr_size);
         }
     }
-    return result;
+
+    PyBuffer_Release(&srcbuf);
+    return dst;
 }
 
 PyDoc_STRVAR(decompress_old_doc,
@@ -364,52 +402,60 @@ PyDoc_STRVAR(decompress_old_doc,
 
 static PyObject *decompress_old(PyObject* self, PyObject *args, PyObject *kwds)
 {
-    PyObject *result;
-    const char *source;
-    uint32_t source_size;
-    uint32_t dest_size;
-    size_t cSize;
+    PyObject *src;
+    Py_buffer srcbuf;
+    PyObject *dst;
+    char *dst_ptr;
+    size_t dst_size;
+    size_t c_size;
 
     static char *kwlist[] = {"data", NULL};
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, CBUF":decompress_old", kwlist,
-                                     &source, &source_size))
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "O:decompress_old", kwlist,
+                                     &src))
         return NULL;
 
-    if (source_size < hdr_size) {
+    if (obj_AsByteBuffer(src, &srcbuf))
+        return NULL;
+
+    if (srcbuf.len < hdr_size) {
         PyErr_SetString(ZstdError, "input too short");
+        PyBuffer_Release(&srcbuf);
         return NULL;
     }
-    dest_size = load_le32(source);
-    if (dest_size > INT_MAX) {
-        PyErr_Format(ZstdError, "invalid size in header: 0x%x",
-                     dest_size);
-        return NULL;
-    }
-    result = PyBytes_FromStringAndSize(NULL, dest_size);
+    dst_size = load_le32(srcbuf.buf);
 
-    if (result != NULL && dest_size > 0) {
-        char *dest = PyBytes_AS_STRING(result);
+    if (dst_size > old_max_size) {
+        PyErr_Format(ZstdError, "invalid size in header: %zu (too large)",
+                     dst_size);
+        PyBuffer_Release(&srcbuf);
+        return NULL;
+    }
+    dst = PyBytes_FromStringAndSize(NULL, dst_size);
+
+    if (dst != NULL && dst_size > 0) {
+        dst_ptr = PyBytes_AS_STRING(dst);
 
         Py_BEGIN_ALLOW_THREADS;
-        cSize = ZSTD_decompress(dest, dest_size, source + hdr_size,
-                                source_size - hdr_size);
+        c_size = ZSTD_decompress(dst_ptr, dst_size,
+                                 srcbuf.buf + hdr_size, srcbuf.len - hdr_size);
         Py_END_ALLOW_THREADS;
 
-        if (ZSTD_isError(cSize)) {
+        if (ZSTD_isError(c_size)) {
             PyErr_Format(ZstdError, "Decompression error: %s",
-                         ZSTD_getErrorName(cSize));
-            Py_CLEAR(result);
+                         ZSTD_getErrorName(c_size));
+            Py_CLEAR(dst);
 
-        } else if (cSize != dest_size) {
+        } else if (c_size != dst_size) {
             PyErr_Format(ZstdError, "Decompression error: length mismatch "
-                         "(expected %lu, got %lu bytes)",
-                         dest_size, (unsigned long)cSize);
-            Py_CLEAR(result);
+                         "(expected %zu, got %zu bytes)",
+                         dst_size, c_size);
+            Py_CLEAR(dst);
 
         }
     }
 
-    return result;
+    PyBuffer_Release(&srcbuf);
+    return dst;
 }
 
 #endif // PYZSTD_LEGACY > 0
