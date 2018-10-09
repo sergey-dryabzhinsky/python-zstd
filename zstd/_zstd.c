@@ -292,9 +292,9 @@ PyDoc_STRVAR(library_version_number_doc,
 static PyObject *library_version_number(PyObject* self)
 {
 #if PY_MAJOR_VERSION >= 3
-    return PyLong_FromLong(ZSTD_VERSION_NUMBER);
+    return PyLong_FromLong(ZSTD_versionNumber());
 #else
-    return PyInt_FromLong(ZSTD_VERSION_NUMBER);
+    return PyInt_FromLong(ZSTD_versionNumber());
 #endif
 }
 
