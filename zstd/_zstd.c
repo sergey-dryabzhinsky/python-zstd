@@ -261,21 +261,13 @@ static PyObject *decompress(PyObject* self, PyObject *args, PyObject *kwds)
     return dst;
 }
 
-PyDoc_STRVAR(version_doc,
-    "version()\n"
-    "--\n\n"
-    "Return the version of the Python bindings as a string.");
-
-static PyObject *version(PyObject* self)
-{
-    return PlainString_FromString(VERSION);
-}
-
-
 PyDoc_STRVAR(library_version_doc,
     "library_version()\n"
     "--\n\n"
-    "Return the version of the zstd library as a string.");
+    "Return the version of the zstd library as a string.\n"
+    "The value returned will be different from the LIBRARY_VERSION\n"
+    "constant when the library in use at runtime is a different version\n"
+    "from the library this module was compiled against.");
 
 static PyObject *library_version(PyObject* self)
 {
@@ -287,7 +279,10 @@ PyDoc_STRVAR(library_version_number_doc,
     "library_version_number()\n"
     "--\n\n"
     "Return the version of the zstd library as a number.\n"
-    "The format of the number is: major*100*100 + minor*100 + release.\n");
+    "The format of the number is: major*100*100 + minor*100 + release.\n"
+    "The value returned will be different from the LIBRARY_VERSION_NUMBER\n"
+    "constant when the library in use at runtime is a different version\n"
+    "from the library this module was compiled against.");
 
 static PyObject *library_version_number(PyObject* self)
 {
@@ -460,12 +455,23 @@ static PyObject *decompress_old(PyObject* self, PyObject *args, PyObject *kwds)
 
 #endif // PYZSTD_LEGACY > 0
 
+static void zstd_add_constants(PyObject *module)
+{
+    PyModule_AddStringConstant(module, "VERSION", VERSION);
+    PyModule_AddStringConstant(module, "LIBRARY_VERSION", ZSTD_VERSION_STRING);
+    PyModule_AddIntConstant(module, "LIBRARY_VERSION_NUMBER",
+                            ZSTD_VERSION_NUMBER);
+
+    PyModule_AddIntConstant(module, "CLEVEL_MIN", ZSTD_CLEVEL_MIN);
+    PyModule_AddIntConstant(module, "CLEVEL_MAX", ZSTD_CLEVEL_MAX);
+    PyModule_AddIntConstant(module, "CLEVEL_DEFAULT", ZSTD_CLEVEL_DEFAULT);
+}
+
 static PyMethodDef ZstdMethods[] = {
     {"compress", (PyCFunction)compress, METH_VARARGS|METH_KEYWORDS,
      compress_doc},
     {"decompress", (PyCFunction)decompress, METH_VARARGS|METH_KEYWORDS,
      decompress_doc},
-    {"version", (PyCFunction)version, METH_NOARGS, version_doc},
     {"library_version", (PyCFunction)library_version, METH_NOARGS,
      library_version_doc},
     {"library_version_number", (PyCFunction)library_version_number,
@@ -478,6 +484,10 @@ static PyMethodDef ZstdMethods[] = {
 #endif
     {NULL, NULL, 0, NULL}
 };
+
+PyDoc_STRVAR(zstd_module_doc,
+    "C extension wrapping libzstd.  Not meant to be used directly;\n"
+    "use the parent module instead.");
 
 #if PY_MAJOR_VERSION >= 3
 
@@ -492,10 +502,6 @@ static int zstd_clear(PyObject *m)
     Py_CLEAR(GETSTATE(m)->error);
     return 0;
 }
-
-PyDoc_STRVAR(zstd_module_doc,
-    "C extension wrapping libzstd.  Not meant to be used directly;\n"
-    "use the parent module instead.");
 
 static struct PyModuleDef ZstdModuleDef = {
         PyModuleDef_HEAD_INIT,
@@ -512,9 +518,8 @@ static struct PyModuleDef ZstdModuleDef = {
 PyMODINIT_FUNC PyInit__zstd(void)
 {
     PyObject *module = PyModule_Create(&ZstdModuleDef);
-    if (module == NULL) {
+    if (module == NULL)
         return NULL;
-    }
 
     PyDoc_STRVAR(zstd_error_doc,
                  "Zstd compression or decompression error.");
@@ -529,6 +534,7 @@ PyMODINIT_FUNC PyInit__zstd(void)
     Py_INCREF(zstd_error);
     PyModule_AddObject(module, "Error", zstd_error);
 
+    zstd_add_constants(module);
     return module;
 }
 
@@ -536,10 +542,10 @@ PyMODINIT_FUNC PyInit__zstd(void)
 
 PyMODINIT_FUNC init_zstd(void)
 {
-    PyObject *module = Py_InitModule("_zstd", ZstdMethods);
-    if (module == NULL) {
+    PyObject *module = Py_InitModule3("_zstd", ZstdMethods,
+                                      zstd_module_doc);
+    if (module == NULL)
         return;
-    }
 
     ZstdError = PyErr_NewException("_zstd.Error", NULL, NULL);
     if (ZstdError == NULL) {
@@ -548,6 +554,8 @@ PyMODINIT_FUNC init_zstd(void)
     }
     Py_INCREF(ZstdError);
     PyModule_AddObject(module, "Error", ZstdError);
+
+    zstd_add_constants(module);
 }
 
 #endif

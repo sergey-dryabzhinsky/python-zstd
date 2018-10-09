@@ -32,6 +32,33 @@
 """
 The functions in this module allow compression and decompression using
 the zstandard library.
+
+.. data:: VERSION
+
+    Version of the Python bindings, as a string.
+
+.. data:: LIBRARY_VERSION
+
+    Version of the zstd library that this module was compiled against,
+    as a string.
+
+.. data:: LIBRARY_VERSION_NUMBER
+
+    Version of the zstd library that this module was compiled against,
+    as a number.
+    The format of the number is: major*100*100 + minor*100 + release.
+
+.. data:: CLEVEL_MIN
+
+    Minimum compression level.
+
+.. data:: CLEVEL_MAX
+
+    Maximum compression level.
+
+.. data:: CLEVEL_DEFAULT
+
+    Default compression level.
 """
 
 from __future__ import absolute_import
@@ -41,14 +68,23 @@ from . import _zstd
 compress = _zstd.compress
 decompress = _zstd.decompress
 
-version = _zstd.version
 library_version = _zstd.library_version
 library_version_number = _zstd.library_version_number
 
 Error = _zstd.Error
 
+VERSION = _zstd.VERSION
+LIBRARY_VERSION = _zstd.LIBRARY_VERSION
+LIBRARY_VERSION_NUMBER = _zstd.LIBRARY_VERSION_NUMBER
+
+CLEVEL_MIN = _zstd.CLEVEL_MIN
+CLEVEL_MAX = _zstd.CLEVEL_MAX
+CLEVEL_DEFAULT = _zstd.CLEVEL_DEFAULT
+
 __all__ = [ "compress", "decompress",
-            "version", "library_version", "library_version_number",
+            "library_version", "library_version_number",
+            "VERSION", "LIBRARY_VERSION", "LIBRARY_VERSION_NUMBER",
+            "CLEVEL_MIN", "CLEVEL_MAX", "CLEVEL_DEFAULT",
             "Error" ]
 
 # alternative names for compatibility
@@ -79,6 +115,11 @@ def loads(data):
     _warn_deprecated_alt("loads", "decompress")
     return decompress(data)
 
+def version():
+    "Deprecated alternative way to access the VERSION constant."
+    _warn_deprecated_alt("version()", "VERSION")
+    return VERSION
+
 def ZSTD_version():
     "Deprecated alternative name for library_version"
     _warn_deprecated_alt("ZSTD_version", "library_version")
@@ -91,7 +132,7 @@ def ZSTD_version_number():
 
 __all__.extend([ "ZSTD_compress", "dumps",
                  "ZSTD_uncompress", "uncompress", "loads",
-                 "ZSTD_version", "ZSTD_version_number" ])
+                 "version", "ZSTD_version", "ZSTD_version_number" ])
 
 
 if hasattr(_zstd, "compress_old"):
