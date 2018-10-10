@@ -1,32 +1,32 @@
 # Tests
 
 import os
+import zstd
 
 from tests.base import BaseTestZSTD
 
-class TestZSTD(BaseTestZSTD):
-
-    def setUp(self):
-        if os.getenv("ZSTD_EXTERNAL"):
-            self.ZSTD_EXTERNAL = True
-        self.VERSION = os.getenv("VERSION")
-        self.PKG_VERSION = os.getenv("PKG_VERSION")
-        v = [int(n) for n in self.VERSION.split(".")]
-        v = sorted(v, reverse=True)
-        self.VERSION_INT = 0
-        i = 0
-        for n in v:
-            self.VERSION_INT += n * 100**i
-            i += 1
+class TestVersions(BaseTestZSTD):
 
     def test_module_version(self):
-        BaseTestZSTD.helper_version(self)
+        self.assertEqual(self.PKG_VERSION, zstd.version())
 
     def test_library_version(self):
-        BaseTestZSTD.helper_zstd_version(self)
+        if self.ZSTD_EXTERNAL:
+            self.skipTest("PyZstd was build with external version of "
+                          "ZSTD library (%s). It can be any version. Almost."
+                          % zstd.library_version())
+
+        self.assertEqual(self.VERSION, zstd.library_version())
 
     def test_library_version_number(self):
-        BaseTestZSTD.helper_zstd_version_number(self)
+        if self.ZSTD_EXTERNAL:
+            # Python 2.6 unittest missing assertLessEqual
+            self.assertFalse(self.VERSION_INT_MIN >
+                             zstd.library_version_number(),
+                             msg="PyZstd %s require external library "
+                             "version >= 1.0.0!" % zstd.version())
+        else:
+            self.assertEqual(self.VERSION_INT, zstd.library_version_number())
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
