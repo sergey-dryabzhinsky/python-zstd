@@ -56,7 +56,6 @@ class BaseTestZSTD(BaseTestCase):
 
     ZSTD_EXTERNAL = False
     LEGACY = False
-    PYZSTD_LEGACY = False
     VERSION = ""
     VERSION_INT = 0
     VERSION_INT_MIN = 1 * 100*100 + 0 * 100 + 0
@@ -65,8 +64,6 @@ class BaseTestZSTD(BaseTestCase):
     def setUp(self):
         if os.getenv("LEGACY"):
             self.LEGACY = True
-        if os.getenv("PYZSTD_LEGACY"):
-            self.PYZSTD_LEGACY = True
         if os.getenv("ZSTD_EXTERNAL"):
             self.ZSTD_EXTERNAL = True
 

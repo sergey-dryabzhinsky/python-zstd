@@ -1,10 +1,16 @@
 # -*- encoding: utf-8 -*-
 # Tests
 
+import hashlib
 import os
+import struct
 import sys
+import warnings
+
 import zstd
 from tests.base import BaseTestZSTD
+
+# Test data.
 
 # Compatibility notes:
 # Explicit Unicode literals (u"") are available starting in Python 2.0.
@@ -41,6 +47,104 @@ tDATA2 = (
     u"AAAAAAAAAAARGGHHH!!! Just hope its enough length. И немного юникода."
 ).encode("utf-8")
 
+# 128kB of random data, which presumably won't compress very well.
+# Take care to read only a few bytes from the OS-level secure RNG.
+def gen_random_bytes(length):
+    m = hashlib.sha256()
+    n, r = divmod(length, m.digest_size)
+    out = []
+    enc = struct.Struct("<l")
+    m.update(os.urandom(16))
+    for i in range(n):
+        m.update(enc.pack(i))
+        out.append(m.digest())
+
+    m.update(enc.pack(0))
+    out.append(m.digest()[:r])
+    return b"".join(out)
+
+tDATA3 = gen_random_bytes(128 * 1024)
+
+# Synthesize round-trip tests (compress, decompress, result should equal
+# original) for the above test strings at all supported compression levels.
+def make_compression_roundtrip_tests():
+    tdict = {}
+    for i, dname in enumerate(["tDATA1", "tDATA2", "tDATA3"]):
+        for level in range(zstd.CLEVEL_MIN, zstd.CLEVEL_MAX + 1):
+            fname = "test_roundtrip_%02d_%02d" % (i, level)
+            fname = fname.replace("-", "m")
+            data = globals()[dname]
+            def test_one(self, data=data, level=level, dname=dname):
+                self.assertEqual(
+                    data, zstd.decompress(zstd.compress(data, level)))
+            test_one.__name__ = fname
+            tdict[fname] = test_one
+    return tdict
+
+CompressionRoundTrip = type("CompressionRoundTrip", (BaseTestZSTD,),
+                            make_compression_roundtrip_tests())
+
+###
+# Compression either without a "level" argument or with zero supplied
+# for that argument is supposed to produce the same compressed blob as
+# compression with level zstd.CLEVEL_DEFAULT.  We repeat this test with
+# all three test strings, as above.
+
+def make_compression_default_tests():
+    tdict = {}
+    for i, dname in enumerate(["tDATA1", "tDATA2", "tDATA3"]):
+        data = globals()[dname]
+
+        fname = "test_no_level_%02d" % i
+        def test_no_level(self, data=data):
+            cdata1 = zstd.compress(data)
+            cdata2 = zstd.compress(data, level=zstd.CLEVEL_DEFAULT)
+            self.assertEqual(cdata1, cdata2)
+        test_no_level.__name__ = fname
+        tdict[fname] = test_no_level
+
+        fname = "test_zero_level_%02d" % i
+        def test_zero_level(self, data=data):
+            cdata1 = zstd.compress(data, level=0)
+            cdata2 = zstd.compress(data, level=zstd.CLEVEL_DEFAULT)
+            self.assertEqual(cdata1, cdata2)
+        test_zero_level.__name__ = fname
+        tdict[fname] = test_zero_level
+
+    return tdict
+
+CompressionDefaults = type("CompressionDefaults", (BaseTestZSTD,),
+                           make_compression_default_tests())
+
+
+###
+# Tests of error handling.
+#
+class CompressionErrors(BaseTestZSTD):
+    def test_level_too_high(self):
+        self.assertRaises(zstd.Error, zstd.compress, tDATA1,
+                          zstd.CLEVEL_MAX + 1)
+
+    def test_level_too_low(self):
+        self.assertRaises(zstd.Error, zstd.compress, tDATA1,
+                          zstd.CLEVEL_MIN - 1)
+
+    def test_level_not_a_number(self):
+        self.assertRaises(TypeError, zstd.compress, tDATA1,
+                          "CLEVEL_DEFAULT")
+
+    def test_decompress_nothing(self):
+        self.assertRaises(zstd.Error, zstd.decompress, b"")
+
+    def test_decompress_truncated(self):
+        CDATA = zstd.compress(tDATA1)
+        for i in range(1, len(CDATA)):
+            self.assertRaises(zstd.Error, zstd.decompress, CDATA[:i])
+
+
+###
+# Tests of the legacy compression format.
+#
 # legacy compression format produced by pyzstd 0.3.6
 tDATA_036 = (
     u"This is must be very very long string to be compressed by zstd "
@@ -75,68 +179,49 @@ CDATA_046 = (
     b"\x18Th\x00l$@\xc5\x11\x0c*\xc0\x00\x00"
 )
 
-class TestZSTD(BaseTestZSTD):
 
-    def test_compression_random(self):
-        DATA = os.urandom(128 * 1024)  # Read 128kb
-        self.assertEqual(DATA, zstd.decompress(zstd.compress(DATA)))
+class TestCompressionLegacy(BaseTestZSTD):
 
-    def test_compression_default_level(self):
-        CDATA = zstd.compress(tDATA1)
-        self.assertEqual(tDATA1, zstd.decompress(CDATA))
+    def test_compression_old_roundtrip(self):
+        if not hasattr(zstd, "compress_old"):
+            self.skipTest("legacy compression functions not available")
 
-    def test_compression_default_level_zero(self):
-        CDATA = zstd.compress(tDATA1)
-        self.assertEqual(CDATA, zstd.compress(tDATA1, 0))
+        self.assertTrue(hasattr(zstd, "decompress_old"))
 
-    def test_compression_default_level_default(self):
-        CDATA = zstd.compress(tDATA1)
-        self.assertEqual(CDATA, zstd.compress(tDATA1, 3))
+        # As well as the round-trip test, check both functions produce
+        # deprecation warnings.
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            self.assertEqual(
+                tDATA2, zstd.decompress_old(zstd.compress_old(tDATA2)))
 
-    def test_compression_negative_level(self):
-        if zstd.library_version_number() < 10304:
-            self.skipTest("PyZstd was build with old version of ZSTD "
-                          "library (%s) without support of negative "
-                          "compression levels." % zstd.library_version())
+            self.assertEqual(len(w), 2)
+            self.assertTrue(issubclass(w[0].category, DeprecationWarning))
+            self.assertTrue("compress_old produces" in str(w[0].message))
+            self.assertTrue(issubclass(w[1].category, DeprecationWarning))
+            self.assertTrue("decompress_old expects" in str(w[1].message))
 
-        CDATA = zstd.compress(tDATA1, -1)
-        self.assertEqual(tDATA1, zstd.decompress(CDATA))
-
-    def test_compression_negative_level_notdefault(self):
-        if zstd.library_version_number() < 10304:
-            self.skipTest("PyZstd was build with old version of ZSTD "
-                          "library (%s) without support of negative "
-                          "compression levels." % zstd.library_version())
-
-        CDATA = zstd.compress(tDATA1, -1)
-        self.assertNotEqual(CDATA, zstd.compress(tDATA1, 0))
-
-    def test_compression_wrong_level(self):
-        self.assertRaises(zstd.Error, zstd.compress, tDATA1, 100)
-
-    def test_compression_level1(self):
-        self.assertEqual(tDATA2, zstd.decompress(zstd.compress(tDATA2, 1)))
-
-    def test_compression_level6(self):
-        self.assertEqual(tDATA2, zstd.decompress(zstd.compress(tDATA2, 6)))
-
-    def test_compression_level20(self):
-        self.assertEqual(tDATA2, zstd.decompress(zstd.compress(tDATA2, 20)))
-
-    def test_compression_old_default_level(self):
-        if not self.PYZSTD_LEGACY:
-            self.skipTest("PyZstd was build without legacy functions support")
-
-        self.assertEqual(tDATA2, zstd.decompress_old(zstd.compress_old(tDATA2)))
 
     def test_decompression_v036(self):
-        if not self.LEGACY or not self.PYZSTD_LEGACY:
-            self.skipTest("PyZstd was build without legacy zstd format "
-                          "and functions support")
-        self.assertEqual(tDATA_036, zstd.decompress_old(CDATA_036))
+        if not hasattr(zstd, "compress_old"):
+            self.skipTest("legacy compression functions not available")
+        if not self.LEGACY:
+            self.skipTest("legacy format support not available")
+
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            self.assertEqual(tDATA_036, zstd.decompress_old(CDATA_036))
 
     def test_decompression_v046(self):
-        if not self.LEGACY or not self.PYZSTD_LEGACY:
-            self.skipTest("PyZstd was build without legacy zstd format "
-                          "and functions support")
-        self.assertEqual(tDATA_046, zstd.decompress_old(CDATA_046))
+        if not hasattr(zstd, "compress_old"):
+            self.skipTest("legacy compression functions not available")
+        if not self.LEGACY:
+            self.skipTest("legacy format support not available")
+
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            self.assertEqual(tDATA_046, zstd.decompress_old(CDATA_046))
+
+    def test_new_decompress_rejects_old_format(self):
+        self.assertRaises(zstd.Error, zstd.decompress, CDATA_036)
+        self.assertRaises(zstd.Error, zstd.decompress, CDATA_046)
