@@ -1,3 +1,3 @@
 [submodule "zstd"]
-	path = zstd
+	path = libzstd
 	url = https://github.com/facebook/zstd.git
