@@ -5,7 +5,6 @@ import hashlib
 import os
 import struct
 import sys
-import warnings
 
 import zstd
 from tests.base import BaseTestZSTD
@@ -278,16 +277,12 @@ class CompressionFormats(BaseTestZSTD):
 
         # As well as the round-trip test, check both functions produce
         # deprecation warnings.
-        with warnings.catch_warnings(record=True) as w:
-            warnings.simplefilter("always")
-            self.assertEqual(
-                tDATA2, zstd.decompress_old(zstd.compress_old(tDATA2)))
+        with self._testingDeprecated("compress_old"):
+            cDATA = zstd.compress_old(tDATA2)
+        with self._testingDeprecated("decompress_old"):
+            uDATA = zstd.decompress_old(cDATA)
 
-            self.assertEqual(len(w), 2)
-            self.assertTrue(issubclass(w[0].category, DeprecationWarning))
-            self.assertTrue("compress_old produces" in str(w[0].message))
-            self.assertTrue(issubclass(w[1].category, DeprecationWarning))
-            self.assertTrue("decompress_old expects" in str(w[1].message))
+        self.assertEqual(uDATA, tDATA2)
 
 
     def test_decompress_v036(self):
@@ -296,8 +291,7 @@ class CompressionFormats(BaseTestZSTD):
         if not self.LEGACY:
             self.skipTest("legacy format support not available")
 
-        with warnings.catch_warnings():
-            warnings.simplefilter("ignore")
+        with self._testingDeprecated("decompress_old"):
             self.assertEqual(tDATA_036, zstd.decompress_old(CDATA_036))
 
     def test_decompress_v046(self):
@@ -306,6 +300,5 @@ class CompressionFormats(BaseTestZSTD):
         if not self.LEGACY:
             self.skipTest("legacy format support not available")
 
-        with warnings.catch_warnings():
-            warnings.simplefilter("ignore")
+        with self._testingDeprecated("decompress_old"):
             self.assertEqual(tDATA_046, zstd.decompress_old(CDATA_046))
