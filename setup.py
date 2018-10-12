@@ -176,11 +176,15 @@ def my_test_suite():
     ))
 
 if __name__ == '__main__':
+    with open("README.rst", "r") as readme:
+        long_description = readme.read()
+
     setup(
         name="zstd",
         version=PKG_VERSION_STR,
-        description="ZSTD Bindings for Python",
-        long_description=open("README.rst", "r").read(),
+        description=("Simple python bindings for Yann Collet's "
+                     "Zstandard compression library"),
+        long_description=long_description,
         author="Sergey Dryabzhinsky, Anton Stuk",
         author_email="sergey.dryabzhinsky@gmail.com",
         maintainer="Sergey Dryabzhinsky",
