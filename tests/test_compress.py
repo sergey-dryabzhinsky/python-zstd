@@ -116,6 +116,23 @@ def make_compression_default_tests():
 CompressionDefaults = type("CompressionDefaults", (BaseTestZSTD,),
                            make_compression_default_tests())
 
+###
+# Tests of constants.
+#
+class CompressionConstants(BaseTestZSTD):
+    def test_constant_types(self):
+        self.assertTrue(isinstance(zstd.CLEVEL_MIN, int))
+        self.assertTrue(isinstance(zstd.CLEVEL_MAX, int))
+        self.assertTrue(isinstance(zstd.CLEVEL_DEFAULT, int))
+
+    def test_constant_relations(self):
+        self.assertTrue(zstd.CLEVEL_MIN < zstd.CLEVEL_MAX)
+        self.assertTrue(zstd.CLEVEL_MIN < zstd.CLEVEL_DEFAULT)
+        self.assertTrue(zstd.CLEVEL_DEFAULT < zstd.CLEVEL_MAX)
+
+        self.assertTrue(zstd.CLEVEL_MIN < 0)
+        self.assertTrue(zstd.CLEVEL_MAX > 0)
+        self.assertTrue(zstd.CLEVEL_DEFAULT != 0)
 
 ###
 # Tests of error handling.
