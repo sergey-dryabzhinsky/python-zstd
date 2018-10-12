@@ -457,7 +457,7 @@ static PyObject *decompress_old(PyObject* self, PyObject *args, PyObject *kwds)
 
 static void zstd_add_constants(PyObject *module)
 {
-    PyModule_AddStringConstant(module, "VERSION", VERSION);
+    PyModule_AddStringConstant(module, "VERSION", PKG_VERSION_STR);
     PyModule_AddStringConstant(module, "LIBRARY_VERSION", ZSTD_VERSION_STRING);
     PyModule_AddIntConstant(module, "LIBRARY_VERSION_NUMBER",
                             ZSTD_VERSION_NUMBER);

@@ -137,12 +137,6 @@ else:
 
 class BaseTestZSTD(TestCaseWithWarns):
 
-    LEGACY = False
-
-    def setUp(self):
-        if os.getenv("LEGACY"):
-            self.LEGACY = True
-
     # Shorthand.  Use as: with self._testingDeprecated("THING"): ...
     def _testingDeprecated(self, name):
         return self.assertWarnsRegex(DeprecationWarning,
