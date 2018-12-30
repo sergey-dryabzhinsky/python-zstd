@@ -8,13 +8,13 @@ from setuptools import setup, find_packages, Extension
 from setuptools.command.build_ext import build_ext
 
 # ZSTD version
-VERSION = (1, 3, 5,)
+VERSION = (1, 3, 8,)
 VERSION_STR = ".".join([str(x) for x in VERSION])
 
 # Package version
 PKG_VERSION = VERSION
 # Minor versions
-PKG_VERSION += ("1",)
+PKG_VERSION += ("0",)
 PKG_VERSION_STR = ".".join([str(x) for x in PKG_VERSION])
 
 ###
@@ -61,21 +61,21 @@ if "--external" in sys.argv:
 
 
 COPT = {
-    'msvc':     [ '/Ox', '/DVERSION=\"\\\"%s\\\"\"' % PKG_VERSION_STR ],
-    'mingw32':  [ '-O2', '-DVERSION="%s"' % PKG_VERSION_STR ],
-    'unix':     [ '-O2', '-DVERSION="%s"' % PKG_VERSION_STR],
-    'clang':    [ '-O2', '-DVERSION="%s"' % PKG_VERSION_STR],
-    'gcc':      [ '-O2', '-DVERSION="%s"' % PKG_VERSION_STR]
+    'msvc':     [ '/Ox', '/DVERSION=\"\\\"%s\\\"\"' % PKG_VERSION_STR, ],
+    'mingw32':  [ '-O2', '-DVERSION="%s"' % PKG_VERSION_STR, ],
+    'unix':     [ '-O2', '-DVERSION="%s"' % PKG_VERSION_STR, ],
+    'clang':    [ '-O2', '-DVERSION="%s"' % PKG_VERSION_STR, ],
+    'gcc':      [ '-O2', '-DVERSION="%s"' % PKG_VERSION_STR, ]
 }
 
 if not SUP_EXTERNAL:
     for comp in COPT:
         if comp == 'msvc':
-            COPT[comp].extend([
+            COPT[comp].extend([ '/DZSTD_MULTITHREAD=1',
                 '/Izstd\\lib', '/Izstd\\lib\\common', '/Izstd\\lib\\compress', '/Izstd\\lib\\decompress',
             ])
         else:
-            COPT[comp].extend([
+            COPT[comp].extend([ '-DZSTD_MULTITHREAD=1',
                 '-Izstd/lib', '-Izstd/lib/common', '-Izstd/lib/compress', '-Izstd/lib/decompress',
             ])
 
@@ -113,9 +113,15 @@ if not SUP_EXTERNAL:
             'compress/fse_compress.c', 'compress/huf_compress.c',
             'compress/hist.c',
 
-            'decompress/zstd_decompress.c', 'common/fse_decompress.c', 'decompress/huf_decompress.c',
+            'common/fse_decompress.c',
+            'decompress/zstd_decompress.c',
+            'decompress/zstd_decompress_block.c',
+            'decompress/zstd_ddict.c',
+            'decompress/huf_decompress.c',
 
-            'common/entropy_common.c', 'common/zstd_common.c', 'common/xxhash.c', 'common/error_private.c', 'common/pool.c',
+            'common/entropy_common.c', 'common/zstd_common.c', 'common/xxhash.c', 'common/error_private.c',
+            'common/pool.c',
+            'common/threading.c',
         ]:
         zstdFiles.append('zstd/lib/'+f)
 

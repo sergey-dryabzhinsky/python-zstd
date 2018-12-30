@@ -70,9 +70,9 @@ static PyObject *ZstdError;
 
 static PyObject *py_zstd_compress(PyObject* self, PyObject *args);
 static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args);
-static PyObject *py_zstd_module_version(PyObject* self);
-static PyObject *py_zstd_library_version(PyObject* self);
-static PyObject *py_zstd_library_version_int(PyObject* self);
+static PyObject *py_zstd_module_version(PyObject* self, PyObject *args);
+static PyObject *py_zstd_library_version(PyObject* self, PyObject *args);
+static PyObject *py_zstd_library_version_int(PyObject* self, PyObject *args);
 
 #if PYZSTD_LEGACY > 0
 static PyObject *py_zstd_compress_old(PyObject* self, PyObject *args);

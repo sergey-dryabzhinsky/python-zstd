@@ -152,7 +152,7 @@ static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args)
 /**
  * Returns this module version as string
  */
-static PyObject *py_zstd_module_version(PyObject* self)
+static PyObject *py_zstd_module_version(PyObject* self, PyObject *args)
 {
 #if PY_MAJOR_VERSION >= 3
     return PyUnicode_FromFormat("%s", VERSION);
@@ -164,7 +164,7 @@ static PyObject *py_zstd_module_version(PyObject* self)
 /**
  * Returns ZSTD library version as string
  */
-static PyObject *py_zstd_library_version(PyObject* self)
+static PyObject *py_zstd_library_version(PyObject* self, PyObject *args)
 {
 #if PY_MAJOR_VERSION >= 3
     return PyUnicode_FromFormat("%s", ZSTD_versionString());
@@ -176,7 +176,7 @@ static PyObject *py_zstd_library_version(PyObject* self)
 /**
  * Returns ZSTD library version as int (major * 100*100 + minor * 100 + release)
  */
-static PyObject *py_zstd_library_version_int(PyObject* self)
+static PyObject *py_zstd_library_version_int(PyObject* self, PyObject *args)
 {
     return Py_BuildValue("i", ZSTD_VERSION_NUMBER);
 }
