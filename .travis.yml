@@ -7,14 +7,15 @@ python:
   - 3.4
   - 3.5
   - 3.6
+  - 3.7
 
-dist: trusty
+dist: xenial
 os: linux
 
 addons:
   apt:
     sources:
-    - trusty
+    - xenial
     - deadsnakes
     - sourceline: 'ppa:sergey-dryabzhinsky/packages'
 
