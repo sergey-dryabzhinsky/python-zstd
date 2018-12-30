@@ -94,11 +94,11 @@ Module has simple API:
    >>> dir(zstd)
    ['Error', 'ZSTD_compress', 'ZSTD_uncompress', 'ZSTD_version', 'ZSTD_version_number', '__doc__', '__file__', '__name__', '__package__', 'compress', 'decompress', 'dumps', 'loads', 'uncompress', 'version']
    >>> zstd.version()
-   '1.3.4.1'
+   '1.3.8.0'
    >>> zstd.ZSTD_version()
-   '1.3.4'
+   '1.3.8'
    >>> zstd.ZSTD_version_number()
-   10304
+   10308
    >>> data = "123456qwert"
    >>> cdata = zstd.compress(data, 1)
    >>> data == zstd.decompress(cdata)
