@@ -9,13 +9,13 @@ python:
   - 3.6
   - 3.7
 
-dist: xenial
+dist: trusty
 os: linux
 
 addons:
   apt:
     sources:
-    - xenial
+    - trusty
     - deadsnakes
     - sourceline: 'ppa:sergey-dryabzhinsky/packages'
 
