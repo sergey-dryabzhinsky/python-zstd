@@ -28,6 +28,7 @@
  */
 
 #include <stdlib.h>
+#include <stddef.h>
 #include <Python.h>
 #include "bytesobject.h"
 #include "zstd.h"
