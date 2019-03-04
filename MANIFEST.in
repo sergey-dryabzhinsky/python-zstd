@@ -4,4 +4,5 @@ graft zstd/lib/compress
 graft zstd/lib/decompress
 graft zstd/lib/legacy
 graft tests
+include LICENSE
 include zstd/lib/zstd.h
