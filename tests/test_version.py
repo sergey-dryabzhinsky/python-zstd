@@ -2,7 +2,7 @@
 
 import os
 
-from tests.base import BaseTestZSTD, log
+from tests.base import BaseTestZSTD
 
 class TestZSTD(BaseTestZSTD):
 
@@ -11,16 +11,12 @@ class TestZSTD(BaseTestZSTD):
             self.ZSTD_EXTERNAL = True
         self.VERSION = os.getenv("VERSION")
         self.PKG_VERSION = os.getenv("PKG_VERSION")
-        log.info("VERSION=%r" % self.VERSION)
-        log.info("PKG_VERSION=%r" % self.PKG_VERSION)
         v = [int(n) for n in reversed(self.VERSION.split("."))]
-        log.info("v=%r" % (v,))
         self.VERSION_INT = 0
         i = 0
         for n in v:
             self.VERSION_INT += n * 100**i
             i += 1
-        log.info("VERSION_INT=%r" % self.VERSION_INT)
 
     def test_module_version(self):
         BaseTestZSTD.helper_version(self)
