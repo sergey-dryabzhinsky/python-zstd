@@ -11,8 +11,7 @@ class TestZSTD(BaseTestZSTD):
             self.ZSTD_EXTERNAL = True
         self.VERSION = os.getenv("VERSION")
         self.PKG_VERSION = os.getenv("PKG_VERSION")
-        v = [int(n) for n in self.VERSION.split(".")]
-        v = sorted(v, reverse=True)
+        v = [int(n) for n in reversed(self.VERSION.split("."))]
         self.VERSION_INT = 0
         i = 0
         for n in v:
