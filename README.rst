@@ -8,7 +8,7 @@ python-zstd
 Simple python bindings to Yann Collet ZSTD compression library
 
 **Zstd**, short for Zstandard, is a new lossless compression algorithm,
- which provides both good compression ratio _and_ speed for your standard compression needs.
+ which provides both good compression ratio *and* speed for your standard compression needs.
  "Standard" translates into everyday situations which neither look for highest possible ratio
  (which LZMA and ZPAQ cover) nor extreme speeds (which LZ4 covers).
 
@@ -61,12 +61,18 @@ Build from source
    >>> $ python3 setup.py build_ext clean
 
 Note: legacy format support disabled by default.
-To build with legacy support - pass ``--legacy`` option to setup.py script:
+To build with Zstd legacy versions support - pass ``--legacy`` option to setup.py script:
 
    >>> $ python setup.py build_ext --legacy clean
 
+Note: PyZstd legacy format support disabled by default.
+To build with python-zstd legacy format support (pre 1.1.2) - pass ``--pyzstd-legacy`` option to setup.py script:
+
+   >>> $ python setup.py build_ext --pyzstd-legacy clean
+
 If you want to build with existing distribution of libzstd just add ``--external`` option.
 But beware! Legacy formats support is unknown in this case.
+And if your version not equal with python-zstd - tests may not pass.
 
    >>> $ python setup.py build_ext --external clean
 
@@ -103,3 +109,7 @@ Module has simple API:
    >>> cdata = zstd.compress(data, 1)
    >>> data == zstd.decompress(cdata)
    True
+
+Note: these functions are aliases:
+- dumps - to compress
+- loads, uncompress - to decompress
