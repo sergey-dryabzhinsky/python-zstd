@@ -111,5 +111,5 @@ Module has simple API:
    True
 
 Note: these functions are aliases:
-- dumps - to compress
-- loads, uncompress - to decompress
+* dumps - to compress
+* loads, uncompress - to decompress
