@@ -1,16 +1,32 @@
-language: python
-python:
-  - 2.6
-  - 2.7
-  - 3.2
-  - 3.3
-  - 3.4
-  - 3.5
-  - 3.6
-  - 3.7
-
-dist: xenial
 os: linux
+dist: xenial
+language: python
+matrix:
+  include:
+    - name: "Python 2.6 Trusty"
+      python: 2.6
+      dist: trusty
+    - name: "Python 2.7 Xenial"
+      python: 2.7
+      dist: xenial
+    - name: "Python 3.2 Trusty"
+      python: 3.2
+      dist: trusty
+    - name: "Python 3.3 Trusty"
+      python: 3.3
+      dist: trusty
+    - name: "Python 3.4 Xenial"
+      python: 3.4
+      dist: xenial
+    - name: "Python 3.5 Xenial"
+      python: 3.5
+      dist: xenial
+    - name: "Python 3.6 Xenial"
+      python: 3.6
+      dist: xenial
+    - name: "Python 3.7 Xenial"
+      python: 3.7
+      dist: xenial
 
 addons:
   apt:
