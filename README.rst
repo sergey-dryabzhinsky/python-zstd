@@ -184,6 +184,11 @@ Module has simple API:
    >>> zstd.ZSTD_version_number()
    10404
    >>> data = "123456qwert"
+#
+#   in python3
+#
+#   >>> data = b"123456qwert"
+#
    >>> cdata = zstd.compress(data, 1)
    >>> data == zstd.decompress(cdata)
    True
