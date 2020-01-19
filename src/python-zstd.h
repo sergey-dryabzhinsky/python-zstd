@@ -96,13 +96,16 @@ PyMODINIT_FUNC initzstd(void);
 
 #define COMPRESS_DOCSTRING      "compress(string[, level]): "PY_BYTESTR_TYPE" -- Returns compressed string.\n\n\
 Optional arg level is the compression level, from 1 (fastest) to 22 (slowest). The default value is 3.\n\
-"ZSTD_134_DOCSTR"\nRaises a zstd.Error exception if any error occurs."
+"ZSTD_134_DOCSTR"\n\
+Input data length limited by 2Gb by Python API.\n\
+Raises a zstd.Error exception if any error occurs."
 
-#define COMPRESS_MT_DOCSTRING      "compress2(string[, level, threads]): "PY_BYTESTR_TYPE" -- Returns compressed string.\n\n\
+#define COMPRESS_MT_DOCSTRING      "compress_mt(string[, level, threads]): "PY_BYTESTR_TYPE" -- Returns compressed string.\n\n\
 Optional arg level is the compression level, from 1 (fastest) to 22 (slowest). The default value is 3.\n\
-Optional arg threads is the number of worker threads, from 0 to 200. 0 - auto-tune. The default value is 0.\n\
-Uses zstd-context api.\n\
-"ZSTD_134_DOCSTR"\nRaises a zstd.Error exception if any error occurs."
+Optional arg threads is the number of worker threads, from 0 to 200. 0 - auto-tune by cpu cores count. The default value is 0.\n\
+"ZSTD_134_DOCSTR"\n\
+Input data length limited by 2Gb by Python API.\n\
+Raises a zstd.Error exception if any error occurs."
 
 #define UNCOMPRESS_DOCSTRING    "decompress("PY_BYTESTR_TYPE"): string -- Returns uncompressed string.\n\nRaises a zstd.Error exception if any error occurs."
 
