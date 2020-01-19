@@ -94,45 +94,75 @@ Install from pypi
 API
 ___
 
-* **Error** - standard python Exception for zstd module
+**Error**
+  Standard python Exception for zstd module
 
-* **ZSTD_compress** (data[, level]): string|bytes - function, compress input data block, return compressed block, or raises Error. Params:
+**ZSTD_compress** (data[, level]): string|bytes
+  Function, compress input data block, return compressed block, or raises Error.
+
+  Params:
  * **data**: string|bytes - input data block
  * **level**: int - compression level, ultra-fast levels from -5 (ultra) to -1 (fast) available since zstd-1.3.4, and from 1 (fast) to 22 (slowest), 0 or unset - means default (3). Default - 3.
- - Aliases: __compress(...)__, __dumps__(...)__
- - Since: 0.1
 
-* **ZSTD_compress_mt** (data[, level, threads]): string|bytes - function, compress input data block via multiple threads, return compressed block, or raises Error. Params:
+  Aliases: __compress(...)__, __dumps__(...)__
+
+  Since: 0.1
+
+**ZSTD_compress_mt** (data[, level, threads]): string|bytes
+  Function, compress input data block via multiple threads, return compressed block, or raises Error.
+
+  Params:
  * **data**: string|bytes - input data block
  * **level**: int - compression level, ultra-fast levels from -5 (ultra) to -1 (fast) available since zstd-1.3.4, and from 1 (fast) to 22 (slowest), 0 or unset - means default (3). Default - 3.
  * **threads**: int - how many threads to use, from 0 to 200, 0 or unset - means default (1). Default - 1.
- - Aliases: __compress_mt(...)__
- - Since: 1.4.4.1
 
-* **ZSTD_uncompress** (data): string|bytes - function, decompress input compressed data block, return decompressed block, or raises Error. Params:
+  Aliases: __compress_mt(...)__
+
+  Since: 1.4.4.1
+
+**ZSTD_uncompress** (data): string|bytes
+  Function, decompress input compressed data block, return decompressed block, or raises Error.
+
+  Params:
  * **data**: string|bytes - input data block
- - Aliases: __decompress(...)__, __uncompress(...)__, __loads__(...)__
- - Since: 0.1
 
-* **version** (): string|bytes - returns this module doted version string
- - Since: 1.3.4.3
+  Aliases: __decompress(...)__, __uncompress(...)__, __loads__(...)__
 
-* **ZSTD_version** (): string|bytes - returns ZSTD library doted version string
- - Since: 1.3.4.3
+  Since: 0.1
 
-* **ZSTD_version_number** (): int - returns ZSTD library version in format: MAJOR*100*100 + MINOR*100 + RELEASE
- - Since: 1.3.4.3
+**version** (): string|bytes
+  Returns this module doted version string.
 
-* **ZSTD_compress_old** (data[, level]): string|bytes - function, compress input data block, return compressed block, or raises Error. Params:
+  Since: 1.3.4.3
+
+**ZSTD_version** (): string|bytes
+  Returns ZSTD library doted version string.
+
+  Since: 1.3.4.3
+
+**ZSTD_version_number** (): int
+   Returns ZSTD library version in format: MAJOR*100*100 + MINOR*100 + RELEASE.
+
+   Since: 1.3.4.3
+
+**ZSTD_compress_old** (data[, level]): string|bytes
+  Function, compress input data block, return compressed block, or raises Error.
+
+  Params:
  * **DEPRECATED**: Returns not compatible with ZSTD block header
  * **data**: string|bytes - input data block
  * **level**: int - compression level, ultra-fast levels from -5 (ultra) to -1 (fast) available since zstd-1.3.4, and from 1 (fast) to 22 (slowest), 0 or unset - means default (3). Default - 3.
- - Since: 1.0.0.99.1
 
-* **ZSTD_uncompress** (data): string|bytes - function, decompress input compressed data block, return decompressed block, or raises Error. Params:
+  Since: 1.0.0.99.1
+
+**ZSTD_uncompress** (data): string|bytes
+  Function, decompress input compressed data block, return decompressed block, or raises Error.
+
+  Params:
  * **DEPRECATED**: Accepts data with not compatible with ZSTD block header
  * **data**: string|bytes - input data block
- - Since: 1.0.0.99.1
+
+  Since: 1.0.0.99.1
 
 Use
 ___
