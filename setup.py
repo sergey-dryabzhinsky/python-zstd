@@ -14,7 +14,7 @@ VERSION_STR = ".".join([str(x) for x in VERSION])
 # Package version
 PKG_VERSION = VERSION
 # Minor versions
-PKG_VERSION += ("0",)
+PKG_VERSION += ("1",)
 PKG_VERSION_STR = ".".join([str(x) for x in PKG_VERSION])
 
 ###

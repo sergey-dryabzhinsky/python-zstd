@@ -33,6 +33,9 @@ class TestZSTD(BaseTestZSTD):
     def test_compression_wrong_level(self):
         BaseTestZSTD.helper_compression_wrong_level(self)
 
+    def test_compression_multi_thread(self):
+        BaseTestZSTD.helper_compression_multi_thread(self)
+
     def test_compression_old_default_level(self):
         if not self.PYZSTD_LEGACY:
             return raise_skip("PyZstd was build without legacy functions support")

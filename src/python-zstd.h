@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Sergey Dryabzhinsky
+ * Copyright (c) 2015-2020 Sergey Dryabzhinsky
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,6 +51,10 @@
 #define ZSTD_MAX_CLEVEL     22
 #endif
 
+#ifndef ZSTDMT_NBWORKERS_MAX
+#define ZSTDMT_NBWORKERS_MAX 200
+#endif
+
 /* --== Negative fast compression levels only since 1.3.4 ==-- */
 #if ZSTD_VERSION_NUMBER >= 10304
 
@@ -69,6 +73,7 @@
 static PyObject *ZstdError;
 
 static PyObject *py_zstd_compress(PyObject* self, PyObject *args);
+static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args);
 static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args);
 static PyObject *py_zstd_module_version(PyObject* self, PyObject *args);
 static PyObject *py_zstd_library_version(PyObject* self, PyObject *args);
@@ -91,6 +96,12 @@ PyMODINIT_FUNC initzstd(void);
 
 #define COMPRESS_DOCSTRING      "compress(string[, level]): "PY_BYTESTR_TYPE" -- Returns compressed string.\n\n\
 Optional arg level is the compression level, from 1 (fastest) to 22 (slowest). The default value is 3.\n\
+"ZSTD_134_DOCSTR"\nRaises a zstd.Error exception if any error occurs."
+
+#define COMPRESS_MT_DOCSTRING      "compress2(string[, level, threads]): "PY_BYTESTR_TYPE" -- Returns compressed string.\n\n\
+Optional arg level is the compression level, from 1 (fastest) to 22 (slowest). The default value is 3.\n\
+Optional arg threads is the number of worker threads, from 0 to 200. 0 - means single thread. The default value is 1.\n\
+Uses multi-thread api.\n\
 "ZSTD_134_DOCSTR"\nRaises a zstd.Error exception if any error occurs."
 
 #define UNCOMPRESS_DOCSTRING    "decompress("PY_BYTESTR_TYPE"): string -- Returns uncompressed string.\n\nRaises a zstd.Error exception if any error occurs."
