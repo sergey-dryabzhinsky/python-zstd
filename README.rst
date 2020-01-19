@@ -201,9 +201,3 @@ In python3 use bytes
    True
    >>> data == zstd.decompress(cdata_mt)
    True
-
-
-Note: these functions are aliases:
-
-* dumps - to compress
-* loads, uncompress - to decompress
