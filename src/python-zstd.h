@@ -100,8 +100,8 @@ Optional arg level is the compression level, from 1 (fastest) to 22 (slowest). T
 
 #define COMPRESS_MT_DOCSTRING      "compress2(string[, level, threads]): "PY_BYTESTR_TYPE" -- Returns compressed string.\n\n\
 Optional arg level is the compression level, from 1 (fastest) to 22 (slowest). The default value is 3.\n\
-Optional arg threads is the number of worker threads, from 0 to 200. 0 - means single thread. The default value is 1.\n\
-Uses multi-thread api.\n\
+Optional arg threads is the number of worker threads, from 0 to 200. 0 - auto-tune. The default value is 0.\n\
+Uses zstd-context api.\n\
 "ZSTD_134_DOCSTR"\nRaises a zstd.Error exception if any error occurs."
 
 #define UNCOMPRESS_DOCSTRING    "decompress("PY_BYTESTR_TYPE"): string -- Returns uncompressed string.\n\nRaises a zstd.Error exception if any error occurs."

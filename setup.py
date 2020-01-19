@@ -134,6 +134,7 @@ if not SUP_EXTERNAL:
             ]:
             zstdFiles.append('zstd/lib/'+f)
 
+zstdFiles.append('src/util.c')
 zstdFiles.append('src/python-zstd.c')
 
 # Python 2.6 compat

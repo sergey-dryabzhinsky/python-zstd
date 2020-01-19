@@ -116,7 +116,7 @@ ZSTD_compress_mt (data[, level, threads]): string|bytes
 
   * **data**: string|bytes - input data block
   * **level**: int - compression level, ultra-fast levels from -5 (ultra) to -1 (fast) available since zstd-1.3.4, and from 1 (fast) to 22 (slowest), 0 or unset - means default (3). Default - 3.
-  * **threads**: int - how many threads to use, from 0 to 200, 0 or unset - means default (1). Default - 1.
+  * **threads**: int - how many threads to use, from 0 to 200, 0 or unset - auto-tune by cpu cores count. Default - 0.
 
   Aliases: __compress_mt(...)__
 

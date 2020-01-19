@@ -32,6 +32,7 @@
 #include <Python.h>
 #include "bytesobject.h"
 #include "zstd.h"
+#include "util.h"
 #include "python-zstd.h"
 
 
@@ -112,7 +113,7 @@ static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args)
     uint32_t dest_size;
     size_t cSize;
     int32_t level = ZSTD_CLEVEL_DEFAULT;
-    int32_t threads = 1;
+    int32_t threads = 0;
 
 #if PY_MAJOR_VERSION >= 3
     if (!PyArg_ParseTuple(args, "y#|ii", &source, &source_size, &level, &threads))
@@ -140,6 +141,7 @@ static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args)
         PyErr_Format(ZstdError, "Bad threads count - less than %d: %d", 0, threads);
         return NULL;
     }
+    if (0 == threads) threads = UTIL_countPhysicalCores();
     /* If threads more than 200 - raise Error. */
     if (threads > ZSTDMT_NBWORKERS_MAX) {
         PyErr_Format(ZstdError, "Bad threads count - more than %d: %d", ZSTDMT_NBWORKERS_MAX, threads);
@@ -155,16 +157,15 @@ static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args)
     if (source_size > 0) {
         dest = PyBytes_AS_STRING(result);
 
-        Py_BEGIN_ALLOW_THREADS
-
         ZSTD_CCtx* cctx = ZSTD_createCCtx();
         ZSTD_CCtx_setParameter(cctx, ZSTD_c_compressionLevel, level);
         ZSTD_CCtx_setParameter(cctx, ZSTD_c_nbWorkers, threads);
 
+        Py_BEGIN_ALLOW_THREADS
         cSize = ZSTD_compress2(cctx, dest, dest_size, source, source_size);
-        ZSTD_freeCCtx(cctx);
-
         Py_END_ALLOW_THREADS
+
+        ZSTD_freeCCtx(cctx);
 
         if (ZSTD_isError(cSize)) {
             PyErr_Format(ZstdError, "Compression error: %s", ZSTD_getErrorName(cSize));
