@@ -55,6 +55,10 @@ matrix:
       python: 3.8
       arch: arm64
       dist: xenial
+addons:
+  apt:
+    sources:
+    - sourceline: 'ppa:sergey-dryabzhinsky/packages'
 
 install:
 - sudo apt-get update -qq
