@@ -27,6 +27,9 @@ matrix:
     - name: "Python 3.7 Xenial"
       python: 3.7
       dist: xenial
+    - name: "Python 3.8 Xenial"
+      python: 3.8
+      dist: xenial
 
 addons:
   apt:
