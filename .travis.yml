@@ -3,40 +3,58 @@ dist: xenial
 language: python
 matrix:
   include:
-    - name: "Python 2.6 Trusty"
+    - name: "Python 2.6 Trusty AMD64"
       python: 2.6
       dist: trusty
-    - name: "Python 2.7 Xenial"
+    - name: "Python 2.7 Xenial AMD64"
       python: 2.7
       dist: xenial
-    - name: "Python 3.2 Trusty"
+    - name: "Python 3.2 Trusty AMD64"
       python: 3.2
       dist: trusty
-    - name: "Python 3.3 Trusty"
+    - name: "Python 3.3 Trusty AMD64"
       python: 3.3
       dist: trusty
-    - name: "Python 3.4 Xenial"
+    - name: "Python 3.4 Xenial AMD64"
       python: 3.4
       dist: xenial
-    - name: "Python 3.5 Xenial"
+    - name: "Python 3.5 Xenial AMD64"
       python: 3.5
       dist: xenial
-    - name: "Python 3.6 Xenial"
+    - name: "Python 3.6 Xenial AMD64"
       python: 3.6
       dist: xenial
-    - name: "Python 3.7 Xenial"
+    - name: "Python 3.7 Xenial AMD64"
       python: 3.7
       dist: xenial
     - name: "Python 3.8 Xenial"
       python: 3.8
       dist: xenial
 
-addons:
-  apt:
-    sources:
-    - trusty
-    - deadsnakes
-    - sourceline: 'ppa:sergey-dryabzhinsky/packages'
+    - name: "Python 2.7 Xenial ARM64"
+      python: 2.7
+      arch: arm64
+      dist: xenial
+    - name: "Python 3.4 Xenial ARM64"
+      python: 3.4
+      arch: arm64
+      dist: xenial
+    - name: "Python 3.5 Xenial ARM64"
+      python: 3.5
+      arch: arm64
+      dist: xenial
+    - name: "Python 3.6 Xenial ARM64"
+      python: 3.6
+      arch: arm64
+      dist: xenial
+    - name: "Python 3.7 Xenial ARM64"
+      python: 3.7
+      arch: arm64
+      dist: xenial
+    - name: "Python 3.8 Xenial ARM64"
+      python: 3.8
+      arch: arm64
+      dist: xenial
 
 install:
 - sudo apt-get update -qq
