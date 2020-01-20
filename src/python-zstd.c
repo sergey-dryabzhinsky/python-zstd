@@ -1,6 +1,6 @@
 /*
  * ZSTD Library Python bindings
- * Copyright (c) 2015-2018, Sergey Dryabzhinsky
+ * Copyright (c) 2015-2020, Sergey Dryabzhinsky
  * All rights reserved.
  *
  * BSD License
@@ -32,15 +32,17 @@
 #include <Python.h>
 #include "bytesobject.h"
 #include "zstd.h"
+#include "util.h"
 #include "python-zstd.h"
 
 
 /**
- * New more interoperable function
- * Uses origin zstd header, nothing more
- * Simple version: not for streaming, no dict support, full block compression
+ * New function for multi-threaded compression.
+ * Uses origin zstd header, nothing more.
+ * Simple version: not for streaming, no dict support, full block compression.
+ * Uses new API with context object.
  */
-static PyObject *py_zstd_compress(PyObject* self, PyObject *args)
+static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args)
 {
 
     PyObject *result;
@@ -50,12 +52,13 @@ static PyObject *py_zstd_compress(PyObject* self, PyObject *args)
     uint32_t dest_size;
     size_t cSize;
     int32_t level = ZSTD_CLEVEL_DEFAULT;
+    int32_t threads = 0;
 
 #if PY_MAJOR_VERSION >= 3
-    if (!PyArg_ParseTuple(args, "y#|i", &source, &source_size, &level))
+    if (!PyArg_ParseTuple(args, "y#|ii", &source, &source_size, &level, &threads))
         return NULL;
 #else
-    if (!PyArg_ParseTuple(args, "s#|i", &source, &source_size, &level))
+    if (!PyArg_ParseTuple(args, "s#|ii", &source, &source_size, &level, &threads))
         return NULL;
 #endif
 
@@ -73,6 +76,17 @@ static PyObject *py_zstd_compress(PyObject* self, PyObject *args)
         return NULL;
     }
 
+    if (threads < 0) {
+        PyErr_Format(ZstdError, "Bad threads count - less than %d: %d", 0, threads);
+        return NULL;
+    }
+    if (0 == threads) threads = UTIL_countPhysicalCores();
+    /* If threads more than 200 - raise Error. */
+    if (threads > ZSTDMT_NBWORKERS_MAX) {
+        PyErr_Format(ZstdError, "Bad threads count - more than %d: %d", ZSTDMT_NBWORKERS_MAX, threads);
+        return NULL;
+    }
+
     dest_size = ZSTD_compressBound(source_size);
     result = PyBytes_FromStringAndSize(NULL, dest_size);
     if (result == NULL) {
@@ -82,9 +96,15 @@ static PyObject *py_zstd_compress(PyObject* self, PyObject *args)
     if (source_size > 0) {
         dest = PyBytes_AS_STRING(result);
 
+        ZSTD_CCtx* cctx = ZSTD_createCCtx();
+        ZSTD_CCtx_setParameter(cctx, ZSTD_c_compressionLevel, level);
+        ZSTD_CCtx_setParameter(cctx, ZSTD_c_nbWorkers, threads);
+
         Py_BEGIN_ALLOW_THREADS
-        cSize = ZSTD_compress(dest, dest_size, source, source_size, level);
+        cSize = ZSTD_compress2(cctx, dest, dest_size, source, source_size);
         Py_END_ALLOW_THREADS
+
+        ZSTD_freeCCtx(cctx);
 
         if (ZSTD_isError(cSize)) {
             PyErr_Format(ZstdError, "Compression error: %s", ZSTD_getErrorName(cSize));
@@ -315,12 +335,12 @@ static PyObject *py_zstd_uncompress_old(PyObject* self, PyObject *args) {
 
 
 static PyMethodDef ZstdMethods[] = {
-    {"ZSTD_compress",  py_zstd_compress, METH_VARARGS, COMPRESS_DOCSTRING},
+    {"ZSTD_compress",  py_zstd_compress_mt, METH_VARARGS, COMPRESS_DOCSTRING},
     {"ZSTD_uncompress",  py_zstd_uncompress, METH_VARARGS, UNCOMPRESS_DOCSTRING},
-    {"compress",  py_zstd_compress, METH_VARARGS, COMPRESS_DOCSTRING},
+    {"compress",  py_zstd_compress_mt, METH_VARARGS, COMPRESS_DOCSTRING},
     {"uncompress",  py_zstd_uncompress, METH_VARARGS, UNCOMPRESS_DOCSTRING},
     {"decompress",  py_zstd_uncompress, METH_VARARGS, UNCOMPRESS_DOCSTRING},
-    {"dumps",  py_zstd_compress, METH_VARARGS, COMPRESS_DOCSTRING},
+    {"dumps",  py_zstd_compress_mt, METH_VARARGS, COMPRESS_DOCSTRING},
     {"loads",  py_zstd_uncompress, METH_VARARGS, UNCOMPRESS_DOCSTRING},
     {"version",  py_zstd_module_version, METH_NOARGS, VERSION_DOCSTRING},
     {"ZSTD_version",  py_zstd_library_version, METH_NOARGS, ZSTD_VERSION_DOCSTRING},

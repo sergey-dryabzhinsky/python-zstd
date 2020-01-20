@@ -96,6 +96,14 @@ class BaseTestZSTD(unittest.TestCase):
     def helper_compression_wrong_level(self):
         self.assertRaises(zstd.Error, zstd.compress, tDATA, 100)
 
+    def helper_compression_multi_thread_one(self):
+        CDATA = zstd.compress(tDATA, 6, 1)
+        self.assertEqual(tDATA, zstd.decompress(CDATA))
+
+    def helper_compression_multi_thread_many(self):
+        CDATA = zstd.compress(tDATA, 6, 16)
+        self.assertEqual(tDATA, zstd.decompress(CDATA))
+
     def helper_compression_old_default_level(self):
         if sys.hexversion < 0x03000000:
             DATA = 'This is must be very very long string to be compressed by zstd. AAAAAAAAAAARGGHHH!!! Just hope its enough length. И немного юникода.'
