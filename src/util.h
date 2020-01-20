@@ -37,7 +37,6 @@ extern "C" {
 #endif
 #endif
 #include <time.h>         /* clock_t, clock, CLOCKS_PER_SEC, nanosleep */
-#include "mem.h"          /* U32, U64 */
 
 
 /*-****************************************
