@@ -33,12 +33,6 @@ class TestZSTD(BaseTestZSTD):
     def test_compression_wrong_level(self):
         BaseTestZSTD.helper_compression_wrong_level(self)
 
-    def test_compression_multi_thread(self):
-        BaseTestZSTD.helper_compression_multi_thread(self)
-
-    def test_compression_multi_thread_auto(self):
-        BaseTestZSTD.helper_compression_multi_thread_auto(self)
-
     def test_compression_multi_thread_one(self):
         BaseTestZSTD.helper_compression_multi_thread_one(self)
 

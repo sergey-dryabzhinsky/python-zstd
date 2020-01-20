@@ -97,11 +97,11 @@ class BaseTestZSTD(unittest.TestCase):
         self.assertRaises(zstd.Error, zstd.compress, tDATA, 100)
 
     def helper_compression_multi_thread_one(self):
-        CDATA = zstd.compress_mt(tDATA, 6, 1)
-        self.assertEqual(tCDATA, zstd.decompress(CDATA))
+        CDATA = zstd.compress(tDATA, 6, 1)
+        self.assertEqual(tDATA, zstd.decompress(CDATA))
 
     def helper_compression_multi_thread_many(self):
-        CDATA = zstd.compress_mt(tDATA, 6, 16)
+        CDATA = zstd.compress(tDATA, 6, 16)
         self.assertEqual(tDATA, zstd.decompress(CDATA))
 
     def helper_compression_old_default_level(self):
