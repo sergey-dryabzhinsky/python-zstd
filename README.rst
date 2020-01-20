@@ -97,30 +97,18 @@ ___
 Error
   Standard python Exception for zstd module
 
-ZSTD_compress (data[, level]): string|bytes
-  Function, compress input data block, return compressed block, or raises Error.
+ZSTD_compress (data[, level, threads]): string|bytes
+  Function, compress input data block via mutliple threads, return compressed block, or raises Error.
 
   Params:
 
   * **data**: string|bytes - input data block, length limited by 2Gb by Python API
   * **level**: int - compression level, ultra-fast levels from -5 (ultra) to -1 (fast) available since zstd-1.3.4, and from 1 (fast) to 22 (slowest), 0 or unset - means default (3). Default - 3.
+  * **threads**: int - how many threads to use, from 0 to 200, 0 or unset - auto-tune by cpu cores count. Default - 0. Since: 1.4.4.1
 
-  Aliases: __compress(...)__, __dumps__(...)__
+  Aliases: *compress(...)*, *dumps(...)*
 
   Since: 0.1
-
-ZSTD_compress_mt (data[, level, threads]): string|bytes
-  Function, compress input data block via multiple threads, return compressed block, or raises Error.
-
-  Params:
-
-  * **data**: string|bytes - input data block, length limited by 2Gb by Python API
-  * **level**: int - compression level, ultra-fast levels from -5 (ultra) to -1 (fast) available since zstd-1.3.4, and from 1 (fast) to 22 (slowest), 0 or unset - means default (3). Default - 3.
-  * **threads**: int - how many threads to use, from 0 to 200, 0 or unset - auto-tune by cpu cores count. Default - 0.
-
-  Aliases: __compress_mt(...)__
-
-  Since: 1.4.4.1
 
 ZSTD_uncompress (data): string|bytes
   Function, decompress input compressed data block, return decompressed block, or raises Error.
@@ -129,7 +117,7 @@ ZSTD_uncompress (data): string|bytes
 
   * **data**: string|bytes - input compressed data block, length limited by 2Gb by Python API
 
-  Aliases: __decompress(...)__, __uncompress(...)__, __loads__(...)__
+  Aliases: *decompress(...)*, *uncompress(...)*, *loads(...)*
 
   Since: 0.1
 
@@ -178,7 +166,7 @@ Module has simple API:
 
    >>> import zstd
    >>> dir(zstd)
-   ['Error', 'ZSTD_compress', 'ZSTD_compress_mt', 'ZSTD_uncompress', 'ZSTD_version', 'ZSTD_version_number', '__doc__', '__file__', '__loader__', '__name__', '__package__', '__spec__', 'compress', 'compress_mt', 'decompress', 'dumps', 'loads', 'uncompress', 'version']
+   ['Error', 'ZSTD_compress', 'ZSTD_uncompress', 'ZSTD_version', 'ZSTD_version_number', '__doc__', '__file__', '__loader__', '__name__', '__package__', '__spec__', 'compress', 'decompress', 'dumps', 'loads', 'uncompress', 'version']
    >>> zstd.version()
    '1.4.4.1'
    >>> zstd.ZSTD_version()
@@ -198,7 +186,7 @@ In python3 use bytes
    >>> cdata = zstd.compress(data, 1)
    >>> data == zstd.decompress(cdata)
    True
-   >>> cdata_mt = zstd.compress_mt(data, 1, 4)
+   >>> cdata_mt = zstd.compress(data, 1, 4)
    >>> cdata == cdata_mt
    True
    >>> data == zstd.decompress(cdata_mt)
