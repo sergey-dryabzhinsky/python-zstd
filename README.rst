@@ -48,7 +48,7 @@ LINKS
 -----
 
 * Zstandard: https://github.com/facebook/zstd
-* More full-featured and compatible with Zstandard python bindings by Gregory Szorc: https://pypi.python.org/pypi/zstandard
+* More full-featured and compatible with Zstandard python bindings by Gregory Szorc: https://github.com/indygreg/python-zstandard
 
 
 Build from source
