@@ -114,10 +114,10 @@ failed:
  * see: man 3 sysctl */
 int UTIL_countPhysicalCores(void)
 {
-    static S32 numPhysicalCores = 0; /* apple specifies int32_t */
+    static int32_t numPhysicalCores = 0; /* apple specifies int32_t */
     if (numPhysicalCores != 0) return numPhysicalCores;
 
-    {   size_t size = sizeof(S32);
+    {   size_t size = sizeof(int32_t);
         int const ret = sysctlbyname("hw.physicalcpu", &numPhysicalCores, &size, NULL, 0);
         if (ret != 0) {
             if (errno == ENOENT) {
