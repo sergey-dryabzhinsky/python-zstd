@@ -41,7 +41,7 @@ __________
 
 These python bindings are kept simple and blunt.
 
-Support of dictionaries is not planned.
+Support of dictionaries and streaming is not planned.
 
 
 LINKS
