@@ -58,13 +58,13 @@
 /* --== Negative fast compression levels only since 1.3.4 ==-- */
 #if ZSTD_VERSION_NUMBER >= 10304
 
-#ifndef ZSTD_MIN_CLEVEL
-#define ZSTD_MIN_CLEVEL     -5
-#define ZSTD_134_DOCSTR "Also supports ultra-fast levels from -5 (fastest) to -1 (less fast) since module compiled with ZSTD 1.3.4+.\n"
+#define ZSTD_MIN_CLEVEL     -100
+#define ZSTD_134_DOCSTR "Also supports ultra-fast levels from -100 (fastest) to -1 (less fast) since module compiled with ZSTD 1.3.4+.\n"
+
 #else
+
 #define ZSTD_MIN_CLEVEL     0
 #define ZSTD_134_DOCSTR ""
-#endif
 
 #endif
 
