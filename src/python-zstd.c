@@ -63,9 +63,9 @@ static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args)
 #endif
 
     if (0 == level) level=ZSTD_CLEVEL_DEFAULT;
-    /* Fast levels (zstd >= 1.3.4) - [-1..-5] */
+    /* Fast levels (zstd >= 1.3.4) - [-1..-100] */
     /* Usual levels                - [ 1..22] */
-    /* If level less than -5 or 1 - raise Error, level 0 handled before. */
+    /* If level less than -100 or 1 - raise Error, level 0 handled before. */
     if (level < ZSTD_MIN_CLEVEL) {
         PyErr_Format(ZstdError, "Bad compression level - less than %d: %d", ZSTD_MIN_CLEVEL, level);
         return NULL;

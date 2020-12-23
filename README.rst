@@ -103,7 +103,7 @@ ZSTD_compress (data[, level, threads]): string|bytes
   Params:
 
   * **data**: string|bytes - input data block, length limited by 2Gb by Python API
-  * **level**: int - compression level, ultra-fast levels from -5 (ultra) to -1 (fast) available since zstd-1.3.4, and from 1 (fast) to 22 (slowest), 0 or unset - means default (3). Default - 3.
+  * **level**: int - compression level, ultra-fast levels from -100 (ultra) to -1 (fast) available since zstd-1.3.4, and from 1 (fast) to 22 (slowest), 0 or unset - means default (3). Default - 3.
   * **threads**: int - how many threads to use, from 0 to 200, 0 or unset - auto-tune by cpu cores count. Default - 0. Since: 1.4.4.1
 
   Aliases: *compress(...)*, *dumps(...)*
@@ -148,7 +148,7 @@ ZSTD_compress_old (data[, level]): string|bytes
 
   Since: 1.0.0.99.1
 
-ZSTD_uncompress (data): string|bytes
+ZSTD_uncompress_old (data): string|bytes
   Function, decompress input compressed data block, return decompressed block, or raises Error.
 
   **DEPRECATED**: Accepts data with not compatible with ZSTD block header
