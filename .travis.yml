@@ -3,18 +3,9 @@ dist: xenial
 language: python
 matrix:
   include:
-    - name: "Python 2.6 Trusty AMD64"
-      python: 2.6
-      dist: trusty
     - name: "Python 2.7 Xenial AMD64"
       python: 2.7
       dist: xenial
-    - name: "Python 3.2 Trusty AMD64"
-      python: 3.2
-      dist: trusty
-    - name: "Python 3.3 Trusty AMD64"
-      python: 3.3
-      dist: trusty
     - name: "Python 3.4 Xenial AMD64"
       python: 3.4
       dist: xenial
