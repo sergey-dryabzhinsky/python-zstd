@@ -14,7 +14,7 @@ VERSION_STR = ".".join([str(x) for x in VERSION])
 # Package version
 PKG_VERSION = VERSION
 # Minor versions
-PKG_VERSION += ("0",)
+PKG_VERSION += ("1",)
 PKG_VERSION_STR = ".".join([str(x) for x in PKG_VERSION])
 
 ###
@@ -161,20 +161,26 @@ if not SUP_EXTERNAL:
 zstdFiles.append('src/util.c')
 zstdFiles.append('src/python-zstd.c')
 
-# Python 2.6 compat
-os.environ["VERSION"] = VERSION_STR
-os.environ["PKG_VERSION"] = PKG_VERSION_STR
-if SUP_LEGACY:
-    os.environ["LEGACY"] = "1"
-if SUP_EXTERNAL:
-    os.environ["ZSTD_EXTERNAL"] = "1"
-if SUP_PYZSTD_LEGACY:
-    os.environ["PYZSTD_LEGACY"] = "1"
+
+def setup_env():
+    # Python 2.6 compat
+    os.environ["VERSION"] = VERSION_STR
+    os.environ["PKG_VERSION"] = PKG_VERSION_STR
+    os.environ["LEGACY"] = "0"
+    os.environ["ZSTD_EXTERNAL"] = "0"
+    os.environ["PYZSTD_LEGACY"] = "0"
+    if SUP_LEGACY:
+        os.environ["LEGACY"] = "1"
+    if SUP_EXTERNAL:
+        os.environ["ZSTD_EXTERNAL"] = "1"
+    if SUP_PYZSTD_LEGACY:
+        os.environ["PYZSTD_LEGACY"] = "1"
 
 # Another dirty hack
 def my_test_suite():
     import unittest
 
+    setup_env()
     test_suite = unittest.TestSuite()
     for test in os.listdir('tests'):
         if test.startswith("test_") and test.endswith(".py"):

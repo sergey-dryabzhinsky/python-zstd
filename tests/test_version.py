@@ -7,10 +7,9 @@ from tests.base import BaseTestZSTD
 class TestZSTD(BaseTestZSTD):
 
     def setUp(self):
-        if os.getenv("ZSTD_EXTERNAL"):
-            self.ZSTD_EXTERNAL = True
-        self.VERSION = os.getenv("VERSION")
-        self.PKG_VERSION = os.getenv("PKG_VERSION")
+        self.ZSTD_EXTERNAL = os.environ["ZSTD_EXTERNAL"] == "1"
+        self.VERSION = os.environ["VERSION"]
+        self.PKG_VERSION = os.environ["PKG_VERSION"]
         v = [int(n) for n in reversed(self.VERSION.split("."))]
         self.VERSION_INT = 0
         i = 0

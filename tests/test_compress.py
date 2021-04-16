@@ -7,10 +7,8 @@ from tests.base import BaseTestZSTD, raise_skip
 class TestZSTD(BaseTestZSTD):
 
     def setUp(self):
-        if os.getenv("LEGACY"):
-            self.LEGACY = True
-        if os.getenv("PYZSTD_LEGACY"):
-            self.PYZSTD_LEGACY = True
+        self.LEGACY = os.environ["LEGACY"] == "1"
+        self.PYZSTD_LEGACY = os.environ["PYZSTD_LEGACY"] == "1"
 
     def test_compression_random(self):
         BaseTestZSTD.helper_compression_random(self)

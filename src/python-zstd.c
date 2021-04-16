@@ -29,12 +29,15 @@
 
 #include <stdlib.h>
 #include <stddef.h>
+
+/* Since 3.8 it is mandatory to use proper type for # formats */
+#define PY_SSIZE_T_CLEAN
 #include <Python.h>
+
 #include "bytesobject.h"
 #include "zstd.h"
 #include "util.h"
 #include "python-zstd.h"
-
 
 /**
  * New function for multi-threaded compression.
@@ -47,12 +50,13 @@ static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args)
 
     PyObject *result;
     const char *source;
-    uint32_t source_size;
+    Py_ssize_t source_size;
     char *dest;
-    uint32_t dest_size;
+    Py_ssize_t dest_size;
     size_t cSize;
     int32_t level = ZSTD_CLEVEL_DEFAULT;
     int32_t threads = 0;
+    ZSTD_CCtx* cctx = 0;
 
 #if PY_MAJOR_VERSION >= 3
     if (!PyArg_ParseTuple(args, "y#|ii", &source, &source_size, &level, &threads))
@@ -87,7 +91,7 @@ static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args)
         return NULL;
     }
 
-    dest_size = ZSTD_compressBound(source_size);
+    dest_size = (Py_ssize_t)ZSTD_compressBound(source_size);
     result = PyBytes_FromStringAndSize(NULL, dest_size);
     if (result == NULL) {
         return NULL;
@@ -96,12 +100,13 @@ static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args)
     if (source_size > 0) {
         dest = PyBytes_AS_STRING(result);
 
-        ZSTD_CCtx* cctx = ZSTD_createCCtx();
+        cctx = ZSTD_createCCtx();
+
         ZSTD_CCtx_setParameter(cctx, ZSTD_c_compressionLevel, level);
         ZSTD_CCtx_setParameter(cctx, ZSTD_c_nbWorkers, threads);
 
         Py_BEGIN_ALLOW_THREADS
-        cSize = ZSTD_compress2(cctx, dest, dest_size, source, source_size);
+        cSize = ZSTD_compress2(cctx, dest, (size_t)dest_size, source, (size_t)source_size);
         Py_END_ALLOW_THREADS
 
         ZSTD_freeCCtx(cctx);
@@ -126,7 +131,7 @@ static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args)
 
     PyObject    *result;
     const char  *source;
-    uint32_t    source_size;
+    Py_ssize_t  source_size;
     uint64_t    dest_size;
     char        error = 0;
     size_t      cSize;
@@ -233,7 +238,7 @@ static PyObject *py_zstd_compress_old(PyObject* self, PyObject *args) {
 
     PyObject *result;
     const char *source;
-    uint32_t source_size;
+    Py_ssize_t source_size;
     char *dest;
     uint32_t dest_size;
     size_t cSize;
@@ -289,7 +294,7 @@ static PyObject *py_zstd_uncompress_old(PyObject* self, PyObject *args) {
 
     PyObject *result;
     const char *source;
-    uint32_t source_size;
+    Py_ssize_t source_size;
     uint32_t dest_size;
     size_t cSize;
 
