@@ -30,6 +30,9 @@ matrix:
     - name: "Python 3.8 Xenial AMD64"
       python: 3.8
       dist: xenial
+    - name: "Python 3.9 Bionic AMD64"
+      python: 3.9
+      dist: bionic
 
     - name: "Python 2.7 Xenial ARM64"
       python: 2.7
@@ -55,6 +58,10 @@ matrix:
       python: 3.8
       arch: arm64
       dist: xenial
+    - name: "Python 3.9 Bionic ARM64"
+      python: 3.9
+      arch: arm64
+      dist: bionic
 addons:
   apt:
     sources:

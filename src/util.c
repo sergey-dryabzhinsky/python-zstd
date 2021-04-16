@@ -18,7 +18,7 @@ extern "C" {
 ******************************************/
 #include "util.h"       /* note : ensure that platform.h is included first ! */
 #include <errno.h>
-#include <assert.h>
+#include <string.h>
 
 #if defined(_MSC_VER) || defined(__MINGW32__) || defined (__MSVCRT__)
 #include <direct.h>     /* needed for _mkdir in windows */

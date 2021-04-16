@@ -8,13 +8,13 @@ from setuptools import setup, find_packages, Extension
 from setuptools.command.build_ext import build_ext
 
 # ZSTD version
-VERSION = (1, 4, 8,)
+VERSION = (1, 4, 9,)
 VERSION_STR = ".".join([str(x) for x in VERSION])
 
 # Package version
 PKG_VERSION = VERSION
 # Minor versions
-PKG_VERSION += ("1",)
+PKG_VERSION += ("0",)
 PKG_VERSION_STR = ".".join([str(x) for x in PKG_VERSION])
 
 ###
@@ -26,6 +26,12 @@ if "--legacy" in sys.argv:
     # Support legacy output format functions
     SUP_LEGACY=1
     sys.argv.remove("--legacy")
+
+SUP_TRACE=0
+if "--debug-trace" in sys.argv:
+    # Support tracing for debug
+    SUP_TRACE=1
+    sys.argv.remove("--debug-trace")
 
 SUP_PYZSTD_LEGACY=0
 if "--pyzstd-legacy" in sys.argv:
@@ -93,6 +99,20 @@ if SUP_PYZSTD_LEGACY:
         else:
             COPT[comp].extend(['-DPYZSTD_LEGACY=1'])
 
+# Force traceing support or disable
+if SUP_TRACE:
+    for comp in COPT:
+        if comp == 'msvc':
+            COPT[comp].extend(['/DZSTD_TRACE=1'])
+        else:
+            COPT[comp].extend(['-DZSTD_TRACE=1'])
+else:
+    for comp in COPT:
+        if comp == 'msvc':
+            COPT[comp].extend(['/DZSTD_TRACE=0'])
+        else:
+            COPT[comp].extend(['-DZSTD_TRACE=0'])
+
 
 class ZstdBuildExt( build_ext ):
 
@@ -123,7 +143,10 @@ if not SUP_EXTERNAL:
             'decompress/zstd_ddict.c',
             'decompress/huf_decompress.c',
 
-            'common/entropy_common.c', 'common/zstd_common.c', 'common/xxhash.c', 'common/error_private.c',
+            'common/entropy_common.c',
+            'common/zstd_common.c',
+            'common/zstd_trace.c',
+            'common/xxhash.c', 'common/error_private.c',
             'common/pool.c',
             'common/threading.c',
         ]:
@@ -193,5 +216,6 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
     ]
 )
