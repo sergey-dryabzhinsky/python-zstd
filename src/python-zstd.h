@@ -78,11 +78,6 @@ static PyObject *py_zstd_module_version(PyObject* self, PyObject *args);
 static PyObject *py_zstd_library_version(PyObject* self, PyObject *args);
 static PyObject *py_zstd_library_version_int(PyObject* self, PyObject *args);
 
-#if PYZSTD_LEGACY > 0
-static PyObject *py_zstd_compress_old(PyObject* self, PyObject *args);
-static PyObject *py_zstd_uncompress_old(PyObject* self, PyObject *args);
-#endif
-
 #if PY_MAJOR_VERSION < 3
 PyMODINIT_FUNC initzstd(void);
 #endif
