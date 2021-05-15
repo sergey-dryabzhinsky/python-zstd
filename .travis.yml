@@ -65,9 +65,7 @@ install:
 script:
 - python setup.py test
 - python setup.py clean -a
-- env PYZSTD_LEGACY=1 python setup.py --pyzstd-legacy test
-- python setup.py clean -a
-- env LEGACY=1 PYZSTD_LEGACY=1 python setup.py --legacy --pyzstd-legacy test
+- env LEGACY=1 python setup.py --legacy test
 - python setup.py clean -a
 - python setup.py --external test || true
 - python setup.py clean -a

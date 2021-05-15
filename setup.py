@@ -8,13 +8,13 @@ from setuptools import setup, find_packages, Extension
 from setuptools.command.build_ext import build_ext
 
 # ZSTD version
-VERSION = (1, 4, 9,)
+VERSION = (1, 5, 0,)
 VERSION_STR = ".".join([str(x) for x in VERSION])
 
 # Package version
 PKG_VERSION = VERSION
 # Minor versions
-PKG_VERSION += ("1",)
+PKG_VERSION += ("0",)
 PKG_VERSION_STR = ".".join([str(x) for x in PKG_VERSION])
 
 ###
@@ -32,12 +32,6 @@ if "--debug-trace" in sys.argv:
     # Support tracing for debug
     SUP_TRACE=1
     sys.argv.remove("--debug-trace")
-
-SUP_PYZSTD_LEGACY=0
-if "--pyzstd-legacy" in sys.argv:
-    # Support ZSTD legacy format
-    SUP_PYZSTD_LEGACY=1
-    sys.argv.remove("--pyzstd-legacy")
 
 SUP_EXTERNAL=0
 ext_libraries=[]
@@ -92,13 +86,6 @@ if SUP_LEGACY:
         else:
             COPT[comp].extend(['-Izstd/lib/legacy', '-DZSTD_LEGACY_SUPPORT=1'])
 
-if SUP_PYZSTD_LEGACY:
-    for comp in COPT:
-        if comp == 'msvc':
-            COPT[comp].extend(['/DPYZSTD_LEGACY=1'])
-        else:
-            COPT[comp].extend(['-DPYZSTD_LEGACY=1'])
-
 # Force traceing support or disable
 if SUP_TRACE:
     for comp in COPT:
@@ -145,7 +132,6 @@ if not SUP_EXTERNAL:
 
             'common/entropy_common.c',
             'common/zstd_common.c',
-            'common/zstd_trace.c',
             'common/xxhash.c', 'common/error_private.c',
             'common/pool.c',
             'common/threading.c',
@@ -162,30 +148,38 @@ zstdFiles.append('src/util.c')
 zstdFiles.append('src/python-zstd.c')
 
 
-def setup_env():
-    # Python 2.6 compat
-    os.environ["VERSION"] = VERSION_STR
-    os.environ["PKG_VERSION"] = PKG_VERSION_STR
-    os.environ["LEGACY"] = "0"
-    os.environ["ZSTD_EXTERNAL"] = "0"
-    os.environ["PYZSTD_LEGACY"] = "0"
-    if SUP_LEGACY:
-        os.environ["LEGACY"] = "1"
-    if SUP_EXTERNAL:
-        os.environ["ZSTD_EXTERNAL"] = "1"
-    if SUP_PYZSTD_LEGACY:
-        os.environ["PYZSTD_LEGACY"] = "1"
-
 # Another dirty hack
-def my_test_suite():
+def my_test_suite(legacy=False, external=False):
     import unittest
 
-    setup_env()
+    os.environ["VERSION"] = VERSION_STR
+    os.environ["PKG_VERSION"] = PKG_VERSION_STR
+    os.environ["LEGACY"] = legacy and "1" or "0"
+    os.environ["ZSTD_EXTERNAL"] = external and "1" or "0"
+
     test_suite = unittest.TestSuite()
     for test in os.listdir('tests'):
         if test.startswith("test_") and test.endswith(".py"):
             test_suite.addTest(unittest.defaultTestLoader.loadTestsFromName("tests."+test.replace(".py","")))
     return test_suite
+
+def my_test_suite_legacy():
+    return my_test_suite(True, False)
+
+def my_test_suite_external():
+    return my_test_suite(False, True)
+
+def my_test_suite_legacy_external():
+    return my_test_suite(True, True)
+
+
+test_func_name = "setup.my_test_suite"
+if SUP_LEGACY:
+    test_func_name = "setup.my_test_suite_legacy"
+if SUP_EXTERNAL:
+    test_func_name = "setup.my_test_suite_external"
+if SUP_LEGACY and SUP_EXTERNAL:
+    test_func_name = "setup.my_test_suite_legacy_external"
 
 setup(
     name='zstd',
@@ -205,7 +199,7 @@ setup(
         Extension('zstd', zstdFiles, libraries=ext_libraries)
     ],
     cmdclass = {'build_ext': ZstdBuildExt },
-    test_suite='setup.my_test_suite',
+    test_suite=test_func_name,
     classifiers=[
         'License :: OSI Approved :: BSD License',
         'Intended Audience :: Developers',

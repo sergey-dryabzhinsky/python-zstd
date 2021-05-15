@@ -35,6 +35,8 @@ As of 1.1.4 version module build without them by default.
 
 As of 1.3.4 version these functions are deprecated and will be removed in future releases.
 
+As of 1.5.0 version these functions are removed.
+
 
 DISCLAIMER
 __________
@@ -136,10 +138,16 @@ ZSTD_version_number (): int
 
    Since: 1.3.4.3
 
+
+Removed
+_______
+
 ZSTD_compress_old (data[, level]): string|bytes
   Function, compress input data block, return compressed block, or raises Error.
 
   **DEPRECATED**: Returns not compatible with ZSTD block header
+
+  **REMOVED**: since 1.5.0
 
   Params:
 
@@ -152,6 +160,8 @@ ZSTD_uncompress_old (data): string|bytes
   Function, decompress input compressed data block, return decompressed block, or raises Error.
 
   **DEPRECATED**: Accepts data with not compatible with ZSTD block header
+
+  **REMOVED**: since 1.5.0
 
   Params:
 
