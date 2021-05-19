@@ -7,3 +7,4 @@ graft tests
 include LICENSE
 include README.md
 include zstd/lib/zstd.h
+include zstd/lib/zstd_errors.h
