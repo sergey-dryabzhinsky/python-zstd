@@ -14,7 +14,7 @@ VERSION_STR = ".".join([str(x) for x in VERSION])
 # Package version
 PKG_VERSION = VERSION
 # Minor versions
-PKG_VERSION += ("1",)
+PKG_VERSION += ("2",)
 PKG_VERSION_STR = ".".join([str(x) for x in PKG_VERSION])
 
 ###
@@ -77,6 +77,14 @@ if not SUP_EXTERNAL:
         else:
             COPT[comp].extend([ '-DZSTD_MULTITHREAD=1',
                 '-Izstd/lib', '-Izstd/lib/common', '-Izstd/lib/compress', '-Izstd/lib/decompress',
+            ])
+else:
+    for comp in COPT:
+        if comp == 'msvc':
+            COPT[comp].extend([ '/DLIBZSTD_EXTERNAL=1'
+            ])
+        else:
+            COPT[comp].extend([ '-DLIBZSTD_EXTERNAL=1',
             ])
 
 if SUP_LEGACY:
@@ -149,37 +157,18 @@ zstdFiles.append('src/python-zstd.c')
 
 
 # Another dirty hack
-def my_test_suite(legacy=False, external=False):
+def my_test_suite():
     import unittest
 
     os.environ["VERSION"] = VERSION_STR
     os.environ["PKG_VERSION"] = PKG_VERSION_STR
-    os.environ["LEGACY"] = legacy and "1" or "0"
-    os.environ["ZSTD_EXTERNAL"] = external and "1" or "0"
 
     test_suite = unittest.TestSuite()
-    for test in os.listdir('tests'):
-        if test.startswith("test_") and test.endswith(".py"):
-            test_suite.addTest(unittest.defaultTestLoader.loadTestsFromName("tests."+test.replace(".py","")))
+    test_suite.addTest(unittest.defaultTestLoader.loadTestsFromName("tests.test_compress"))
+    test_suite.addTest(unittest.defaultTestLoader.loadTestsFromName("tests.test_version"))
     return test_suite
 
-def my_test_suite_legacy():
-    return my_test_suite(True, False)
-
-def my_test_suite_external():
-    return my_test_suite(False, True)
-
-def my_test_suite_legacy_external():
-    return my_test_suite(True, True)
-
-
 test_func_name = "setup.my_test_suite"
-if SUP_LEGACY:
-    test_func_name = "setup.my_test_suite_legacy"
-if SUP_EXTERNAL:
-    test_func_name = "setup.my_test_suite_external"
-if SUP_LEGACY and SUP_EXTERNAL:
-    test_func_name = "setup.my_test_suite_legacy_external"
 
 setup(
     name='zstd',

@@ -1,14 +1,8 @@
 # Tests
 
-import os
+from tests.base import BaseTestZSTD
 
-from tests.base import BaseTestZSTD, raise_skip
-
-class TestZSTD(BaseTestZSTD):
-
-    def setUp(self):
-        self.LEGACY = os.environ["LEGACY"] == "1"
-        pass
+class TestZstdCompress(BaseTestZSTD):
 
     def test_compression_random(self):
         BaseTestZSTD.helper_compression_random(self)

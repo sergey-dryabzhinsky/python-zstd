@@ -40,27 +40,26 @@ if sys.hexversion >= 0x03000000:
 
 class BaseTestZSTD(unittest.TestCase):
 
-    ZSTD_EXTERNAL = False
-    LEGACY = False
-    VERSION = ""
-    VERSION_INT = 0
-    VERSION_INT_MIN = 1 * 100*100 + 0 * 100 + 0
-    PKG_VERSION = ""
+    VERSION = "1.5.0"
+    VERSION_INT = 10500
+    VERSION_INT_MIN = 1 * 100*100 + 0 * 1*100 + 0
+    PKG_VERSION = "1.5.0.2"
 
     def helper_version(self):
         self.assertEqual(self.PKG_VERSION, zstd.version())
 
     def helper_zstd_version(self):
-        if self.ZSTD_EXTERNAL:
+        if zstd.ZSTD_external():
             return raise_skip("PyZstd was build with external version of ZSTD library (%s). It can be any version. Almost." % zstd.ZSTD_version())
         self.assertEqual(self.VERSION, zstd.ZSTD_version())
 
+    def helper_zstd_version_number_min(self):
+        self.assertFalse(self.VERSION_INT_MIN > zstd.ZSTD_version_number(), msg="PyZstd %s require external library version >= 1.0.0!" % zstd.version())
+
     def helper_zstd_version_number(self):
-        if self.ZSTD_EXTERNAL:
-            # Python 2.6 unittest missing assertLessEqual
-            self.failIf(self.VERSION_INT_MIN > zstd.ZSTD_version_number(), msg="PyZstd %s require external library version >= 1.0.0!" % zstd.version())
-        else:
-            self.assertEqual(self.VERSION_INT, zstd.ZSTD_version_number())
+        if zstd.ZSTD_external():
+            return raise_skip("PyZstd was build with external version of ZSTD library (%s). It can be any version. Almost." % zstd.ZSTD_version())
+        self.assertEqual(self.VERSION_INT, zstd.ZSTD_version_number())
 
     def helper_compression_random(self):
         DATA = os.urandom(128 * 1024)  # Read 128kb

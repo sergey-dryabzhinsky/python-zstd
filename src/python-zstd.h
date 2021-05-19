@@ -42,6 +42,12 @@
 #endif
 
 
+/*-=====  Do you build with external library?  =====-*/
+#ifndef LIBZSTD_EXTERNAL
+#define LIBZSTD_EXTERNAL 0
+#endif
+
+
 /*-=====  Pre-defined compression levels  =====-*/
 #ifndef ZSTD_CLEVEL_DEFAULT
 #define ZSTD_CLEVEL_DEFAULT 3
@@ -77,6 +83,7 @@ static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args);
 static PyObject *py_zstd_module_version(PyObject* self, PyObject *args);
 static PyObject *py_zstd_library_version(PyObject* self, PyObject *args);
 static PyObject *py_zstd_library_version_int(PyObject* self, PyObject *args);
+static PyObject *py_zstd_library_external(PyObject* self, PyObject *args);
 
 #if PY_MAJOR_VERSION < 3
 PyMODINIT_FUNC initzstd(void);
@@ -100,6 +107,7 @@ Raises a zstd.Error exception if any error occurs."
 #define VERSION_DOCSTRING       "version(): string -- Returns this module version as string."
 #define ZSTD_VERSION_DOCSTRING  "ZSTD_version(): string -- Returns ZSTD library version as string."
 #define ZSTD_INT_VERSION_DOCSTRING  "ZSTD_version_number(): int -- Returns ZSTD library version as integer.\n Format of the number is: major * 100*100 + minor * 100 + release."
+#define ZSTD_EXTERNAL_DOCSTRING  "ZSTD_external(): int -- Returns 0 or 1 if ZSTD library build as external."
 
 #if PYZSTD_LEGACY > 0
 #define COMPRESS_OLD_DOCSTRING      "compress_old(string[, level]): "PY_BYTESTR_TYPE" -- Compress string, old version, returning the compressed data.\n\nUses custom format. Not compatible with streaming or origin compression tools.\n\nRaises a zstd.Error exception if any error occurs.\n\n@deprecated"

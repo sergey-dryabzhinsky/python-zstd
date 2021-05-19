@@ -87,9 +87,9 @@ If paths to header file ``zstd.h`` and libraries is uncommon - use common ``buil
 Install from pypi
 -----------------
 
-   >>> # for Python 2.6+
+   >>> # for Python 2.7+
    >>> $ pip install zstd
-   >>> # or for Python 3.2+
+   >>> # or for Python 3.4+
    >>> $ pip3 install zstd
 
 
@@ -138,6 +138,11 @@ ZSTD_version_number (): int
 
    Since: 1.3.4.3
 
+ZSTD_external (): int
+   Returns 0 of 1 if ZSTD library build as external.
+
+   Since: 1.5.0.2
+
 
 Removed
 _______
@@ -178,11 +183,13 @@ Module has simple API:
    >>> dir(zstd)
    ['Error', 'ZSTD_compress', 'ZSTD_uncompress', 'ZSTD_version', 'ZSTD_version_number', '__doc__', '__file__', '__loader__', '__name__', '__package__', '__spec__', 'compress', 'decompress', 'dumps', 'loads', 'uncompress', 'version']
    >>> zstd.version()
-   '1.4.4.1'
+   '1.5.0.2'
    >>> zstd.ZSTD_version()
-   '1.4.4'
+   '1.5.0'
    >>> zstd.ZSTD_version_number()
-   10404
+   10500
+   >>> zstd.ZSTD_external()
+   0
 
 In python2
 

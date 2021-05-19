@@ -207,6 +207,14 @@ static PyObject *py_zstd_library_version_int(PyObject* self, PyObject *args)
     return Py_BuildValue("i", ZSTD_VERSION_NUMBER);
 }
 
+/**
+ * Returns 0 or 1 if ZSTD library build as external
+ */
+static PyObject *py_zstd_library_external(PyObject* self, PyObject *args)
+{
+    return Py_BuildValue("i", LIBZSTD_EXTERNAL);
+}
+
 
 static PyMethodDef ZstdMethods[] = {
     {"ZSTD_compress",  py_zstd_compress_mt, METH_VARARGS, COMPRESS_DOCSTRING},
@@ -219,6 +227,7 @@ static PyMethodDef ZstdMethods[] = {
     {"version",  py_zstd_module_version, METH_NOARGS, VERSION_DOCSTRING},
     {"ZSTD_version",  py_zstd_library_version, METH_NOARGS, ZSTD_VERSION_DOCSTRING},
     {"ZSTD_version_number",  py_zstd_library_version_int, METH_NOARGS, ZSTD_INT_VERSION_DOCSTRING},
+    {"ZSTD_external",  py_zstd_library_external, METH_NOARGS, ZSTD_EXTERNAL_DOCSTRING},
     {NULL, NULL, 0, NULL}
 };
 

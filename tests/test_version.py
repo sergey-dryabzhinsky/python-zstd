@@ -1,24 +1,14 @@
 # Tests
 
-import os
-
 from tests.base import BaseTestZSTD
 
-class TestZSTD(BaseTestZSTD):
-
-    def setUp(self):
-        self.ZSTD_EXTERNAL = os.environ["ZSTD_EXTERNAL"] == "1"
-        self.VERSION = os.environ["VERSION"]
-        self.PKG_VERSION = os.environ["PKG_VERSION"]
-        v = [int(n) for n in reversed(self.VERSION.split("."))]
-        self.VERSION_INT = 0
-        i = 0
-        for n in v:
-            self.VERSION_INT += n * 100**i
-            i += 1
+class TestZstdVersion(BaseTestZSTD):
 
     def test_module_version(self):
         BaseTestZSTD.helper_version(self)
+
+    def test_library_version_number_min(self):
+        BaseTestZSTD.helper_zstd_version_number_min(self)
 
     def test_library_version(self):
         BaseTestZSTD.helper_zstd_version(self)
