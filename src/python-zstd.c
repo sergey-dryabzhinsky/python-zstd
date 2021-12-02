@@ -33,6 +33,7 @@
 /* Since 3.8 it is mandatory to use proper type for # formats */
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
+#include "pythoncapi_compat.h"    // Py_SET_SIZE() for Python 3.8 and older
 
 #include "bytesobject.h"
 #include "zstd.h"
@@ -116,7 +117,7 @@ static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args)
             Py_CLEAR(result);
             return NULL;
         }
-        Py_SIZE(result) = cSize;
+        Py_SET_SIZE(result, cSize);
     }
     return result;
 }
