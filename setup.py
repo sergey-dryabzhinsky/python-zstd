@@ -14,7 +14,7 @@ VERSION_STR = ".".join([str(x) for x in VERSION])
 # Package version
 PKG_VERSION = VERSION
 # Minor versions
-PKG_VERSION += ("2",)
+PKG_VERSION += ("3",)
 PKG_VERSION_STR = ".".join([str(x) for x in PKG_VERSION])
 
 ###
@@ -203,5 +203,7 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
     ]
 )

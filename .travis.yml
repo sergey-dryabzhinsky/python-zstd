@@ -24,6 +24,9 @@ matrix:
     - name: "Python 3.9 Bionic AMD64"
       python: 3.9
       dist: bionic
+    - name: "Python 3.10 Bionic AMD64"
+      python: 3.10
+      dist: bionic
 
     - name: "Python 2.7 Xenial ARM64"
       python: 2.7
@@ -51,6 +54,10 @@ matrix:
       dist: xenial
     - name: "Python 3.9 Bionic ARM64"
       python: 3.9
+      arch: arm64
+      dist: bionic
+    - name: "Python 3.10 Bionic ARM64"
+      python: 3.10
       arch: arm64
       dist: bionic
 addons:
