@@ -134,14 +134,14 @@ ZSTD_version (): string|bytes
   Since: 1.3.4.3
 
 ZSTD_version_number (): int
-   Returns ZSTD library version in format: MAJOR*100*100 + MINOR*100 + RELEASE.
+  Returns ZSTD library version in format: MAJOR*100*100 + MINOR*100 + RELEASE.
 
-   Since: 1.3.4.3
+  Since: 1.3.4.3
 
 ZSTD_external (): int
-   Returns 0 of 1 if ZSTD library build as external.
+  Returns 0 of 1 if ZSTD library build as external.
 
-   Since: 1.5.0.2
+  Since: 1.5.0.2
 
 
 Removed
@@ -181,9 +181,9 @@ Module has simple API:
 
    >>> import zstd
    >>> dir(zstd)
-   ['Error', 'ZSTD_compress', 'ZSTD_uncompress', 'ZSTD_version', 'ZSTD_version_number', '__doc__', '__file__', '__loader__', '__name__', '__package__', '__spec__', 'compress', 'decompress', 'dumps', 'loads', 'uncompress', 'version']
+   ['Error', 'ZSTD_compress', 'ZSTD_external', 'ZSTD_uncompress', 'ZSTD_version', 'ZSTD_version_number', '__doc__', '__file__', '__loader__', '__name__', '__package__', '__spec__', 'compress', 'decompress', 'dumps', 'loads', 'uncompress', 'version']
    >>> zstd.version()
-   '1.5.0.2'
+   '1.5.0.4'
    >>> zstd.ZSTD_version()
    '1.5.0'
    >>> zstd.ZSTD_version_number()
