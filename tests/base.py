@@ -40,10 +40,10 @@ if sys.hexversion >= 0x03000000:
 
 class BaseTestZSTD(unittest.TestCase):
 
-    VERSION = "1.5.0"
-    VERSION_INT = 10500
+    VERSION = "1.5.1"
+    VERSION_INT = 10501
     VERSION_INT_MIN = 1 * 100*100 + 0 * 1*100 + 0
-    PKG_VERSION = "1.5.0.4"
+    PKG_VERSION = "1.5.1.0"
 
     def helper_version(self):
         self.assertEqual(self.PKG_VERSION, zstd.version())

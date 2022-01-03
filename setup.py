@@ -8,13 +8,13 @@ from setuptools import setup, find_packages, Extension
 from setuptools.command.build_ext import build_ext
 
 # ZSTD version
-VERSION = (1, 5, 0,)
+VERSION = (1, 5, 1,)
 VERSION_STR = ".".join([str(x) for x in VERSION])
 
 # Package version
 PKG_VERSION = VERSION
 # Minor versions
-PKG_VERSION += ("4",)
+PKG_VERSION += ("0",)
 PKG_VERSION_STR = ".".join([str(x) for x in PKG_VERSION])
 
 ###
@@ -60,12 +60,16 @@ if "--external" in sys.argv:
         ext_libraries=["zstd"]
 
 
+###
+# DVERSION - pass module version string
+# DDYNAMIC_BMI2 - disable BMI2 amd64 asembler code - can't build it, use CFLAGS with -march= bdver4, znver1/2/3, native
+#
 COPT = {
-    'msvc':     [ '/Ox', '/DVERSION=%s' % PKG_VERSION_STR, ],
-    'mingw32':  [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, ],
-    'unix':     [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, ],
-    'clang':    [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, ],
-    'gcc':      [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, ]
+    'msvc':     [ '/Ox', '/DVERSION=%s' % PKG_VERSION_STR, '/DDYNAMIC_BMI2=0' ],
+    'mingw32':  [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=0' ],
+    'unix':     [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=0' ],
+    'clang':    [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=0' ],
+    'gcc':      [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=0' ]
 }
 
 if not SUP_EXTERNAL:
@@ -128,8 +132,13 @@ if not SUP_EXTERNAL:
             'compress/zstd_compress_sequences.c',
             'compress/zstd_compress_superblock.c',
             'compress/zstdmt_compress.c',
-            'compress/zstd_fast.c', 'compress/zstd_double_fast.c', 'compress/zstd_lazy.c', 'compress/zstd_opt.c', 'compress/zstd_ldm.c',
-            'compress/fse_compress.c', 'compress/huf_compress.c',
+            'compress/zstd_fast.c',
+            'compress/zstd_double_fast.c',
+            'compress/zstd_lazy.c',
+            'compress/zstd_opt.c',
+            'compress/zstd_ldm.c',
+            'compress/fse_compress.c',
+            'compress/huf_compress.c',
             'compress/hist.c',
 
             'common/fse_decompress.c',
@@ -140,7 +149,8 @@ if not SUP_EXTERNAL:
 
             'common/entropy_common.c',
             'common/zstd_common.c',
-            'common/xxhash.c', 'common/error_private.c',
+            'common/xxhash.c',
+            'common/error_private.c',
             'common/pool.c',
             'common/threading.c',
         ]:
