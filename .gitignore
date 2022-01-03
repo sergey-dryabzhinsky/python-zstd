@@ -1,6 +1,7 @@
 build
 sdist
 dist
+venv
 
 .idea
 .settings

@@ -61,11 +61,11 @@ if "--external" in sys.argv:
 
 
 COPT = {
-    'msvc':     [ '/Ox', '/DVERSION=\"\\\"%s\\\"\"' % PKG_VERSION_STR, ],
-    'mingw32':  [ '-O2', '-DVERSION="%s"' % PKG_VERSION_STR, ],
-    'unix':     [ '-O2', '-DVERSION="%s"' % PKG_VERSION_STR, ],
-    'clang':    [ '-O2', '-DVERSION="%s"' % PKG_VERSION_STR, ],
-    'gcc':      [ '-O2', '-DVERSION="%s"' % PKG_VERSION_STR, ]
+    'msvc':     [ '/Ox', '/DVERSION=%s' % PKG_VERSION_STR, ],
+    'mingw32':  [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, ],
+    'unix':     [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, ],
+    'clang':    [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, ],
+    'gcc':      [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, ]
 }
 
 if not SUP_EXTERNAL:
