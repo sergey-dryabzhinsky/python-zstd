@@ -153,8 +153,8 @@ _Py_SET_SIZE(PyVarObject *ob, Py_ssize_t size)
 #endif
 
 
-// bpo-40421 added PyFrame_GetCode() to Python 3.9.0b1
-#if PY_VERSION_HEX < 0x030900B1
+// bpo-40421 added PyFrame_GetCode() to Python 3.9.0b1 // pypy not implemented this
+#if PY_VERSION_HEX < 0x030900B1 || defined(PYPY_VERSION)
 static inline PyCodeObject*
 PyFrame_GetCode(PyFrameObject *frame)
 {
