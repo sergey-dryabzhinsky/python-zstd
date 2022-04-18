@@ -21,24 +21,26 @@ PKG_VERSION_STR = ".".join([str(x) for x in PKG_VERSION])
 # Ugly hacks, I know
 #
 
-SUP_LEGACY=0
+SUP_LEGACY="ZSTD_LEGACY" in os.environ
 if "--legacy" in sys.argv:
     # Support legacy output format functions
-    SUP_LEGACY=1
+    SUP_LEGACY=True
     sys.argv.remove("--legacy")
 
-SUP_TRACE=0
+SUP_TRACE="ZSTD_TRACE" in os.environ
 if "--debug-trace" in sys.argv:
     # Support tracing for debug
-    SUP_TRACE=1
+    SUP_TRACE=True
     sys.argv.remove("--debug-trace")
 
-SUP_EXTERNAL=0
+SUP_EXTERNAL="ZSTD_EXTERNAL" in os.environ
 ext_libraries=[]
 if "--external" in sys.argv:
     # You want use external Zstd library?
-    SUP_EXTERNAL=1
+    SUP_EXTERNAL=True
     sys.argv.remove("--external")
+
+if SUP_EXTERNAL:
     # You should add external library by option: --libraries zstd
     # And probably include paths by option: --include-dirs /usr/include/zstd
     # And probably library paths by option: --library-dirs /usr/lib/i386-linux-gnu
