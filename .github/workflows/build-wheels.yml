@@ -51,10 +51,12 @@ jobs:
         env:
           # build just supported python versions at December 2021
           CIBW_BUILD: 'cp36-* cp37-* cp38-* cp39-* cp310-*'
-          # Skip 32-bit builds
-          CIBW_SKIP: '*-win32 *_i686'
-          CIBW_MANYLINUX_X86_64_IMAGE: manylinux2010
-          CIBW_MANYLINUX_AARCH64_IMAGE: manylinux2014
+          # Skip 32-bit builds // NO
+          # CIBW_SKIP: '*-win32 *_i686'
+          CIBW_MANYLINUX_I686_IMAGE: manylinux1
+          CIBW_MANYLINUX_X86_64_IMAGE: manylinux1
+          CIBW_MANYLINUX_AARCH64_IMAGE: manylinux1
+          CIBW_MUSLLINUX_I686_IMAGE: musllinux_1_1
           CIBW_MUSLLINUX_X86_64_IMAGE: musllinux_1_1
           # Only build on x86 and arm64 for linux
           CIBW_ARCHS_LINUX: auto aarch64
