@@ -91,10 +91,6 @@ jobs:
           if [ -n "$SECRET" ]; then HAS_SECRET='true' ; fi
           echo ::set-output name=HAS_SECRET::${HAS_SECRET}
         env:
-          PYPI_U: "${{ secrets.pypi_username }}"
-          PYPI_P: "${{ secrets.pypi_password }}"
-          PYPI_TU: "${{ secrets.test_pypi_username }}"
-          PYPI_TP: "${{ secrets.test_pypi_password }}"
           SECRET: "${{ secrets.test_pypi_password }}"
 
       - name: Install twine
@@ -108,9 +104,9 @@ jobs:
           # If the PR/Push has secret access
           # and PYPI_PASSWORD is in GH Secrets for this repo
           # and this is a tag, publish to PyPI
-          TWINE_USERNAME: ${{ secrets.pypi_username }}
+          TWINE_USERNAME: "${{ secrets.pypi_username }}"
           TWINE_NON_INTERACTIVE: 1
-          TWINE_PASSWORD: ${{ secrets.pypi_password }}
+          TWINE_PASSWORD: "${{ secrets.pypi_password }}"
         run: twine upload --non-interactive --skip-existing --verbose 'dist/*'
 
       - name: Publish distribution to Test PyPI
@@ -120,7 +116,7 @@ jobs:
           # and TEST_PYPI_PASSWORD is in GH Secrets for this repo
           # then publish each build to test PyPI
           TWINE_REPOSITORY_URL: https://test.pypi.org/legacy/
-          TWINE_USERNAME: ${{ secrets.text_pypi_username }}
+          TWINE_USERNAME: "${{ secrets.text_pypi_username }}"
           TWINE_NON_INTERACTIVE: 1
-          TWINE_PASSWORD: ${{ secrets.test_pypi_password }}
-        run: twine upload --non-interactive --skip-existing --verbose 'dist/*'
+          TWINE_PASSWORD: "${{ secrets.test_pypi_password }}"
+        run: twine upload --username "{{ secrets.text_pypi_username }}" --password "${{ secrets.test_pypi_password }}" --repository-url "https://test.pypi.org/legacy/" --non-interactive --skip-existing --verbose 'dist/*'
