@@ -14,7 +14,7 @@ VERSION_STR = ".".join([str(x) for x in VERSION])
 # Package version
 PKG_VERSION = VERSION
 # Minor versions
-PKG_VERSION += ("2",)
+PKG_VERSION += ("3",)
 PKG_VERSION_STR = ".".join([str(x) for x in PKG_VERSION])
 
 ###
@@ -44,7 +44,7 @@ if SUP_EXTERNAL:
     # You should add external library by option: --libraries zstd
     # And probably include paths by option: --include-dirs /usr/include/zstd
     # And probably library paths by option: --library-dirs /usr/lib/i386-linux-gnu
-    # Wee need pkg-config here!
+    # We need pkg-config here!
     pkgconf = "/usr/bin/pkg-config"
     if os.path.exists(pkgconf):
         cmd = [pkgconf, "libzstd", "--modversion"]
