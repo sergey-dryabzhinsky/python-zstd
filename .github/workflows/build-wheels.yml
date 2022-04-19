@@ -104,7 +104,7 @@ jobs:
           # If the PR/Push has secret access
           # and PYPI_PASSWORD is in GH Secrets for this repo
           # and this is a tag, publish to PyPI
-          TWINE_USERNAME: __token__
+          TWINE_USERNAME: ${{ secrets.pypi_username }}
           TWINE_NON_INTERACTIVE: 1
           TWINE_PASSWORD: ${{ secrets.pypi_password }}
         run: twine upload --non-interactive --skip-existing --verbose 'dist/*'
@@ -116,7 +116,7 @@ jobs:
           # and TEST_PYPI_PASSWORD is in GH Secrets for this repo
           # then publish each build to test PyPI
           TWINE_REPOSITORY_URL: https://test.pypi.org/legacy/
-          TWINE_USERNAME: __token__
+          TWINE_USERNAME: ${{ secrets.text_pypi_username }}
           TWINE_NON_INTERACTIVE: 1
           TWINE_PASSWORD: ${{ secrets.test_pypi_password }}
         run: twine upload --non-interactive --skip-existing --verbose 'dist/*'
