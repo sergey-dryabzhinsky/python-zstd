@@ -91,6 +91,10 @@ jobs:
           if [ -n "$SECRET" ]; then HAS_SECRET='true' ; fi
           echo ::set-output name=HAS_SECRET::${HAS_SECRET}
         env:
+          PYPI_U: "${{ secrets.pypi_username }}"
+          PYPI_P: "${{ secrets.pypi_password }}"
+          PYPI_TU: "${{ secrets.test_pypi_username }}"
+          PYPI_TP: "${{ secrets.test_pypi_password }}"
           SECRET: "${{ secrets.test_pypi_password }}"
 
       - name: Install twine
