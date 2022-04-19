@@ -8,6 +8,9 @@ python-zstd
 .. image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg?branch=master&event=release
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml
 
+.. image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml
+
 Simple python bindings to Yann Collet ZSTD compression library.
 
 **Zstd**, short for Zstandard, is a new lossless compression algorithm,
