@@ -115,9 +115,9 @@ jobs:
           CIBW_BUILD: 'cp39-* cp310-* pp37-* pp38-* pp39-*'
           # Skip 32-bit builds // NO
           # CIBW_SKIP: '*-win32 *_i686'
-          CIBW_MANYLINUX_I686_IMAGE: manylinux2010
-          CIBW_MANYLINUX_X86_64_IMAGE: manylinux2010
-          CIBW_MANYLINUX_AARCH64_IMAGE: manylinux2010
+          CIBW_MANYLINUX_I686_IMAGE: manylinux2014
+          CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
+          CIBW_MANYLINUX_AARCH64_IMAGE: manylinux2014
           CIBW_MUSLLINUX_I686_IMAGE: musllinux_1_2
           CIBW_MUSLLINUX_X86_64_IMAGE: musllinux_1_2
           # Only build on x86 and arm64 for linux
