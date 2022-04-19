@@ -67,6 +67,10 @@ To build with Zstd legacy versions support - pass ``--legacy`` option to setup.p
 
    >>> $ python setup.py build_ext --legacy clean
 
+When using a PEP 517 builder you can use ``ZSTD_LEGACY`` environment variable instead:
+
+   >>> $ ZSTD_LEGACY=1 python -m build -w
+
 Note: Python-Zstd legacy format support removed since 1.5.0.
 If you need to convert old data - checkout 1.4.9.1 module version. Support of it disabled by default.
 To build with python-zstd legacy format support (pre 1.1.2) - pass ``--pyzstd-legacy`` option to setup.py script:
@@ -78,6 +82,10 @@ But beware! Legacy formats support state is unknown in this case.
 And if your version not equal with python-zstd - tests may not pass.
 
    >>> $ python setup.py build_ext --external clean
+
+When using a PEP 517 builder you can use ``ZSTD_EXTERNAL`` environment variable instead:
+
+   >>> $ ZSTD_EXTERNAL=1 python -m build -w
 
 If paths to header file ``zstd.h`` and libraries is uncommon - use common ``build`` params:
 --libraries --include-dirs --library-dirs.
