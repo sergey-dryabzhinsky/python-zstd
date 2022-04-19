@@ -50,7 +50,7 @@ jobs:
           output-dir: dist
         env:
           # build just supported python versions at December 2021
-          CIBW_BUILD: 'cp27-* cp35-*'
+          CIBW_BUILD: 'cp27-* cp35-* pp27-* pp36-*'
           # Skip 32-bit builds // NO
           # CIBW_SKIP: '*-win32 *_i686'
           CIBW_MANYLINUX_I686_IMAGE: manylinux1
