@@ -14,7 +14,7 @@ VERSION_STR = ".".join([str(x) for x in VERSION])
 # Package version
 PKG_VERSION = VERSION
 # Minor versions
-PKG_VERSION += ("4",)
+PKG_VERSION += ("5",)
 PKG_VERSION_STR = ".".join([str(x) for x in PKG_VERSION])
 
 ###
@@ -65,13 +65,14 @@ if SUP_EXTERNAL:
 ###
 # DVERSION - pass module version string
 # DDYNAMIC_BMI2 - disable BMI2 amd64 asembler code - can't build it, use CFLAGS with -march= bdver4, znver1/2/3, native
+# DZSTD_DISABLE_ASM=1 - disable ASM inlines, pypi/pip can't build them
 #
 COPT = {
-    'msvc':     [ '/Ox', '/DVERSION=%s' % PKG_VERSION_STR, '/DDYNAMIC_BMI2=0' ],
-    'mingw32':  [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=0' ],
-    'unix':     [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=0' ],
-    'clang':    [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=0' ],
-    'gcc':      [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=0' ]
+    'msvc':     [ '/Ox', '/DVERSION=%s' % PKG_VERSION_STR, '/DDYNAMIC_BMI2=0', '/DZSTD_DISABLE_ASM=1' ],
+    'mingw32':  [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=0', '-DZSTD_DISABLE_ASM=1' ],
+    'unix':     [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=0', '-DZSTD_DISABLE_ASM=1' ],
+    'clang':    [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=0', '-DZSTD_DISABLE_ASM=1' ],
+    'gcc':      [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=0', '-DZSTD_DISABLE_ASM=1' ]
 }
 
 if not SUP_EXTERNAL:
