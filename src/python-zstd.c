@@ -103,7 +103,7 @@ static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args)
         return NULL;
     }
 
-    if (source_size > 0) {
+    if (source_size >= 0) {
         dest = PyBytes_AS_STRING(result);
 
         cctx = ZSTD_createCCtx();
