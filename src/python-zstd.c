@@ -150,8 +150,8 @@ static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args)
         return NULL;
 #endif
 
-    dest_size = (uint64_t) ZSTD_getDecompressedSize(source, source_size);
-    if (dest_size == 0) {
+    dest_size = (uint64_t) ZSTD_getFrameContentSize(source, source_size);
+    if (dest_size == ZSTD_CONTENTSIZE_UNKNOWN || dest_size == ZSTD_CONTENTSIZE_ERROR) {
         PyErr_Format(ZstdError, "Input data invalid or missing content size in frame header.");
         return NULL;
     }
