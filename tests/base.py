@@ -122,3 +122,12 @@ class BaseTestZSTD(unittest.TestCase):
         else:
             DATA = b"This is must be very very long string to be compressed by zstd. AAAAAAAAAAAAARGGHHH!!! Just hope its enough length." + " И немного юникода.".encode()
         self.assertEqual(DATA, zstd.decompress(zstd.compress(DATA, 20)))
+
+    def helper_compression_empty_string(self):
+        # https://github.com/sergey-dryabzhinsky/python-zstd/issues/80
+        # An empty string should be able to be compressed and decompressed
+        # All levels 1-20 are tested, just to be safe.
+        data = b""
+
+        for level in range(0, 20):
+            self.assertEqual(data, zstd.decompress(zstd.compress(data, level + 1)))
