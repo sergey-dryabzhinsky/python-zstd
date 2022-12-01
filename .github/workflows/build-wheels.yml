@@ -10,6 +10,34 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-10.15, ubuntu-latest, windows-latest]
+        cibw:
+          # build just supported python versions at December 2021
+          - build: cp27-*
+            group: old
+          - build: cp35-*
+            group: old
+          - build: cp36-*
+            group: old
+          - build: pp27-*
+            group: old
+          - build: pp36-*
+            group: old
+          - build: cp37-*
+            group: new
+          - build: cp38-*
+            group: new
+          - build: cp39-*
+            group: new
+          - build: cp310-*
+            group: new
+          - build: cp311-*
+            group: new
+          - build: pp37-*
+            group: new
+          - build: pp38-*
+            group: new
+          - build: pp39-*
+            group: new
 
     steps:
       - name: Cancel previous runs on the same branch
@@ -46,11 +74,11 @@ jobs:
 
       - name: Build ${{ matrix.os }} wheels and test (old)
         uses: joerick/cibuildwheel@v1.11.1
+        if: matrix.cibw.group == 'old'
         with:
           output-dir: dist
         env:
-          # build just supported python versions at December 2021
-          CIBW_BUILD: 'cp27-* cp35-* cp36-* pp27-* pp36-*'
+          CIBW_BUILD: ${{ matrix.cibw.build }}
           # Skip 32-bit builds // NO
           # CIBW_SKIP: '*-win32 *_i686'
           CIBW_MANYLINUX_I686_IMAGE: manylinux1
@@ -77,11 +105,11 @@ jobs:
 
       - name: Build ${{ matrix.os }} wheels and test (new)
         uses: joerick/cibuildwheel@v2.11.1
+        if: matrix.cibw.group == 'new'
         with:
           output-dir: dist
         env:
-          # build just supported python versions at December 2021
-          CIBW_BUILD: 'cp37-* cp38-* cp39-* cp310-* cp311-* pp37-* pp38-* pp39-*'
+          CIBW_BUILD: ${{ matrix.cibw.build }}
           # Skip 32-bit builds // NO
           # CIBW_SKIP: '*-win32 *_i686'
           CIBW_MANYLINUX_I686_IMAGE: manylinux2014
