@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   build_wheels:
-    name: Build wheel on ${{ matrix.os }}
+    name: Build wheel - ${{ matrix.cibw.build }} ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
