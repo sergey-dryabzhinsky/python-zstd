@@ -2,6 +2,10 @@ name: Build wheels
 
 on: [push, pull_request]
 
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}-${{ github.event_name }}-${{ github.ref == format('refs/heads/{0}', github.event.repository.default_branch) && github.sha || '' }}
+  cancel-in-progress: true
+
 jobs:
   build_wheels:
     name: Build wheel on ${{ matrix.os }}
@@ -12,12 +16,6 @@ jobs:
         os: [macos-10.15, ubuntu-latest, windows-latest]
 
     steps:
-      - name: Cancel previous runs on the same branch
-        if: ${{ github.ref != 'refs/heads/master' }}
-        uses: styfle/cancel-workflow-action@0.9.1
-        with:
-          access_token: ${{ github.token }}
-
       - name: Checkout code
         uses: actions/checkout@v2
         with:
