@@ -8,13 +8,13 @@ from setuptools import setup, find_packages, Extension
 from setuptools.command.build_ext import build_ext
 
 # ZSTD version
-VERSION = (1, 5, 2,)
+VERSION = (1, 5, 4,)
 VERSION_STR = ".".join([str(x) for x in VERSION])
 
 # Package version
 PKG_VERSION = VERSION
 # Minor versions
-PKG_VERSION += ("6",)
+PKG_VERSION += ("0",)
 PKG_VERSION_STR = ".".join([str(x) for x in PKG_VERSION])
 
 ###
