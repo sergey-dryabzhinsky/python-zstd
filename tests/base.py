@@ -43,7 +43,7 @@ class BaseTestZSTD(unittest.TestCase):
     VERSION = "1.5.4"
     VERSION_INT = 10504
     VERSION_INT_MIN = 1 * 100*100 + 0 * 1*100 + 0
-    PKG_VERSION = "1.5.4.0"
+    PKG_VERSION = "1.5.4.1"
 
     def helper_version(self):
         self.assertEqual(self.PKG_VERSION, zstd.version())

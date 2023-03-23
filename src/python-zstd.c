@@ -224,6 +224,25 @@ static PyObject *py_zstd_library_external(PyObject* self, PyObject *args)
 }
 
 
+/**
+ * Returns ZSTD determined threads count, int
+ */
+static PyObject *py_zstd_threads_count(PyObject* self, PyObject *args)
+{
+    int32_t threads = UTIL_countPhysicalCores();
+
+    return Py_BuildValue("i", threads);
+}
+
+/**
+ * Returns ZSTD determined max threads count, int
+ */
+static PyObject *py_zstd_max_threads_count(PyObject* self, PyObject *args)
+{
+    return Py_BuildValue("i", ZSTDMT_NBWORKERS_MAX);
+}
+
+
 static PyMethodDef ZstdMethods[] = {
     {"ZSTD_compress",  py_zstd_compress_mt, METH_VARARGS, COMPRESS_DOCSTRING},
     {"ZSTD_uncompress",  py_zstd_uncompress, METH_VARARGS, UNCOMPRESS_DOCSTRING},
@@ -235,6 +254,8 @@ static PyMethodDef ZstdMethods[] = {
     {"version",  py_zstd_module_version, METH_NOARGS, VERSION_DOCSTRING},
     {"ZSTD_version",  py_zstd_library_version, METH_NOARGS, ZSTD_VERSION_DOCSTRING},
     {"ZSTD_version_number",  py_zstd_library_version_int, METH_NOARGS, ZSTD_INT_VERSION_DOCSTRING},
+    {"ZSTD_threads_count",  py_zstd_threads_count, METH_NOARGS, ZSTD_THREADS_COUNT_DOCSTRING},
+    {"ZSTD_max_threads_count",  py_zstd_max_threads_count, METH_NOARGS, ZSTD_MAX_THREADS_COUNT_DOCSTRING},
     {"ZSTD_external",  py_zstd_library_external, METH_NOARGS, ZSTD_EXTERNAL_DOCSTRING},
     {NULL, NULL, 0, NULL}
 };
