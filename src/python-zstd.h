@@ -58,7 +58,7 @@
 #endif
 
 #ifndef ZSTDMT_NBWORKERS_MAX
-#define ZSTDMT_NBWORKERS_MAX 200
+#define ZSTDMT_NBWORKERS_MAX ((sizeof(void*)==4) /*32-bit*/ ? 64 : 256)
 #endif
 
 /* --== Negative fast compression levels only since 1.3.4 ==-- */
@@ -108,6 +108,8 @@ Raises a zstd.Error exception if any error occurs."
 #define ZSTD_VERSION_DOCSTRING  "ZSTD_version(): string -- Returns ZSTD library version as string."
 #define ZSTD_INT_VERSION_DOCSTRING  "ZSTD_version_number(): int -- Returns ZSTD library version as integer.\n Format of the number is: major * 100*100 + minor * 100 + release."
 #define ZSTD_EXTERNAL_DOCSTRING  "ZSTD_external(): int -- Returns 0 or 1 if ZSTD library build as external."
+#define ZSTD_THREADS_COUNT_DOCSTRING  "ZSTD_threads_count(): int -- Returns ZSTD determined CPU cores count in integer."
+#define ZSTD_MAX_THREADS_COUNT_DOCSTRING  "ZSTD_max_threads_count(): int -- Returns ZSTD library determined maximum working threads count in integer."
 
 #if PYZSTD_LEGACY > 0
 #define COMPRESS_OLD_DOCSTRING      "compress_old(string[, level]): "PY_BYTESTR_TYPE" -- Compress string, old version, returning the compressed data.\n\nUses custom format. Not compatible with streaming or origin compression tools.\n\nRaises a zstd.Error exception if any error occurs.\n\n@deprecated"
