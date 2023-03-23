@@ -58,7 +58,7 @@
 #endif
 
 #ifndef ZSTDMT_NBWORKERS_MAX
-#define ZSTDMT_NBWORKERS_MAX 200
+#define ZSTDMT_NBWORKERS_MAX ((sizeof(void*)==4) /*32-bit*/ ? 64 : 256)
 #endif
 
 /* --== Negative fast compression levels only since 1.3.4 ==-- */

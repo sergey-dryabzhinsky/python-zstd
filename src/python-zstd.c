@@ -93,8 +93,10 @@ static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args)
     if (0 == threads) threads = UTIL_countPhysicalCores();
     /* If threads more than 200 - raise Error. */
     if (threads > ZSTDMT_NBWORKERS_MAX) {
-        PyErr_Format(ZstdError, "Bad threads count - more than %d: %d", ZSTDMT_NBWORKERS_MAX, threads);
-        return NULL;
+        threads = ZSTDMT_NBWORKERS_MAX;
+        // do not fail here, due auto thread counter
+        //PyErr_Format(ZstdError, "Bad threads count - more than %d: %d", ZSTDMT_NBWORKERS_MAX, threads);
+        //return NULL;
     }
 
     dest_size = (Py_ssize_t)ZSTD_compressBound(source_size);
