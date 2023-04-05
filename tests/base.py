@@ -40,10 +40,10 @@ if sys.hexversion >= 0x03000000:
 
 class BaseTestZSTD(unittest.TestCase):
 
-    VERSION = "1.5.4"
-    VERSION_INT = 10504
+    VERSION = "1.5.5"
+    VERSION_INT = 10505
     VERSION_INT_MIN = 1 * 100*100 + 0 * 1*100 + 0
-    PKG_VERSION = "1.5.4.1"
+    PKG_VERSION = "1.5.5.1"
 
     def helper_version(self):
         self.assertEqual(self.PKG_VERSION, zstd.version())
@@ -131,3 +131,16 @@ class BaseTestZSTD(unittest.TestCase):
 
         for level in range(0, 20):
             self.assertEqual(data, zstd.decompress(zstd.compress(data, level + 1)))
+
+    def helper_compression_multiple_blocks(self):
+        # https://github.com/sergey-dryabzhinsky/python-zstd/issues/94
+        # An conctenaed blocks should be able to be decompressed
+        if sys.hexversion < 0x03000000:
+            import codecs
+            data = codecs.decode("28b52ffd200631000068656c6c6f0a28b52ffd2006310000776f726c640a", 'hex_codec')
+            odata = "hello\nworld\n"
+        else:
+            data = bytes.fromhex("28b52ffd200631000068656c6c6f0a28b52ffd2006310000776f726c640a")
+            odata = b"hello\nworld\n"
+
+        self.assertEqual(odata, zstd.decompress(data))

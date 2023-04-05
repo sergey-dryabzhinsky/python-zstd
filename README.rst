@@ -2,7 +2,7 @@
 python-zstd
 =============
 
-.. |releaseW| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg?branch=v1.5.4.0
+.. |releaseW| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg?branch=v1.5.5.1
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml
 
 .. |masterW| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg
@@ -136,12 +136,14 @@ ZSTD_compress (data[, level, threads]): string|bytes
   Max number of threads:
   - 32bit system: 64
   - 64bit system: 256
-  If provided bigger number - siletly set maximum number (since 1.5.4.1)
+  If provided bigger number - silemtly set maximum number (since 1.5.4.1)
 
   Since: 0.1
 
 ZSTD_uncompress (data): string|bytes
   Function, decompress input compressed data block, return decompressed block, or raises Error.
+
+  Support compressed data with multiple/concatenated frames (blocks) (since 1.5.5.1).
 
   Params:
 

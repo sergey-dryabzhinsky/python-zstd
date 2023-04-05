@@ -39,9 +39,13 @@ class TestZstdCompress(BaseTestZSTD):
 
     def test_compression_level20(self):
         BaseTestZSTD.helper_compression_level20(self)
-    
+
     def test_compression_empty_string(self):
         BaseTestZSTD.helper_compression_empty_string(self)
+
+    def test_compression_multiple_blocks(self):
+        BaseTestZSTD.helper_compression_multiple_blocks(self)
+
 
 if __name__ == '__main__':
     unittest.main()
