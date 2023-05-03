@@ -15,7 +15,7 @@ jobs:
       matrix:
         os:
           - name: macOS
-            runs-on: macos-10.15
+            runs-on: macos-10.14
             matrix: macos
           - name: Linux
             runs-on: ubuntu-latest
@@ -24,7 +24,7 @@ jobs:
             runs-on: windows-latest
             matrix: windows
         cibw:
-          # build just supported python versions at December 2021
+          # build just supported python versions at May 2023
           - build: cp27-*
             group: old
           - build: cp35-*
@@ -45,8 +45,8 @@ jobs:
             group: new
           - build: cp311-*
             group: new
-          - build: cp312-*
-            group: new
+          - build: pp27-*
+            group: old
           - build: pp37-*
             group: new
           - build: pp38-*
