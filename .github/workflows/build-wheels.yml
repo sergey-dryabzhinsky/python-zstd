@@ -45,6 +45,8 @@ jobs:
             group: new
           - build: cp311-*
             group: new
+          - build: cp312-*
+            group: new
           - build: pp37-*
             group: new
           - build: pp38-*
@@ -120,7 +122,7 @@ jobs:
             python -m unittest discover -v -s {package}
 
       - name: Build ${{ matrix.os.name }} wheels and test (new)
-        uses: joerick/cibuildwheel@v2.12.1
+        uses: joerick/cibuildwheel@v2.12.3
         if: matrix.cibw.group == 'new'
         with:
           output-dir: dist
