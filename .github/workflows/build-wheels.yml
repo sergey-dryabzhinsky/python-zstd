@@ -45,6 +45,8 @@ jobs:
             group: new
           - build: cp311-*
             group: new
+          - build: cp312-*
+            group: new
           - build: pp27-*
             group: old
           - build: pp37-*
@@ -91,7 +93,7 @@ jobs:
           python -m build --sdist --outdir dist .
 
       - name: Build ${{ matrix.os.name }} wheels and test (old)
-        uses: joerick/cibuildwheel@v1.11.1
+        uses: pypa/cibuildwheel@v2.19.1
         if: matrix.cibw.group == 'old'
         with:
           output-dir: dist
