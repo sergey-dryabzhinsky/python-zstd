@@ -93,7 +93,7 @@ jobs:
           python -m build --sdist --outdir dist .
 
       - name: Build ${{ matrix.os.name }} wheels and test (old)
-        uses: pypa/cibuildwheel@v2.22.0
+        uses: pypa/cibuildwheel@v1.12.0
         if: matrix.cibw.group == 'old'
         with:
           output-dir: dist
@@ -124,7 +124,7 @@ jobs:
             python -m unittest discover -v -s {package}
 
       - name: Build ${{ matrix.os.name }} wheels and test (new)
-        uses: joerick/cibuildwheel@v2.12.3
+        uses: joerick/cibuildwheel@v2.22.0
         if: matrix.cibw.group == 'new'
         with:
           output-dir: dist
