@@ -1,6 +1,6 @@
 Metadata-Version: 1.1
 Name: zstd
-Version: 1.5.5.1
+Version: 1.5.6.0
 Summary: Simple python bindings to Yann Collet ZSTD compression library
 Home-page: https://github.com/sergey-dryabzhinsky/python-zstd
 Author: Sergey Dryabzhinsky
