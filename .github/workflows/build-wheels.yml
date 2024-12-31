@@ -159,7 +159,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: wheels
-          path: ./dist
+          path: ./wheel
 
       - name: Test for secrets access
         id: check_secrets
