@@ -47,6 +47,8 @@ jobs:
             group: new
           - build: cp312-*
             group: new
+            build: cp313-*
+            group: new
           - build: pp27-*
             group: old
           - build: pp37-*
@@ -54,6 +56,8 @@ jobs:
           - build: pp38-*
             group: new
           - build: pp39-*
+            group: new
+            build: pp310-*
             group: new
         exclude:
           - os:
