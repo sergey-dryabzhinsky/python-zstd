@@ -96,7 +96,7 @@ jobs:
         uses: pypa/cibuildwheel@v1.12.0
         if: matrix.cibw.group == 'old'
         with:
-          output-dir: wheel
+          output-dir: dist
         env:
           CIBW_BUILD: ${{ matrix.cibw.build }}
           # Skip 32-bit builds // NO
@@ -127,7 +127,7 @@ jobs:
         uses: joerick/cibuildwheel@v2.22.0
         if: matrix.cibw.group == 'new'
         with:
-          output-dir: wheel
+          output-dir: dist
         env:
           CIBW_BUILD: ${{ matrix.cibw.build }}
           # Skip 32-bit builds // NO
@@ -159,7 +159,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: wheels
-          path: ./wheel
+          path: ./dist
 
       - name: Test for secrets access
         id: check_secrets
