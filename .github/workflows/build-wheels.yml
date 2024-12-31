@@ -103,8 +103,8 @@ jobs:
           # CIBW_SKIP: '*-win32 *_i686'
           CIBW_MANYLINUX_I686_IMAGE: manylinux1
           CIBW_MANYLINUX_X86_64_IMAGE: manylinux1
-          CIBW_MUSLLINUX_I686_IMAGE: musllinux_1_1
-          CIBW_MUSLLINUX_X86_64_IMAGE: musllinux_1_1
+          CIBW_MUSLLINUX_I686_IMAGE: musllinux_1_2
+          CIBW_MUSLLINUX_X86_64_IMAGE: musllinux_1_2
           # Only build on x86 and arm64 for linux
           CIBW_ARCHS_LINUX: i686 x86_64
           CIBW_BEFORE_ALL_LINUX: >
@@ -156,7 +156,7 @@ jobs:
             python -m unittest discover -v -s {package}
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: wheels
           path: ./dist
