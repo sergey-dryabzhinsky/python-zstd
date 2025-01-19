@@ -294,6 +294,8 @@ static PyMethodDef ZstdMethods[] = {
     {"ZSTD_uncompress",  py_zstd_uncompress, METH_VARARGS, UNCOMPRESS_DOCSTRING},
     {"compress",  py_zstd_compress_mt, METH_VARARGS, COMPRESS_DOCSTRING},
     {"uncompress",  py_zstd_uncompress, METH_VARARGS, UNCOMPRESS_DOCSTRING},
+    {"encode",  py_zstd_compress_mt, METH_VARARGS, COMPRESS_DOCSTRING},
+    {"decode",  py_zstd_uncompress, METH_VARARGS, UNCOMPRESS_DOCSTRING},
     {"decompress",  py_zstd_uncompress, METH_VARARGS, UNCOMPRESS_DOCSTRING},
     {"dumps",  py_zstd_compress_mt, METH_VARARGS, COMPRESS_DOCSTRING},
     {"loads",  py_zstd_uncompress, METH_VARARGS, UNCOMPRESS_DOCSTRING},
