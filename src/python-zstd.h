@@ -84,6 +84,8 @@ static PyObject *py_zstd_module_version(PyObject* self, PyObject *args);
 static PyObject *py_zstd_library_version(PyObject* self, PyObject *args);
 static PyObject *py_zstd_library_version_int(PyObject* self, PyObject *args);
 static PyObject *py_zstd_library_external(PyObject* self, PyObject *args);
+static PyObject *py_zstd_with_threads(PyObject* self, PyObject *args);
+static PyObject *py_zstd_with_asm(PyObject* self, PyObject *args);
 
 #if PY_MAJOR_VERSION < 3
 PyMODINIT_FUNC initzstd(void);
@@ -108,6 +110,8 @@ Raises a zstd.Error exception if any error occurs."
 #define ZSTD_VERSION_DOCSTRING  "ZSTD_version(): string -- Returns ZSTD library version as string."
 #define ZSTD_INT_VERSION_DOCSTRING  "ZSTD_version_number(): int -- Returns ZSTD library version as integer.\n Format of the number is: major * 100*100 + minor * 100 + release."
 #define ZSTD_EXTERNAL_DOCSTRING  "ZSTD_external(): int -- Returns 0 or 1 if ZSTD library build as external."
+#define ZSTD_WITH_THREADS_DOCSTRING  "ZSTD_with_threads(): int -- Returns 0 or 1 if ZSTD library build with threads support."
+#define ZSTD_WITH_ASM_DOCSTRING  "ZSTD_with_asm(): int -- Returns 0 or 1 if ZSTD library build with assembler support."
 #define ZSTD_THREADS_COUNT_DOCSTRING  "ZSTD_threads_count(): int -- Returns ZSTD determined CPU cores count in integer."
 #define ZSTD_MAX_THREADS_COUNT_DOCSTRING  "ZSTD_max_threads_count(): int -- Returns ZSTD library determined maximum working threads count in integer."
 
