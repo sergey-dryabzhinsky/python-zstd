@@ -1,4 +1,4 @@
-=============
+7=============
 python-zstd
 =============
 
@@ -88,11 +88,10 @@ To build with python-zstd legacy format support (pre 1.1.2) - pass ``--pyzstd-le
 
    >>> $ python setup.py build_ext --pyzstd-legacy clean
 
-.
 But beware! Legacy formats support state is unknown in this case.
 And if your version not equal with python-zstd - tests may not pass.
 
- If you're scared of threads you may pass option `--libzstd-no-threads`:
+If you're scared of threads you may pass option `--libzstd-no-threads`:
 
    >>> $ python setup.py build_ext --libzstd-no-threads clean
 
@@ -100,13 +99,14 @@ When using a PEP 517 builder you can use ``ZSTD_THREADS`` environment variable i
 
    >>> $ ZSTD_THREADS=0 python -m build -w
 
- If you're meet some cpu instruction errorrsyou may try to disable built-in optimizations and pass option `--libzstd-no-use-asm`:
+If you're meet some cpu instruction errorrs you may try to disable built-in optimizations and pass option `--libzstd-no-use-asm`:
 
    >>> $ python setup.py build_ext --libzstd-no-use-asm clean
 
 Or add more speed with option `--libzstd-use-asm-bmi2` to use instructions for new AMD CPU.
 When using a PEP 517 builder you can use ``ZSTD_ASM`` environment variable instead:
-And ``ZST_ASM_BMI2=1``
+And ``ZST_ASM_BMI2=1`` too for bmi2 use.
+
    >>> $ ZSTD_ASM=0 python -m build -w
 
 
