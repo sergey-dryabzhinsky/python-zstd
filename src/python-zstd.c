@@ -196,9 +196,9 @@ static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args)
             PyErr_Format(ZstdError, "Decompression error: length mismatch -> decomp %lu != %lu [header]", (uint64_t)cSize, dest_size);
             error = 1;
         }
-    } else {
+    }/* else {
          error = 1;
-    }
+    }*/
 
     if (error) {
         Py_CLEAR(result);
