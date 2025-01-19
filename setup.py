@@ -27,7 +27,7 @@ if "--legacy" in sys.argv:
     SUP_LEGACY=True
     sys.argv.remove("--legacy")
 
-SUP_ASM="ZSTD_ASM" in os.environ
+SUP_ASM="ZSTD_ASM" in os.environ or True 
 if "--libzstd-use-asm" in sys.argv:
     # Support assembler builtin optimization in lizstd
     SUP_ASM=False
