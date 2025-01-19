@@ -11,7 +11,7 @@ class TestZstdDecompress(BaseTestZSTD):
         else:
             DATA =b''
         self.assertRaises(zstd.Error, zstd.uncompress, zstd.compress(DATA)+b' ')
-  
+
     def test_check(self)
-        self.assertEqual(1, zstd.ZSTD_check, zstd.compress(DATA))
+        self.assertEqual(1, zstd.check, zstd.compress(DATA))
   
