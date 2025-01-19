@@ -265,7 +265,7 @@ static PyObject *py_zstd_with_threads(PyObject* self, PyObject *args)
  */
 static PyObject *py_zstd_with_asm(PyObject* self, PyObject *args)
 {
-    return Py_BuildValue("i", ! ZSTD_DISABLEASM);
+    return Py_BuildValue("i", ! ZSTD_DISABLE_ASM);
 }
 
 
