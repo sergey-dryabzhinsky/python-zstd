@@ -36,7 +36,7 @@ DISABLE_ASM=1
 if SUP_ASM:
      DISABLE_ASM=0
 
-SUP_THREADS="ZSTD_THREADS" in os.environ or True 
+SUP_THREADS="ZSTD_THREADS" in os.environ #or True 
 if "--libzstd-no-threads" in sys.argv:
     # Disable support multithreading in lizstd
     SUP_THREADS=False
