@@ -14,7 +14,7 @@ VERSION_STR = ".".join([str(x) for x in VERSION])
 # Package version
 PKG_VERSION = VERSION
 # Minor versions
-PKG_VERSION += ("1",)
+PKG_VERSION += ("2",)
 PKG_VERSION_STR = ".".join([str(x) for x in PKG_VERSION])
 
 ###
@@ -26,6 +26,33 @@ if "--legacy" in sys.argv:
     # Support legacy output format functions
     SUP_LEGACY=True
     sys.argv.remove("--legacy")
+
+SUP_ASM="ZSTD_ASM" in os.environ
+if "--libzstd-use-asm" in sys.argv:
+    # Support assembler builtin optimization in lizstd
+    SUP_ASM=False
+    sys.argv.remove("--libzstd-use-asm")
+ DISABLE_ASM=1
+ if SUP_ASM:
+     DISABLE_ASM=0
+
+SUP_THREADS="ZSTD_THREADS" in os.environ
+if "--libzstd-threads" in sys.argv:
+    # Support multithreading in lizstd
+    SUP_THREADS=False
+    sys.argv.remove("--libzstd-threads")
+ ENABLE_THREADS=0
+ if SUP_THREADS:
+     ENABLE_THREADS=1
+
+SUP_ASM_BMI2="ZSTD_ASM_BMI2" in os.environ
+if "--libzstd-use-asm-bmi2" in sys.argv:
+    # Support assembler builtin optimization in lizstd
+    SUP_ASM_BMI2=False
+    sys.argv.remove("--libzstd-use-asm-bmi2")
+ ENABLE_ASM_BMI2=1
+ if SUP_ASM_BMI2:
+     ENABLE_ASM_BMI2=0
 
 SUP_TRACE="ZSTD_TRACE" in os.environ
 if "--debug-trace" in sys.argv:
@@ -68,7 +95,7 @@ if SUP_EXTERNAL:
 # DZSTD_DISABLE_ASM=1 - disable ASM inlines, pypi/pip can't build them
 #
 COPT = {
-    'msvc':     [ '/Ox', '/DVERSION=%s' % PKG_VERSION_STR, '/DDYNAMIC_BMI2=0', '/DZSTD_DISABLE_ASM=1' ],
+    'msvc':     [ '/Ox', '/DVERSION=%s' % PKG_VERSION_STR, '/DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '/DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ],
     'mingw32':  [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=0', '-DZSTD_DISABLE_ASM=1' ],
     'unix':     [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=0', '-DZSTD_DISABLE_ASM=1' ],
     'clang':    [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=0', '-DZSTD_DISABLE_ASM=1' ],
@@ -78,11 +105,11 @@ COPT = {
 if not SUP_EXTERNAL:
     for comp in COPT:
         if comp == 'msvc':
-            COPT[comp].extend([ '/DZSTD_MULTITHREAD=1',
+            COPT[comp].extend([ '/DZSTD_MULTITHREAD=%d' % ENABLE_THREADS,
                 '/Izstd\\lib', '/Izstd\\lib\\common', '/Izstd\\lib\\compress', '/Izstd\\lib\\decompress',
             ])
         else:
-            COPT[comp].extend([ '-DZSTD_MULTITHREAD=1',
+            COPT[comp].extend([ '-DZSTD_MULTITHREAD=%d' % ENABLE_THREADS,
                 '-Izstd/lib', '-Izstd/lib/common', '-Izstd/lib/compress', '-Izstd/lib/decompress',
             ])
 else:
