@@ -54,7 +54,7 @@ ENABLE_ASM_BMI2=0
 if SUP_ASM_BMI2:
      ENABLE_ASM_BMI2=1
 
-SUP_TRACE="ZSTD_TRACE" in os.environ:
+SUP_TRACE="ZSTD_TRACE" in os.environ
 if "--debug-trace" in sys.argv:
     # Support tracing for debug
     SUP_TRACE=True
