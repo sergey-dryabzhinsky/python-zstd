@@ -10,5 +10,5 @@ class TestZstdDecompress(BaseTestZSTD):
             DATA = ''
         else:
             DATA =b''
-        self.assertRaises(zstd.Error, zstd.uncompress, DATA)
+        self.assertRaises(zstd.Error, zstd.uncompress, zstd.compress(DATA)+b' ')
   
