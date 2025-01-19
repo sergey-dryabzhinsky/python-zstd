@@ -107,7 +107,7 @@ Raises a zstd.Error exception if any error occurs."
 
 #define UNCOMPRESS_DOCSTRING    "decompress("PY_BYTESTR_TYPE"): string -- Returns uncompressed string.\n\nRaises a zstd.Error exception if any error occurs."
 
-#define check_DOCSTRING    "check("PY_BYTESTR_TYPE"): string -- Returns 0 or 1.\n\nRaises a zstd.Error exception if any error occurs."
+#define CHECK_DOCSTRING    "check("PY_BYTESTR_TYPE"): string -- Returns 0 or 1.\n\nRaises a zstd.Error exception if any error occurs."
 
 #define VERSION_DOCSTRING       "version(): string -- Returns this module version as string."
 #define ZSTD_VERSION_DOCSTRING  "ZSTD_version(): string -- Returns ZSTD library version as string."
