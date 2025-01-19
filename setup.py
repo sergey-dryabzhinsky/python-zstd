@@ -32,8 +32,8 @@ if "--libzstd-use-asm" in sys.argv:
     # Support assembler builtin optimization in lizstd
     SUP_ASM=False
     sys.argv.remove("--libzstd-use-asm")
- DISABLE_ASM=1
- if SUP_ASM:
+DISABLE_ASM=1
+if SUP_ASM:
      DISABLE_ASM=0
 
 SUP_THREADS="ZSTD_THREADS" in os.environ
@@ -50,8 +50,8 @@ if "--libzstd-use-asm-bmi2" in sys.argv:
     # Support assembler builtin optimization in lizstd
     SUP_ASM_BMI2=False
     sys.argv.remove("--libzstd-use-asm-bmi2")
- ENABLE_ASM_BMI2=1
- if SUP_ASM_BMI2:
+ENABLE_ASM_BMI2=1
+if SUP_ASM_BMI2:
      ENABLE_ASM_BMI2=0
 
 SUP_TRACE="ZSTD_TRACE" in os.environ
