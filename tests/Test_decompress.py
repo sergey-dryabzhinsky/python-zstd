@@ -1,5 +1,6 @@
 # Tests
 
+import sys
 from tests.base import BaseTestZSTD, zstd
 
 class TestZstdDecompress(BaseTestZSTD):
