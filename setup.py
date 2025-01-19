@@ -45,7 +45,7 @@ ENABLE_THREADS=0
 if SUP_THREADS:
      ENABLE_THREADS=1
 
-SUP_ASM_BMI2="ZSTD_ASM_BMI2" in os.environ
+SUP_ASM_BMI2="ZSTD_ASM_BMI2" in os.environ or True 
 if "--libzstd-use-asm-bmi2" in sys.argv:
     # Support assembler builtin optimization in lizstd for new AMD CPU
     SUP_ASM_BMI2=False
@@ -96,10 +96,10 @@ if SUP_EXTERNAL:
 #
 COPT = {
     'msvc':     [ '/Ox', '/DVERSION=%s' % PKG_VERSION_STR, '/DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '/DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ],
-    'mingw32':  [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=0', '-DZSTD_DISABLE_ASM=1' ],
-    'unix':     [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=0', '-DZSTD_DISABLE_ASM=1' ],
-    'clang':    [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=0', '-DZSTD_DISABLE_ASM=1' ],
-    'gcc':      [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=0', '-DZSTD_DISABLE_ASM=1' ]
+    'mingw32':  [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '-DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ],
+    'unix':     [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '-DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ],
+    'clang':    [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '-DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ],
+    'gcc':      [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '-DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ]
 }
 
 if not SUP_EXTERNAL:
