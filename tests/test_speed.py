@@ -6,8 +6,8 @@ from time import time
 class TestZstdSpeed(BaseTestZSTD):
 
     def test_system_info(self):
-        log.info("Bundled libzstd uses assembler? : %r" zstd.ZSTD_with_asm())
-        log.info("Bundled libzstd uses threads? :%r" %zstd.ZSTD_with_threads())
+        log.info("Bundled libzstd uses assembler? : %r" % zstd.ZSTD_with_asm())
+        log.info("Bundled libzstd uses threads? :%r" % zstd.ZSTD_with_threads())
 
     def test_compressio_speed(self):
         log.info("Compression speed average. Wait 60 seconds...")
