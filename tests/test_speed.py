@@ -20,7 +20,7 @@ class TestZstdSpeed(BaseTestZSTD):
             cdata = zstd.compress(tDATA)
             sum+=l
 
-         log.info("Compression speed average =%.%f b/sec" % (1.0*sum/sec))
+        log.info("Compression speed average =%.%f b/sec" % (1.0*sum/sec))
 
 if __name__ == '__main__':
     unittest.main()
