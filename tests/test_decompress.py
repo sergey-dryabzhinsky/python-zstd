@@ -9,7 +9,6 @@ class TestZstdDecompress(BaseTestZSTD):
         if sys.hexversion < 0x03000000:
             DATA = ''
         else:
-            DATA = b''
-        zstd.uncompress(DATA)
-
+            DATA =b''
+        self.assertRaises(zstd.Error, zstd.uncompress, DATA)
   
