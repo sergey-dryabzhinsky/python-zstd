@@ -172,8 +172,11 @@ ZSTD_uncompress (data): string|bytes
 
   * **data**: string|bytes - input compressed data block, length limited by 2Gb by Python API
 
-  Aliases: *decompress(...)*, *uncompress(...)*, *loads(...)*, 
-     *decode(...)* since: 1.5.6.2
+  Aliases: 
+     - *decompress(...)*, 
+     - *uncompress(...)*,  
+     - *loads(...)*, 
+     - *decode(...)* since: 1.5.6.2
 
   Since: 0.1
 
