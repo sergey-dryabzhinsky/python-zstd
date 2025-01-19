@@ -252,6 +252,25 @@ static PyObject *py_zstd_library_external(PyObject* self, PyObject *args)
 
 
 /**
+ * Returns 0 or 1 if ZSTD library build with threads
+ */
+static PyObject *py_zstd_with_threads(PyObject* self, PyObject *args)
+{
+    return Py_BuildValue("i", ZSTD_MULTITHREAD);
+}
+
+
+/**
+ * Returns 0 or 1 if ZSTD library build with threads
+ */
+static PyObject *py_zstd_with_asm(PyObject* self, PyObject *args)
+{
+    return Py_BuildValue("i", ! ZSTD_DISABLEASM);
+}
+
+
+
+/**
  * Returns ZSTD determined threads count, int
  */
 static PyObject *py_zstd_threads_count(PyObject* self, PyObject *args)
@@ -284,6 +303,8 @@ static PyMethodDef ZstdMethods[] = {
     {"ZSTD_threads_count",  py_zstd_threads_count, METH_NOARGS, ZSTD_THREADS_COUNT_DOCSTRING},
     {"ZSTD_max_threads_count",  py_zstd_max_threads_count, METH_NOARGS, ZSTD_MAX_THREADS_COUNT_DOCSTRING},
     {"ZSTD_external",  py_zstd_library_external, METH_NOARGS, ZSTD_EXTERNAL_DOCSTRING},
+    {"ZSTD_with_threads",  py_zstd_with_threads, METH_NOARGS, ZSTD_WITH_THREADS_DOCSTRING},
+    {"ZSTD_with_asm",  py_zstd_with_asm, METH_NOARGS, ZSTD_WITH_ASM_DOCSTRING},
     {NULL, NULL, 0, NULL}
 };
 
