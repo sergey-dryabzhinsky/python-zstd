@@ -237,7 +237,7 @@ static PyObject *py_zstd_check(PyObject* self, PyObject *args)
     dest_size = (uint64_t) ZSTD_getFrameContentSize(source, source_size);
     if (dest_size == ZSTD_CONTENTSIZE_UNKNOWN || dest_size == ZSTD_CONTENTSIZE_ERROR) {
         //PyErr_Format(ZstdError, "Input data invalid or missing content size in frame header.");
-        return NULL;
+        return Py_BuildValue("i", 0);
     }
 
 	// Find real dest_size across multiple frames
