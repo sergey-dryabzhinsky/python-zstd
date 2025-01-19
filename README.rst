@@ -88,9 +88,29 @@ To build with python-zstd legacy format support (pre 1.1.2) - pass ``--pyzstd-le
 
    >>> $ python setup.py build_ext --pyzstd-legacy clean
 
-If you want to build with existing distribution of libzstd just add ``--external`` option.
+.
 But beware! Legacy formats support state is unknown in this case.
 And if your version not equal with python-zstd - tests may not pass.
+
+ If you're scared of threads you may pass option `--libzstd-no-threads`:
+
+   >>> $ python setup.py build_ext --libzstd-no-threads clean
+
+When using a PEP 517 builder you can use ``ZSTD_THREADS`` environment variable instead:
+
+   >>> $ ZSTD_THREADS=0 python -m build -w
+
+ If you're meet some cpu instruction errorrsyou may try to disable built-in optimizations and pass option `--libzstd-no-use-asm`:
+
+   >>> $ python setup.py build_ext --libzstd-no-use-asm clean
+
+Or add more speed with option `--libzstd-use-asm-bmi2` to use instructions for new AMD CPU.
+When using a PEP 517 builder you can use ``ZSTD_ASM`` environment variable instead:
+And ``ZST_ASM_BMI2=1``
+   >>> $ ZSTD_ASM=0 python -m build -w
+
+
+If you want to build with existing distribution of libzstd just add ``--external`` option
 
    >>> $ python setup.py build_ext --external clean
 
@@ -128,8 +148,10 @@ ZSTD_compress (data[, level, threads]): string|bytes
   * **level**: int - compression level, ultra-fast levels from -100 (ultra) to -1 (fast) available since zstd-1.3.4, and from 1 (fast) to 22 (slowest), 0 or unset - means default (3). Default - 3.
   * **threads**: int - how many threads to use, from 0 to 200, 0 or unset - auto-tune by cpu cores count. Default - 0. Since: 1.4.4.1
 
-  Aliases: *compress(...)*, *dumps(...)*, 
-     *encode(...)* since: 1.5.6.2
+  Aliases: *c
+       -*compress(...)*, 
+       -*dumps(...)*, 
+       - *encode(...)* since: 1.5.6.2
 
   Exception if:
   - level bigger than max level
