@@ -1,7 +1,7 @@
 # Tests
 
 import sys
-from tests.base import BaseTestZSTD, zstd
+from tests.base import BaseTestZSTD, zstd, tDATA
 
 class TestZstdDecompress(BaseTestZSTD):
 
@@ -13,5 +13,5 @@ class TestZstdDecompress(BaseTestZSTD):
         self.assertRaises(zstd.Error, zstd.uncompress, zstd.compress(DATA)+b' ')
 
     def test_check(self):
-        self.assertEqual(1, zstd.check, zstd.compress(DATA))
+        self.assertEqual(1, zstd.check, zstd.compress(tDATA))
 
