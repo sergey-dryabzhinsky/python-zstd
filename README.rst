@@ -148,9 +148,9 @@ ZSTD_compress (data[, level, threads]): string|bytes
   * **level**: int - compression level, ultra-fast levels from -100 (ultra) to -1 (fast) available since zstd-1.3.4, and from 1 (fast) to 22 (slowest), 0 or unset - means default (3). Default - 3.
   * **threads**: int - how many threads to use, from 0 to 200, 0 or unset - auto-tune by cpu cores count. Default - 0. Since: 1.4.4.1
 
-  Aliases: *c
-       -*compress(...)*, 
-       -*dumps(...)*, 
+  Aliases:
+       - *compress(...)*, 
+       - *dumps(...)*, 
        - *encode(...)* since: 1.5.6.2
 
   Exception if:
