@@ -21,13 +21,13 @@ PKG_VERSION_STR = ".".join([str(x) for x in PKG_VERSION])
 # Ugly hacks, I know
 #
 
-SUP_LEGACY="ZSTD_LEGACY" in os.environ
+SUP_LEGACY="ZSTD_LEGACY" in os.environ:
 if "--legacy" in sys.argv:
     # Support legacy output format functions
     SUP_LEGACY=True
     sys.argv.remove("--legacy")
 
-SUP_ASM="ZSTD_ASM" in os.environ
+SUP_ASM="ZSTD_ASM" in os.environ:
 if "--libzstd-use-asm" in sys.argv:
     # Support assembler builtin optimization in lizstd
     SUP_ASM=False
@@ -36,7 +36,7 @@ DISABLE_ASM=1
 if SUP_ASM:
      DISABLE_ASM=0
 
-SUP_THREADS="ZSTD_THREADS" in os.environ or True 
+SUP_THREADS="ZSTD_THREADS" in os.environ or True :
 if "--libzstd-no-threads" in sys.argv:
     # Disable support multithreading in lizstd
     SUP_THREADS=False
@@ -45,7 +45,7 @@ ENABLE_THREADS=0
 if SUP_THREADS:
      ENABLE_THREADS=1
 
-SUP_ASM_BMI2="ZSTD_ASM_BMI2" in os.environ
+SUP_ASM_BMI2="ZSTD_ASM_BMI2" in os.environ:
 if "--libzstd-use-asm-bmi2" in sys.argv:
     # Support assembler builtin optimization in lizstd for new AMD CPU
     SUP_ASM_BMI2=False
@@ -54,13 +54,13 @@ ENABLE_ASM_BMI2=1
 if SUP_ASM_BMI2:
      ENABLE_ASM_BMI2=0
 
-SUP_TRACE="ZSTD_TRACE" in os.environ
+SUP_TRACE="ZSTD_TRACE" in os.environ:
 if "--debug-trace" in sys.argv:
     # Support tracing for debug
     SUP_TRACE=True
     sys.argv.remove("--debug-trace")
 
-SUP_EXTERNAL="ZSTD_EXTERNAL" in os.environ
+SUP_EXTERNAL="ZSTD_EXTERNAL" in os.environ:
 ext_libraries=[]
 if "--external" in sys.argv:
     # You want use external Zstd library?
