@@ -180,6 +180,20 @@ ZSTD_uncompress (data): string|bytes
 
   Since: 0.1
 
+ZSTD_check (data): string|bytes
+  Function, checks if input is zstd compressed data block, return s1if yes, 0 if no, or raises Error.
+
+  Support compressed data with multiple/concatenated frames (blocks) .
+
+  Params:
+
+  * **data**: string|bytes - input compressed data block, length limited by 2Gb by Python API
+
+  Aliases:
+     - *check(...)*,
+
+  Since: 1.5.6.2
+
 version (): string|bytes
   Returns this module doted version string.
 
