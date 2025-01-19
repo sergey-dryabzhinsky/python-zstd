@@ -19,7 +19,7 @@ class TestZstdSpeed(BaseTestZSTD):
             cdata = zstd.compress(tDATA)
             sum+=l
 
-        log.info("Compression speed average =%6f Mb/sec" % (1.0*sum//10241024/sec,))
+        log.info("Compression speed average =%6f Mb/sec" % (1.0*sum/1024/1024/sec,))
 
     def test_decompression_speed(self):
         log.info("\nWait 60 seconds...")
