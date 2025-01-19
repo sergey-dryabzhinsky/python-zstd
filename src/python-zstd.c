@@ -213,6 +213,54 @@ static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args)
 }
 
 /**
+ * New more interoperable function
+ * Uses origin zstd header, nothing more
+ * Simple version: check if data block has zstd compressed data inside
+ */
+static PyObject *py_zstd_chech(PyObject* self, PyObject *args)
+{
+
+    PyObject    *result;
+    const char  *source, *src;
+    Py_ssize_t  source_size, ss, seek_frame;
+    uint64_t    dest_size, frame_size;
+    //char        error = 0;
+    //size_t      cSize;
+
+#if PY_MAJOR_VERSION >= 3
+    if (!PyArg_ParseTuple(args, "y#", &source, &source_size))
+        return NULL;
+#else
+    if (!PyArg_ParseTuple(args, "s#", &source, &source_size))
+        return NULL;
+#endif
+
+    dest_size = (uint64_t) ZSTD_getFrameContentSize(source, source_size);
+    if (dest_size == ZSTD_CONTENTSIZE_UNKNOWN || dest_size == ZSTD_CONTENTSIZE_ERROR) {
+        //PyErr_Format(ZstdError, "Input data invalid or missing content size in frame header.");
+        return NULL;
+    }
+
+	// Find real dest_size across multiple frames
+	ss = source_size;
+	seek_frame = ss - 1;
+	src = source;
+	while (seek_frame < ss) {
+		seek_frame = ZSTD_findFrameCompressedSize(src, ss);
+		if (ZSTD_isError(seek_frame)) break;
+		src += seek_frame;
+		ss -= seek_frame;
+		if (ss <=0) break;
+		frame_size = (uint64_t) ZSTD_getFrameContentSize(src, ss);
+		if (ZSTD_isError(frame_size)) break;
+		dest_size += frame_size;
+	}
+    if (dest_size>=source_size)
+        Py_BuildValue("i", 0);
+    return Py_BuildValue("i", 1);
+}
+
+/**
  * Returns this module version as string
  */
 static PyObject *py_zstd_module_version(PyObject* self, PyObject *args)
@@ -294,6 +342,7 @@ static PyObject *py_zstd_max_threads_count(PyObject* self, PyObject *args)
 static PyMethodDef ZstdMethods[] = {
     {"ZSTD_compress",  py_zstd_compress_mt, METH_VARARGS, COMPRESS_DOCSTRING},
     {"ZSTD_uncompress",  py_zstd_uncompress, METH_VARARGS, UNCOMPRESS_DOCSTRING},
+    {"ZSTD_check",  py_zstd_check, METH_VARARGS, UNCOMPRESS_DOCSTRING},
     {"compress",  py_zstd_compress_mt, METH_VARARGS, COMPRESS_DOCSTRING},
     {"uncompress",  py_zstd_uncompress, METH_VARARGS, UNCOMPRESS_DOCSTRING},
     {"encode",  py_zstd_compress_mt, METH_VARARGS, COMPRESS_DOCSTRING},
