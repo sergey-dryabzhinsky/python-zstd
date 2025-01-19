@@ -217,10 +217,9 @@ static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args)
  * Uses origin zstd header, nothing more
  * Simple version: check if data block has zstd compressed data inside
  */
-static PyObject *py_zstd_chech(PyObject* self, PyObject *args)
+static PyObject *py_zstd_check(PyObject* self, PyObject *args)
 {
-
-    PyObject    *result;
+    //PyObject    *result;
     const char  *source, *src;
     Py_ssize_t  source_size, ss, seek_frame;
     uint64_t    dest_size, frame_size;
@@ -343,6 +342,7 @@ static PyMethodDef ZstdMethods[] = {
     {"ZSTD_compress",  py_zstd_compress_mt, METH_VARARGS, COMPRESS_DOCSTRING},
     {"ZSTD_uncompress",  py_zstd_uncompress, METH_VARARGS, UNCOMPRESS_DOCSTRING},
     {"ZSTD_check",  py_zstd_check, METH_VARARGS, CHECK_DOCSTRING},
+    {"check",  py_zstd_check, METH_VARARGS, CHECK_DOCSTRING},
     {"compress",  py_zstd_compress_mt, METH_VARARGS, COMPRESS_DOCSTRING},
     {"uncompress",  py_zstd_uncompress, METH_VARARGS, UNCOMPRESS_DOCSTRING},
     {"encode",  py_zstd_compress_mt, METH_VARARGS, COMPRESS_DOCSTRING},
