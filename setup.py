@@ -37,17 +37,17 @@ if SUP_ASM:
      DISABLE_ASM=0
 
 SUP_THREADS="ZSTD_THREADS" in os.environ
-if "--libzstd-threads" in sys.argv:
-    # Support multithreading in lizstd
+if "--libzstd--no-threads" in sys.argv:
+    # Disable support multithreading in lizstd
     SUP_THREADS=False
-    sys.argv.remove("--libzstd-threads")
- ENABLE_THREADS=0
- if SUP_THREADS:
+    sys.argv.remove("--libzstd-no-threads")
+ENABLE_THREADS=0
+if SUP_THREADS:
      ENABLE_THREADS=1
 
 SUP_ASM_BMI2="ZSTD_ASM_BMI2" in os.environ
 if "--libzstd-use-asm-bmi2" in sys.argv:
-    # Support assembler builtin optimization in lizstd
+    # Support assembler builtin optimization in lizstd for new AMD CPU
     SUP_ASM_BMI2=False
     sys.argv.remove("--libzstd-use-asm-bmi2")
 ENABLE_ASM_BMI2=1
