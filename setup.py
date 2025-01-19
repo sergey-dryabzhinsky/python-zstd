@@ -29,10 +29,10 @@ if "--legacy" in sys.argv:
 
 SUP_ASM="ZSTD_ASM" in os.environ or True 
 #a asm on by default
-if "--libzstd-use-asm" in sys.argv:
+if "--libzstd-no-use-asm" in sys.argv:
     # Support assembler builtin optimization in lizstd
     SUP_ASM=False
-    sys.argv.remove("--libzstd-use-asm")
+    sys.argv.remove("--libzstd-no-use-asm")
 DISABLE_ASM=1
 if SUP_ASM:
      DISABLE_ASM=0
