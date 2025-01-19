@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 Sergey Dryabzhinsky
+ * Copyright (c) 2015-2025 Sergey Dryabzhinsky
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -80,6 +80,7 @@ static PyObject *ZstdError;
 
 static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args);
 static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args);
+static PyObject *py_zstd_check(PyObject* self, PyObject *args);
 static PyObject *py_zstd_module_version(PyObject* self, PyObject *args);
 static PyObject *py_zstd_library_version(PyObject* self, PyObject *args);
 static PyObject *py_zstd_library_version_int(PyObject* self, PyObject *args);
@@ -105,6 +106,8 @@ Input data length limited by 2Gb by Python API.\n\
 Raises a zstd.Error exception if any error occurs."
 
 #define UNCOMPRESS_DOCSTRING    "decompress("PY_BYTESTR_TYPE"): string -- Returns uncompressed string.\n\nRaises a zstd.Error exception if any error occurs."
+
+#define check_DOCSTRING    "check("PY_BYTESTR_TYPE"): string -- Returns 0 or 1.\n\nRaises a zstd.Error exception if any error occurs."
 
 #define VERSION_DOCSTRING       "version(): string -- Returns this module version as string."
 #define ZSTD_VERSION_DOCSTRING  "ZSTD_version(): string -- Returns ZSTD library version as string."
