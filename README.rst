@@ -2,7 +2,7 @@
 python-zstd
 =============
 
-.. |releaseW| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg?branch=v1.5.6.2
+.. |releaseW| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg?branch=v1.5.6.3
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml
 
 .. |masterW| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg
@@ -139,7 +139,7 @@ ___
 Error
   Standard python Exception for zstd module
 
-ZSTD_compress (data[, level, threads]): string|bytes
+ZSTD_compress (data[, level, threads, strict]): string|bytes
   Function, compress input data block via mutliple threads, return compressed block, or raises Error.
 
   Params:
@@ -147,7 +147,8 @@ ZSTD_compress (data[, level, threads]): string|bytes
   * **data**: string|bytes - input data block, length limited by 2Gb by Python API
   * **level**: int - compression level, ultra-fast levels from -100 (ultra) to -1 (fast) available since zstd-1.3.4, and from 1 (fast) to 22 (slowest), 0 or unset - means default (3). Default - 3.
   * **threads**: int - how many threads to use, from 0 to 200, 0 or unset - auto-tune by cpu cores count. Default - 0. Since: 1.4.4.1
-
+  * **strict**: int - strict behaviour, raise `zstd.Error` if threads number or compression level is beyond limitations. Default - 0. Since: 1.5.6.3
+  
   Aliases:
        - *compress(...)*, 
        - *dumps(...)*, 
