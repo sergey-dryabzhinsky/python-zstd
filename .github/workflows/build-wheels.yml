@@ -68,6 +68,10 @@ jobs:
             cibw:
               build: cp27-*
           - os:
+              matrix: macos
+            cibw:
+              build: pp27-*
+          - os:
               matrix: windows
             cibw:
               build: pp27-*
