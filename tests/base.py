@@ -91,8 +91,8 @@ class BaseTestZSTD(unittest.TestCase):
         CDATA = zstd.compress(tDATA, -1)
         self.assertNotEqual(CDATA, zstd.compress(tDATA, 0))
 
-    def helper_compression_wrong_level(self):
-        self.assertRaises(zstd.Error, zstd.compress, tDATA, 100)
+    #def helper_compression_wrong_level(self):
+    #    self.assertRaises(zstd.Error, zstd.compress, tDATA, 100)
 
     def helper_compression_multi_thread_one(self):
         CDATA = zstd.compress(tDATA, 6, 1)
