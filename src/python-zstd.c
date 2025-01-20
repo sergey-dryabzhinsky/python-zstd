@@ -62,13 +62,14 @@ static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args)
     size_t cSize;
     int32_t level = ZSTD_CLEVEL_DEFAULT;
     int32_t threads = 0;
+    int32_t strict = 0;
     ZSTD_CCtx* cctx = 0;
 
 #if PY_MAJOR_VERSION >= 3
-    if (!PyArg_ParseTuple(args, "y#|ii", &source, &source_size, &level, &threads))
+    if (!PyArg_ParseTuple(args, "y#|iii", &source, &source_size, &level, &threads, &strict))
         return NULL;
 #else
-    if (!PyArg_ParseTuple(args, "s#|ii", &source, &source_size, &level, &threads))
+    if (!PyArg_ParseTuple(args, "s#|iii", &source, &source_size, &level, &threads, &strict))
         return NULL;
 #endif
 
