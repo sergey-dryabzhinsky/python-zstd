@@ -1,8 +1,8 @@
-=============
+7=============
 python-zstd
 =============
 
-.. |releaseW| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg?branch=v1.5.6.1
+.. |releaseW| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg?branch=v1.5.6.2
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml
 
 .. |masterW| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg
@@ -88,9 +88,29 @@ To build with python-zstd legacy format support (pre 1.1.2) - pass ``--pyzstd-le
 
    >>> $ python setup.py build_ext --pyzstd-legacy clean
 
-If you want to build with existing distribution of libzstd just add ``--external`` option.
 But beware! Legacy formats support state is unknown in this case.
 And if your version not equal with python-zstd - tests may not pass.
+
+If you're scared of threads you may pass option `--libzstd-no-threads`:
+
+   >>> $ python setup.py build_ext --libzstd-no-threads clean
+
+When using a PEP 517 builder you can use ``ZSTD_THREADS`` environment variable instead:
+
+   >>> $ ZSTD_THREADS=0 python -m build -w
+
+If you're meet some cpu instruction errorrs you may try to disable built-in optimizations and pass option `--libzstd-no-use-asm`:
+
+   >>> $ python setup.py build_ext --libzstd-no-use-asm clean
+
+Or add more speed with option `--libzstd-use-asm-bmi2` to use instructions for new AMD CPU.
+When using a PEP 517 builder you can use ``ZSTD_ASM`` environment variable instead:
+And ``ZST_ASM_BMI2=1`` too for bmi2 use.
+
+   >>> $ ZSTD_ASM=0 python -m build -w
+
+
+If you want to build with existing distribution of libzstd just add ``--external`` option
 
    >>> $ python setup.py build_ext --external clean
 
@@ -128,7 +148,10 @@ ZSTD_compress (data[, level, threads]): string|bytes
   * **level**: int - compression level, ultra-fast levels from -100 (ultra) to -1 (fast) available since zstd-1.3.4, and from 1 (fast) to 22 (slowest), 0 or unset - means default (3). Default - 3.
   * **threads**: int - how many threads to use, from 0 to 200, 0 or unset - auto-tune by cpu cores count. Default - 0. Since: 1.4.4.1
 
-  Aliases: *compress(...)*, *dumps(...)*
+  Aliases:
+       - *compress(...)*, 
+       - *dumps(...)*, 
+       - *encode(...)* since: 1.5.6.2
 
   Exception if:
   - level bigger than max level
@@ -136,7 +159,7 @@ ZSTD_compress (data[, level, threads]): string|bytes
   Max number of threads:
   - 32bit system: 64
   - 64bit system: 256
-  If provided bigger number - silemtly set maximum number (since 1.5.4.1)
+  If provided bigger number - silently set maximber (since 1.5.4.1)
 
   Since: 0.1
 
@@ -149,9 +172,27 @@ ZSTD_uncompress (data): string|bytes
 
   * **data**: string|bytes - input compressed data block, length limited by 2Gb by Python API
 
-  Aliases: *decompress(...)*, *uncompress(...)*, *loads(...)*
+  Aliases: 
+     - *decompress(...)*, 
+     - *uncompress(...)*,  
+     - *loads(...)*, 
+     - *decode(...)* since: 1.5.6.2
 
   Since: 0.1
+
+ZSTD_check (data): string|bytes
+  Function, checks if input is zstd compressed data block, return s1if yes, 0 if no, or raises Error.
+
+  Support compressed data with multiple/concatenated frames (blocks) .
+
+  Params:
+
+  * **data**: string|bytes - input compressed data block, length limited by 2Gb by Python API
+
+  Aliases:
+     - *check(...)*,
+
+  Since: 1.5.6.2
 
 version (): string|bytes
   Returns this module doted version string.
@@ -185,6 +226,16 @@ ZSTD_external (): int
   Returns 0 of 1 if ZSTD library build as external.
 
   Since: 1.5.0.2
+
+ZSTD_with_threads (): int
+  Returns 0 of 1 if bundled ZSTD library build with threads support.
+
+  Since: 1.5.6.2
+
+ZSTD_with_asm (): int
+  Returns 0 of 1 if bundled ZSTD library build with asm optimization s.
+
+  Since: 1.5.6.2
 
 
 Removed

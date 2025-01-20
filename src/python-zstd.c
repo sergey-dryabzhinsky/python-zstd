@@ -196,6 +196,8 @@ static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args)
             PyErr_Format(ZstdError, "Decompression error: length mismatch -> decomp %lu != %lu [header]", (uint64_t)cSize, dest_size);
             error = 1;
         }
+    } else {
+         error = 1;
     }
 
     if (error) {
@@ -208,6 +210,53 @@ static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args)
 	}
 
     return result;
+}
+
+/**
+ * New more interoperable function
+ * Uses origin zstd header, nothing more
+ * Simple version: check if data block has zstd compressed data inside
+ */
+static PyObject *py_zstd_check(PyObject* self, PyObject *args)
+{
+    //PyObject    *result;
+    const char  *source, *src;
+    Py_ssize_t  source_size, ss, seek_frame;
+    uint64_t    dest_size, frame_size;
+    //char        error = 0;
+    //size_t      cSize;
+
+#if PY_MAJOR_VERSION >= 3
+    if (!PyArg_ParseTuple(args, "y#", &source, &source_size))
+        return NULL;
+#else
+    if (!PyArg_ParseTuple(args, "s#", &source, &source_size))
+        return NULL;
+#endif
+
+    dest_size = (uint64_t) ZSTD_getFrameContentSize(source, source_size);
+    if (dest_size == ZSTD_CONTENTSIZE_UNKNOWN || dest_size == ZSTD_CONTENTSIZE_ERROR) {
+        //PyErr_Format(ZstdError, "Input data invalid or missing content size in frame header.");
+        return Py_BuildValue("i", 0);
+    }
+
+	// Find real dest_size across multiple frames
+	ss = source_size;
+	seek_frame = ss - 1;
+	src = source;
+	while (seek_frame < ss) {
+		seek_frame = ZSTD_findFrameCompressedSize(src, ss);
+		if (ZSTD_isError(seek_frame)) break;
+		src += seek_frame;
+		ss -= seek_frame;
+		if (ss <=0) break;
+		frame_size = (uint64_t) ZSTD_getFrameContentSize(src, ss);
+		if (ZSTD_isError(frame_size)) break;
+		dest_size += frame_size;
+	}
+    if (dest_size>=source_size)
+        Py_BuildValue("i", 0);
+    return Py_BuildValue("i", 1);
 }
 
 /**
@@ -252,6 +301,25 @@ static PyObject *py_zstd_library_external(PyObject* self, PyObject *args)
 
 
 /**
+ * Returns 0 or 1 if ZSTD library build with threads
+ */
+static PyObject *py_zstd_with_threads(PyObject* self, PyObject *args)
+{
+    return Py_BuildValue("i", ZSTD_MULTITHREAD);
+}
+
+
+/**
+ * Returns 0 or 1 if ZSTD library build with threads
+ */
+static PyObject *py_zstd_with_asm(PyObject* self, PyObject *args)
+{
+    return Py_BuildValue("i", ! ZSTD_DISABLE_ASM);
+}
+
+
+
+/**
  * Returns ZSTD determined threads count, int
  */
 static PyObject *py_zstd_threads_count(PyObject* self, PyObject *args)
@@ -273,8 +341,12 @@ static PyObject *py_zstd_max_threads_count(PyObject* self, PyObject *args)
 static PyMethodDef ZstdMethods[] = {
     {"ZSTD_compress",  py_zstd_compress_mt, METH_VARARGS, COMPRESS_DOCSTRING},
     {"ZSTD_uncompress",  py_zstd_uncompress, METH_VARARGS, UNCOMPRESS_DOCSTRING},
+    {"ZSTD_check",  py_zstd_check, METH_VARARGS, CHECK_DOCSTRING},
+    {"check",  py_zstd_check, METH_VARARGS, CHECK_DOCSTRING},
     {"compress",  py_zstd_compress_mt, METH_VARARGS, COMPRESS_DOCSTRING},
     {"uncompress",  py_zstd_uncompress, METH_VARARGS, UNCOMPRESS_DOCSTRING},
+    {"encode",  py_zstd_compress_mt, METH_VARARGS, COMPRESS_DOCSTRING},
+    {"decode",  py_zstd_uncompress, METH_VARARGS, UNCOMPRESS_DOCSTRING},
     {"decompress",  py_zstd_uncompress, METH_VARARGS, UNCOMPRESS_DOCSTRING},
     {"dumps",  py_zstd_compress_mt, METH_VARARGS, COMPRESS_DOCSTRING},
     {"loads",  py_zstd_uncompress, METH_VARARGS, UNCOMPRESS_DOCSTRING},
@@ -284,6 +356,8 @@ static PyMethodDef ZstdMethods[] = {
     {"ZSTD_threads_count",  py_zstd_threads_count, METH_NOARGS, ZSTD_THREADS_COUNT_DOCSTRING},
     {"ZSTD_max_threads_count",  py_zstd_max_threads_count, METH_NOARGS, ZSTD_MAX_THREADS_COUNT_DOCSTRING},
     {"ZSTD_external",  py_zstd_library_external, METH_NOARGS, ZSTD_EXTERNAL_DOCSTRING},
+    {"ZSTD_with_threads",  py_zstd_with_threads, METH_NOARGS, ZSTD_WITH_THREADS_DOCSTRING},
+    {"ZSTD_with_asm",  py_zstd_with_asm, METH_NOARGS, ZSTD_WITH_ASM_DOCSTRING},
     {NULL, NULL, 0, NULL}
 };
 
