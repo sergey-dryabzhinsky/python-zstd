@@ -71,7 +71,7 @@ jobs:
               matrix: macos
             cibw:
               build: pp27-*
-           - os:
+          - os:
               matrix: macos
             cibw:
               build: cp35-*
