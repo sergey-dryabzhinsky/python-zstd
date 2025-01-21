@@ -73,7 +73,7 @@ if "--external" in sys.argv:
     SUP_EXTERNAL=True
     sys.argv.remove("--external")
 
-if SUP_EXTERNAL:
+#if SUP_EXTERNAL:
     # You should add external library by option: --libraries zstd
     # And probably include paths by option: --include-dirs /usr/include/zstd
     # And probably library paths by option: --library-dirs /usr/lib/i386-linux-gnu
@@ -89,6 +89,9 @@ if SUP_EXTERNAL:
         if sys.hexversion >= 0x03000000:
             # It's bytes in PY3
             VERSION_STR = VERSION_STR.decode()
+        if VERSION_STR>"1.3.0":
+            SUP_EXTERNAL=True
+            ext_libraries=[]
         VERSION = tuple(int(v) for v in VERSION_STR.split("."))
     if "--libraries" not in sys.argv:
         # Add something default
