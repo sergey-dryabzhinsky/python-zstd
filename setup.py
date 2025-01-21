@@ -27,7 +27,9 @@ if "--legacy" in sys.argv:
     SUP_LEGACY=True
     sys.argv.remove("--legacy")
 
-SUP_ASM="ZSTD_ASM" in os.environ or True 
+SUP_ASM="ZSTD_ASM" in os.environ
+if ZSTD_ASM not in os.environ:
+    SUP_ASM = True 
 #a asm on by default
 if "--libzstd-no-use-asm" in sys.argv:
     # Support assembler builtin optimization in lizstd
@@ -37,7 +39,9 @@ DISABLE_ASM=1
 if SUP_ASM:
      DISABLE_ASM=0
 
-SUP_THREADS="ZSTD_THREADS" in os.environ or True
+SUP_THREADS="ZSTD_THREADS" in os.environ 
+IF ZSTD_THREADS not in os.environ:
+    SUP_THREADS = True
 # threads on by default
 if "--libzstd-no-threads" in sys.argv:
     # Disable support multithreading in lizstd
