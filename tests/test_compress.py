@@ -1,6 +1,6 @@
 # Tests
 
-from tests.base import BaseTestZSTD
+from tests.base import BaseTestZSTD, zstd, tDATA, log
 
 class TestZstdCompress(BaseTestZSTD):
 
