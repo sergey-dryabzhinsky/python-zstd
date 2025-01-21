@@ -16,10 +16,13 @@ else:
         raise unittest.SkipTest(msg)
 
 import zstd
+import platform
 
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger('ZSTD')
 log.info("Python version: %s" % sys.version)
+log.info("machine:%s; processor:%s;system:%r; release:%r" % ( platform.machine(), platform.processor(), platform.system(), platform.release()))
+log.info("libzstd linked external:%r"% zstd.ZSTD_external())
 
 # Classic lorem ipsum
 # + За словесными горами
