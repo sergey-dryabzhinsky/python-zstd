@@ -21,8 +21,9 @@ import platform
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger('ZSTD')
 log.info("Python version: %s" % sys.version)
-log.info("machine:%s; processor:%s;system:%r; release:%r" % ( platform.machine(), platform.processor(), platform.system(), platform.release()))
+log.info("Machine:%s; processor:%s; system:%r; release:%r" % ( platform.machine(), platform.processor(), platform.system(), platform.release()))
 log.info("libzstd linked external:%r"% zstd.ZSTD_external())
+log.info("zstd max number of thhreads:%r"% zstd.ZSTD_max_threads_count()))
 
 # Classic lorem ipsum
 # + За словесными горами
