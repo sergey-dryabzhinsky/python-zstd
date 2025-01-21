@@ -11,7 +11,8 @@ python-zstd
 +---------+------------+
 | branch  |  status    |
 +=========+============+
-| Release 1.5.6.3 | |releaseW| |
+| Release | |releaseW| |
+| 1.5.6.3 |.           |
 +---------+------------+
 | Master  | |masterW|  |
 +---------+------------+
