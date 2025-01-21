@@ -11,12 +11,6 @@ from setuptools.command.build_ext import build_ext
 VERSION = (1, 5, 6,)
 VERSION_STR = ".".join([str(x) for x in VERSION])
 
-# Package version
-PKG_VERSION = VERSION
-# Minor versions
-PKG_VERSION += ("3",)
-PKG_VERSION_STR = ".".join([str(x) for x in PKG_VERSION])
-
 ###
 # Ugly hacks, I know
 #
@@ -27,7 +21,9 @@ if "--legacy" in sys.argv:
     SUP_LEGACY=True
     sys.argv.remove("--legacy")
 
-SUP_ASM="ZSTD_ASM" in os.environ or True 
+SUP_ASM="ZSTD_ASM" in os.environ
+if "ZSTD_ASM" not in os.environ:
+    SUP_ASM = True 
 #a asm on by default
 if "--libzstd-no-use-asm" in sys.argv:
     # Support assembler builtin optimization in lizstd
@@ -37,7 +33,9 @@ DISABLE_ASM=1
 if SUP_ASM:
      DISABLE_ASM=0
 
-SUP_THREADS="ZSTD_THREADS" in os.environ or True
+SUP_THREADS="ZSTD_THREADS" in os.environ 
+if "ZSTD_THREADS" not in os.environ:
+    SUP_THREADS = True
 # threads on by default
 if "--libzstd-no-threads" in sys.argv:
     # Disable support multithreading in lizstd
@@ -62,6 +60,12 @@ if "--debug-trace" in sys.argv:
     SUP_TRACE=True
     sys.argv.remove("--debug-trace")
 
+BUILD_SMALL="ZSTD_SMALL" in os.environ
+if "--small" in sys.argv:
+    # Support tracing for debug
+    BUILD_SMALL=True 
+    sys.argv.remove("--small")
+    
 SUP_EXTERNAL="ZSTD_EXTERNAL" in os.environ
 ext_libraries=[]
 if "--external" in sys.argv:
@@ -91,19 +95,42 @@ if SUP_EXTERNAL:
         ext_libraries=["zstd"]
 
 
+# Package version, even external 
+PKG_VERSION = VERSION
+# Minor revision 
+PKG_VERSION += ("3",)
+PKG_VERSION_STR = ".".join([str(x) for x in PKG_VERSION])
+
+
+if BUILD_SMALL:
+   COPT = {
+       'msvc': ['/O1', ],
+       'mingw32': ['-Os',],
+       'unix': ['-Os',],
+       'clang': ['-Os',],
+       'gcc': ['-Os',],
+   }
+else:
+    COPT = {
+       'msvc': ['/Ox', ],
+       'mingw32': ['-O2',],
+       'unix': ['-O2',],
+       'clang': ['-O2',],
+       'gcc': ['-O2',],
+    }
 ###
 # DVERSION - pass module version string
 # DDYNAMIC_BMI2 - disable BMI2 amd64 asembler code - can't build it, use CFLAGS with -march= bdver4, znver1/2/3, native
-# DZSTD_DISABLE_ASM=1 - disable ASM inlines, pypi/pip can't build them
-#
-COPT = {
-    'msvc':     [ '/Ox', '/DVERSION=%s' % PKG_VERSION_STR, '/DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '/DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ],
-    'mingw32':  [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '-DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ],
-    'unix':     [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '-DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ],
-    'clang':    [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '-DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ],
-    'gcc':      [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '-DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ]
-}
+# DZSTD_DISABLE_ASM=1 - disable ASM inlines
 
+
+for comp in COPT:
+    if comp == 'msvc':
+        COPT[comp].extend([ '/DVERSION=%s' % PKG_VERSION_STR, '/DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '/DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ]),
+    else:
+        COPT[comp].extend([ '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '-DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ]),
+   
+        
 if not SUP_EXTERNAL:
     for comp in COPT:
         if comp == 'msvc':
