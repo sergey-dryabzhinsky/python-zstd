@@ -97,6 +97,14 @@ if "--external" in sys.argv:
         # Add something default
         ext_libraries=["zstd"]
 
+    
+#SUP_EXTERNAL="ZSTD_EXTERNAL" in os.environ
+#ext_libraries=[]
+if "--bundled" in sys.argv:
+    # You want use external Zstd library?
+    SUP_EXTERNAL=False
+    sys.argv.remove("--bundled")
+    
 
 # Package version, even external 
 PKG_VERSION = VERSION
