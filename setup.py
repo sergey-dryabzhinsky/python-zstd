@@ -28,7 +28,7 @@ if "--legacy" in sys.argv:
     sys.argv.remove("--legacy")
 
 SUP_ASM="ZSTD_ASM" in os.environ
-if ZSTD_ASM not in os.environ:
+if "ZSTD_ASM" not in os.environ:
     SUP_ASM = True 
 #a asm on by default
 if "--libzstd-no-use-asm" in sys.argv:
@@ -40,7 +40,7 @@ if SUP_ASM:
      DISABLE_ASM=0
 
 SUP_THREADS="ZSTD_THREADS" in os.environ 
-if ZSTD_THREADS not in os.environ:
+if "ZSTD_THREADS" not in os.environ:
     SUP_THREADS = True
 # threads on by default
 if "--libzstd-no-threads" in sys.argv:
