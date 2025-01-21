@@ -108,7 +108,6 @@ jobs:
       - name: Build source distribution with Ubuntu
         if: matrix.os.matrix == 'linux'
         run: |
-          apt install -y lizstd-dev
           pip install build
           python -m build --sdist --outdir dist .
 
@@ -128,6 +127,7 @@ jobs:
           # Only build on x86 and arm64 for linux
           CIBW_ARCHS_LINUX: i686 x86_64
           CIBW_BEFORE_ALL_LINUX: >
+            apt install -y libzstd-dev
             python -m pip install --upgrade pip
           # CIBW_ARCHS_MACOS: x86_64 arm64 universal2
           # Building two wheels for MacOS and skipping Universal
