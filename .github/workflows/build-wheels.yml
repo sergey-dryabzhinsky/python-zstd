@@ -108,6 +108,7 @@ jobs:
       - name: Build source distribution with Ubuntu
         if: matrix.os.matrix == 'linux'
         run: |
+          apt install -y lizstd-dev
           pip install build
           python -m build --sdist --outdir dist .
 
