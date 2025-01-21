@@ -14,10 +14,10 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - name: macOS
+          - name: macOS old
             runs-on: macos-13 # x86
             matrix: macos
-          - name: macOS L
+          - name: macOS Latest
             runs-on: macos-latest # arm
             matrix: macos
           - name: Linux
