@@ -348,6 +348,22 @@ static PyObject *py_zstd_max_threads_count(PyObject* self, PyObject *args)
     return Py_BuildValue("i", ZSTDMT_NBWORKERS_MAX);
 }
 
+/**
+ * Returns ZSTD determined minimal ultrafast compression level, int
+ */
+static PyObject *py_zstd_min_compression_level(PyObject* self, PyObject *args)
+{
+    return Py_BuildValue("i", ZSTD_MIN_CLEVEL);
+}
+
+/**
+ * Returns ZSTD determined maximum number of compression level, int
+ */
+static PyObject *py_zstd_max_compression_level(PyObject* self, PyObject *args)
+{
+    return Py_BuildValue("i", ZSTD_MAX_CLEVEL);
+}
+
 
 static PyMethodDef ZstdMethods[] = {
     {"ZSTD_compress",  py_zstd_compress_mt, METH_VARARGS, COMPRESS_DOCSTRING},
@@ -366,6 +382,9 @@ static PyMethodDef ZstdMethods[] = {
     {"ZSTD_version_number",  py_zstd_library_version_int, METH_NOARGS, ZSTD_INT_VERSION_DOCSTRING},
     {"ZSTD_threads_count",  py_zstd_threads_count, METH_NOARGS, ZSTD_THREADS_COUNT_DOCSTRING},
     {"ZSTD_max_threads_count",  py_zstd_max_threads_count, METH_NOARGS, ZSTD_MAX_THREADS_COUNT_DOCSTRING},
+    {"ZSTD_min_compression_level",  py_zstd_min_compression_level, METH_NOARGS, ZSTD_MAX_THREADS_COUNT_DOCSTRING},
+    {"ZSTD_max_compression_level",  py_zstd_min_compression_level, METH_NOARGS, ZSTD_MAX_THREADS_COUNT_DOCSTRING},
+
     {"ZSTD_external",  py_zstd_library_external, METH_NOARGS, ZSTD_EXTERNAL_DOCSTRING},
     {"ZSTD_with_threads",  py_zstd_with_threads, METH_NOARGS, ZSTD_WITH_THREADS_DOCSTRING},
     {"ZSTD_with_asm",  py_zstd_with_asm, METH_NOARGS, ZSTD_WITH_ASM_DOCSTRING},
