@@ -26,6 +26,11 @@ class TestZstdCompress(BaseTestZSTD):
         self.assertRaises(zstd.Error, zstd.compress, tDATA, 100, 0, 1)
         #BaseTestZSTD.helper_compression_wrong_level(self)
 
+    def test_compression_equal_hidh_level(self):
+        cdata1 = zstd.compress(tDATA, 22)
+        cdata2 = zstd.compress(tDATA, 2200)
+        self.assertEqual(cdata1, cdata2)
+        
     def test_compression_multi_thread_one(self):
         BaseTestZSTD.helper_compression_multi_thread_one(self)
 
