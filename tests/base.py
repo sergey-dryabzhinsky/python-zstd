@@ -23,7 +23,9 @@ log = logging.getLogger('ZSTD')
 log.info("Python version: %s" % sys.version)
 log.info("Machine:%s; processor:%s; system:%r; release:%r" % ( platform.machine(), platform.processor(), platform.system(), platform.release()))
 log.info("libzstd linked external:%r"% zstd.ZSTD_external())
-log.info("zstd max number of thhreads:%r"% zstd.ZSTD_max_threads_count())
+log.info("zstd max number of threads:%r"% zstd.ZSTD_max_threads_count())
+log.info("zstd max compression level:%r"% zstd.ZSTD_max_compression_level())
+log.info("zstd min compression level:%r"% zstd.ZSTD_min_compression_level())
 
 # Classic lorem ipsum
 # + За словесными горами
