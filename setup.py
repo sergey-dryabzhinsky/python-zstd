@@ -110,7 +110,7 @@ if BUILD_SMALL:
    }
 else:
     COPT = {
-       'msvc': ['/O2', ],
+       'msvc': ['/Ox', ],
        'mingw32': ['-O2',],
        'unix': ['-O2',],
        'clang': ['-O2',],
@@ -120,15 +120,15 @@ else:
 # DVERSION - pass module version string
 # DDYNAMIC_BMI2 - disable BMI2 amd64 asembler code - can't build it, use CFLAGS with -march= bdver4, znver1/2/3, native
 # DZSTD_DISABLE_ASM=1 - disable ASM inlines
-#
-COPT = {
-    'msvc':     COPT['msvc'].extend([ '/Ox', '/DVERSION=%s' % PKG_VERSION_STR, '/DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '/DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ]),
-    'mingw32':  COPT['mingw32'].extend([ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '-DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ]),
-    'unix':     COPT['unix'].extend([ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '-DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ]),
-    'clang':    COPT['clang'].extend([ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '-DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ]),
-    'gcc':      COPT['gcc'].extend([ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '-DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ])
-}
 
+
+for comp in COPT:
+    if comp == 'msvc':
+        COPT[comp].extend([ '/DVERSION=%s' % PKG_VERSION_STR, '/DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '/DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ]),
+    else:
+        COPT[comp].extend([ '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '-DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ]),
+   
+        
 if not SUP_EXTERNAL:
     for comp in COPT:
         if comp == 'msvc':
