@@ -78,18 +78,28 @@ static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args)
     /* Usual levels                - [ 1..22] */
     /* If level less than -100 or 1 - raise Error, level 0 handled before. */
     if (level < ZSTD_MIN_CLEVEL) {
+	if (strict) {
         PyErr_Format(ZstdError, "Bad compression level - less than %d: %d", ZSTD_MIN_CLEVEL, level);
         return NULL;
+	} else {
+	    level = ZSTD_MIN_CLEVEL;
+	}
     }
     /* If level more than 22 - raise Error. */
     if (level > ZSTD_MAX_CLEVEL) {
+	if (strict) {
         PyErr_Format(ZstdError, "Bad compression level - more than %d: %d", ZSTD_MAX_CLEVEL, level);
         return NULL;
+	} else {
+	    level = ZSTD_MAX_CLEVEL;
+	}
     }
 
     if (threads < 0) {
+	if (strict) {
         PyErr_Format(ZstdError, "Bad threads count - less than %d: %d", 0, threads);
         return NULL;
+	} else threads = 0; 
     }
     if (0 == threads) threads = UTIL_countPhysicalCores();
     /* If threads more than 200 - raise Error. */
