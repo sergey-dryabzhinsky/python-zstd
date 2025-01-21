@@ -127,7 +127,7 @@ jobs:
           # Only build on x86 and arm64 for linux
           CIBW_ARCHS_LINUX: i686 x86_64
           CIBW_BEFORE_ALL_LINUX: >
-            apt install -y libzstd-dev
+            apt-get install -y libzstd-dev
             python -m pip install --upgrade pip
           # CIBW_ARCHS_MACOS: x86_64 arm64 universal2
           # Building two wheels for MacOS and skipping Universal
@@ -160,6 +160,7 @@ jobs:
           # Only build on x86 and arm64 for linux
           CIBW_ARCHS_LINUX: auto aarch64
           CIBW_BEFORE_ALL_LINUX: >
+            apt-get install -y libzstd-dev
             python -m pip install --upgrade pip
           # CIBW_ARCHS_MACOS: x86_64 arm64 universal2
           # Building two wheels for MacOS and skipping Universal
