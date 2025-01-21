@@ -123,10 +123,10 @@ else:
 #
 COPT = {
     'msvc':     COPT['msvc'].extend([ '/Ox', '/DVERSION=%s' % PKG_VERSION_STR, '/DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '/DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ]),
-    'mingw32':  COPT['msvc'].extend([ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '-DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ]),
-    'unix':     COPT['msvc'].extend([ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '-DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ]),
-    'clang':    COPT['msvc'].extend([ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '-DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ]),
-    'gcc':      COPT['msvc'].extend([ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '-DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ])
+    'mingw32':  COPT['mingw32'].extend([ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '-DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ]),
+    'unix':     COPT['unix'].extend([ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '-DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ]),
+    'clang':    COPT['clang'].extend([ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '-DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ]),
+    'gcc':      COPT['gcc'].extend([ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '-DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ])
 }
 
 if not SUP_EXTERNAL:
