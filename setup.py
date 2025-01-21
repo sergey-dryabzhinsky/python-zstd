@@ -11,12 +11,6 @@ from setuptools.command.build_ext import build_ext
 VERSION = (1, 5, 6,)
 VERSION_STR = ".".join([str(x) for x in VERSION])
 
-# Package version
-PKG_VERSION = VERSION
-# Minor versions
-PKG_VERSION += ("3",)
-PKG_VERSION_STR = ".".join([str(x) for x in PKG_VERSION])
-
 ###
 # Ugly hacks, I know
 #
@@ -99,6 +93,14 @@ if SUP_EXTERNAL:
     if "--libraries" not in sys.argv:
         # Add something default
         ext_libraries=["zstd"]
+
+
+# Package version, even external 
+PKG_VERSION = VERSION
+# Minor revision 
+PKG_VERSION += ("3",)
+PKG_VERSION_STR = ".".join([str(x) for x in PKG_VERSION])
+
 
 if BUILD_SMALL:
    COPT = {
