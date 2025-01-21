@@ -40,7 +40,7 @@ if SUP_ASM:
      DISABLE_ASM=0
 
 SUP_THREADS="ZSTD_THREADS" in os.environ 
-IF ZSTD_THREADS not in os.environ:
+if ZSTD_THREADS not in os.environ:
     SUP_THREADS = True
 # threads on by default
 if "--libzstd-no-threads" in sys.argv:
