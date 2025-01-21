@@ -66,6 +66,12 @@ if "--debug-trace" in sys.argv:
     SUP_TRACE=True
     sys.argv.remove("--debug-trace")
 
+BUILD_SMALL="ZSTD_SMALL" in os.environ or True 
+if "--small" in sys.argv:
+    # Support tracing for debug
+    BUILD_SMALL=False
+    sys.argv.remove("--small")
+    
 SUP_EXTERNAL="ZSTD_EXTERNAL" in os.environ
 ext_libraries=[]
 if "--external" in sys.argv:
@@ -94,18 +100,33 @@ if SUP_EXTERNAL:
         # Add something default
         ext_libraries=["zstd"]
 
-
+if BUILD_SMALL:
+   COPT = {
+       'msvc': ['/O1', ],
+       'mingw32': ['-Os',],
+       'unix': ['-Os',],
+       'clang': ['-Os',],
+       'gcc': ['-Os',],
+   }
+else:
+    COPT = {
+       'msvc': ['/O2', ],
+       'mingw32': ['-O2',],
+       'unix': ['-O2',],
+       'clang': ['-O2',],
+       'gcc': ['-O2',],
+    }
 ###
 # DVERSION - pass module version string
 # DDYNAMIC_BMI2 - disable BMI2 amd64 asembler code - can't build it, use CFLAGS with -march= bdver4, znver1/2/3, native
-# DZSTD_DISABLE_ASM=1 - disable ASM inlines, pypi/pip can't build them
+# DZSTD_DISABLE_ASM=1 - disable ASM inlines
 #
 COPT = {
-    'msvc':     [ '/Ox', '/DVERSION=%s' % PKG_VERSION_STR, '/DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '/DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ],
-    'mingw32':  [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '-DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ],
-    'unix':     [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '-DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ],
-    'clang':    [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '-DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ],
-    'gcc':      [ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '-DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ]
+    'msvc':     COPT['msvc'].extend([ '/Ox', '/DVERSION=%s' % PKG_VERSION_STR, '/DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '/DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ]),
+    'mingw32':  COPT['msvc'].extend([ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '-DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ]),
+    'unix':     COPT['msvc'].extend([ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '-DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ]),
+    'clang':    COPT['msvc'].extend([ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '-DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ]),
+    'gcc':      COPT['msvc'].extend([ '-O2', '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '-DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ])
 }
 
 if not SUP_EXTERNAL:
