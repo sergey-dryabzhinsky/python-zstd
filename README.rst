@@ -110,6 +110,13 @@ And ``ZST_ASM_BMI2=1`` too for bmi2 use.
 
    >>> $ ZSTD_ASM=0 python -m build -w
 
+If you want bo build smaller module by size try to use option `--small`, but it will work slower.
+
+   >>> $ python setup.py build_ext --small clean
+
+When using a PEP 517 builder you can use ``ZSTD_SMALL`` environment variable instead:
+
+   >>> $ ZSTD_SMALL=1 python -m build -w
 
 If you want to build with existing distribution of libzstd just add ``--external`` option
 
