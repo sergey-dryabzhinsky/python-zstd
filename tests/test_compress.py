@@ -23,7 +23,7 @@ class TestZstdCompress(BaseTestZSTD):
         BaseTestZSTD.helper_compression_negative_level_notdefault(self)
 
     def test_compression_wrong_level_strict(self):
-        self.assertRaises(zstd.Error, zstd.compress(tDATA, 100, 0, 1))
+        self.assertRaises(zstd.Error, zstd.compress, tDATA, 100, 0, 1)
         #BaseTestZSTD.helper_compression_wrong_level(self)
 
     def test_compression_multi_thread_one(self):
