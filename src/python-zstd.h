@@ -118,6 +118,9 @@ Raises a zstd.Error exception if any error occurs."
 #define ZSTD_THREADS_COUNT_DOCSTRING  "ZSTD_threads_count(): int -- Returns ZSTD determined CPU cores count in integer."
 #define ZSTD_MAX_THREADS_COUNT_DOCSTRING  "ZSTD_max_threads_count(): int -- Returns ZSTD library determined maximum working threads count in integer."
 
+#define ZSTD_MIN_COMPRESSION_LEVEL_DOCSTRING  "ZSTD_min_compression_level(): int -- Returns ZSTD library determined minimum number of compression level in integer."
+#define ZSTD_MAX_COMPRESSION_LEVEL_DOCSTRING  "ZSTD_max_compression_level(): int -- Returns ZSTD library determined maximum number of compression level in integer."
+
 #if PYZSTD_LEGACY > 0
 #define COMPRESS_OLD_DOCSTRING      "compress_old(string[, level]): "PY_BYTESTR_TYPE" -- Compress string, old version, returning the compressed data.\n\nUses custom format. Not compatible with streaming or origin compression tools.\n\nRaises a zstd.Error exception if any error occurs.\n\n@deprecated"
 #define UNCOMPRESS_OLD_DOCSTRING    "decompress_old("PY_BYTESTR_TYPE"): string -- Decompress string, old version, returning the uncompressed data.\n\nUses custom format from `compress_old` fucntion.\nNot compatible with streaming or origin compression tools.\n\nRaises a zstd.Error exception if any error occurs.\n\n@deprecated"

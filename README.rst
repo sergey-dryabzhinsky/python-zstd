@@ -2,7 +2,7 @@
 python-zstd
 =============
 
-.. |releaseW| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg?branch=v1.5.6.2
+.. |releaseW| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg?tag=v1.5.6.2
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml
 
 .. |masterW| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg
@@ -12,6 +12,7 @@ python-zstd
 | branch  |  status    |
 +=========+============+
 | Release | |releaseW| |
+| 1.5.6.2 |            |
 +---------+------------+
 | Master  | |masterW|  |
 +---------+------------+
@@ -139,7 +140,7 @@ ___
 Error
   Standard python Exception for zstd module
 
-ZSTD_compress (data[, level, threads]): string|bytes
+ZSTD_compress (data[, level, threads, strict]): string|bytes
   Function, compress input data block via mutliple threads, return compressed block, or raises Error.
 
   Params:
@@ -147,7 +148,8 @@ ZSTD_compress (data[, level, threads]): string|bytes
   * **data**: string|bytes - input data block, length limited by 2Gb by Python API
   * **level**: int - compression level, ultra-fast levels from -100 (ultra) to -1 (fast) available since zstd-1.3.4, and from 1 (fast) to 22 (slowest), 0 or unset - means default (3). Default - 3.
   * **threads**: int - how many threads to use, from 0 to 200, 0 or unset - auto-tune by cpu cores count. Default - 0. Since: 1.4.4.1
-
+  * **strict**: int - strict behaviour, raise `zstd.Error` if threads number or compression level is beyond limitations. Default - 0. Since: 1.5.6.3
+  
   Aliases:
        - *compress(...)*, 
        - *dumps(...)*, 
@@ -181,7 +183,7 @@ ZSTD_uncompress (data): string|bytes
   Since: 0.1
 
 ZSTD_check (data): string|bytes
-  Function, checks if input is zstd compressed data block, return s1if yes, 0 if no, or raises Error.
+  Function, checks if input is zstd compressed data block, returns 1 if yes, 0 if no, or raises Error.
 
   Support compressed data with multiple/concatenated frames (blocks) .
 
@@ -221,6 +223,16 @@ ZSTD_max_threads_count (): int
   Returns ZSTD library determined maximum working threads count.
 
   Since: 1.5.4.1
+
+ZSTD_max_compression_level (): int
+  Returns ZSTD library determined maximum number of compression level .
+
+  Since: 1.5.6.3
+
+ZSTD_min_compression_level (): int
+  Returns ZSTD library determined minimum number of compression level .
+
+  Since: 1.5.6.3
 
 ZSTD_external (): int
   Returns 0 of 1 if ZSTD library build as external.

@@ -62,13 +62,14 @@ static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args)
     size_t cSize;
     int32_t level = ZSTD_CLEVEL_DEFAULT;
     int32_t threads = 0;
+    int32_t strict = 0;
     ZSTD_CCtx* cctx = 0;
 
 #if PY_MAJOR_VERSION >= 3
-    if (!PyArg_ParseTuple(args, "y#|ii", &source, &source_size, &level, &threads))
+    if (!PyArg_ParseTuple(args, "y#|iii", &source, &source_size, &level, &threads, &strict))
         return NULL;
 #else
-    if (!PyArg_ParseTuple(args, "s#|ii", &source, &source_size, &level, &threads))
+    if (!PyArg_ParseTuple(args, "s#|iii", &source, &source_size, &level, &threads, &strict))
         return NULL;
 #endif
 
@@ -77,18 +78,28 @@ static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args)
     /* Usual levels                - [ 1..22] */
     /* If level less than -100 or 1 - raise Error, level 0 handled before. */
     if (level < ZSTD_MIN_CLEVEL) {
+	if (strict) {
         PyErr_Format(ZstdError, "Bad compression level - less than %d: %d", ZSTD_MIN_CLEVEL, level);
         return NULL;
+	} else {
+	    level = ZSTD_MIN_CLEVEL;
+	}
     }
     /* If level more than 22 - raise Error. */
     if (level > ZSTD_MAX_CLEVEL) {
+	if (strict) {
         PyErr_Format(ZstdError, "Bad compression level - more than %d: %d", ZSTD_MAX_CLEVEL, level);
         return NULL;
+	} else {
+	    level = ZSTD_MAX_CLEVEL;
+	}
     }
 
     if (threads < 0) {
+	if (strict) {
         PyErr_Format(ZstdError, "Bad threads count - less than %d: %d", 0, threads);
         return NULL;
+	} else threads = 0; 
     }
     if (0 == threads) threads = UTIL_countPhysicalCores();
     /* If threads more than 200 - raise Error. */
@@ -337,6 +348,22 @@ static PyObject *py_zstd_max_threads_count(PyObject* self, PyObject *args)
     return Py_BuildValue("i", ZSTDMT_NBWORKERS_MAX);
 }
 
+/**
+ * Returns ZSTD determined minimal ultrafast compression level, int
+ */
+static PyObject *py_zstd_min_compression_level(PyObject* self, PyObject *args)
+{
+    return Py_BuildValue("i", ZSTD_MIN_CLEVEL);
+}
+
+/**
+ * Returns ZSTD determined maximum number of compression level, int
+ */
+static PyObject *py_zstd_max_compression_level(PyObject* self, PyObject *args)
+{
+    return Py_BuildValue("i", ZSTD_MAX_CLEVEL);
+}
+
 
 static PyMethodDef ZstdMethods[] = {
     {"ZSTD_compress",  py_zstd_compress_mt, METH_VARARGS, COMPRESS_DOCSTRING},
@@ -355,6 +382,9 @@ static PyMethodDef ZstdMethods[] = {
     {"ZSTD_version_number",  py_zstd_library_version_int, METH_NOARGS, ZSTD_INT_VERSION_DOCSTRING},
     {"ZSTD_threads_count",  py_zstd_threads_count, METH_NOARGS, ZSTD_THREADS_COUNT_DOCSTRING},
     {"ZSTD_max_threads_count",  py_zstd_max_threads_count, METH_NOARGS, ZSTD_MAX_THREADS_COUNT_DOCSTRING},
+    {"ZSTD_min_compression_level",  py_zstd_min_compression_level, METH_NOARGS, ZSTD_MIN_COMPRESSION_LEVEL_DOCSTRING},
+    {"ZSTD_max_compression_level",  py_zstd_max_compression_level, METH_NOARGS, ZSTD_MAX_COMPRESSION_LEVEL_DOCSTRING},
+
     {"ZSTD_external",  py_zstd_library_external, METH_NOARGS, ZSTD_EXTERNAL_DOCSTRING},
     {"ZSTD_with_threads",  py_zstd_with_threads, METH_NOARGS, ZSTD_WITH_THREADS_DOCSTRING},
     {"ZSTD_with_asm",  py_zstd_with_asm, METH_NOARGS, ZSTD_WITH_ASM_DOCSTRING},

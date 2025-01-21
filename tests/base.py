@@ -16,10 +16,16 @@ else:
         raise unittest.SkipTest(msg)
 
 import zstd
+import platform
 
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger('ZSTD')
 log.info("Python version: %s" % sys.version)
+log.info("Machine:%s; processor:%s; system:%r; release:%r" % ( platform.machine(), platform.processor(), platform.system(), platform.release()))
+log.info("libzstd linked external:%r"% zstd.ZSTD_external())
+log.info("zstd max number of threads:%r"% zstd.ZSTD_max_threads_count())
+log.info("zstd max compression level:%r"% zstd.ZSTD_max_compression_level())
+log.info("zstd min compression level:%r"% zstd.ZSTD_min_compression_level())
 
 # Classic lorem ipsum
 # + За словесными горами
@@ -43,7 +49,7 @@ class BaseTestZSTD(unittest.TestCase):
     VERSION = "1.5.6"
     VERSION_INT = 10506
     VERSION_INT_MIN = 1 * 100*100 + 0 * 1*100 + 0
-    PKG_VERSION = "1.5.6.2"
+    PKG_VERSION = "1.5.6.3"
 
     def helper_version(self):
         self.assertEqual(self.PKG_VERSION, zstd.version())
@@ -91,8 +97,8 @@ class BaseTestZSTD(unittest.TestCase):
         CDATA = zstd.compress(tDATA, -1)
         self.assertNotEqual(CDATA, zstd.compress(tDATA, 0))
 
-    def helper_compression_wrong_level(self):
-        self.assertRaises(zstd.Error, zstd.compress, tDATA, 100)
+    #def helper_compression_wrong_level(self):
+    #    self.assertRaises(zstd.Error, zstd.compress, tDATA, 100)
 
     def helper_compression_multi_thread_one(self):
         CDATA = zstd.compress(tDATA, 6, 1)
