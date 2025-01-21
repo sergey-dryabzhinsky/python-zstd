@@ -2,7 +2,7 @@
 python-zstd
 =============
 
-.. |releaseW| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg?branch=v1.5.6.3
+.. |releaseW| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg?tag=v1.5.6.3
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml
 
 .. |masterW| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg
@@ -11,7 +11,7 @@ python-zstd
 +---------+------------+
 | branch  |  status    |
 +=========+============+
-| Release | |releaseW| |
+| Release 1.5.6.3 | |releaseW| |
 +---------+------------+
 | Master  | |masterW|  |
 +---------+------------+
@@ -222,6 +222,16 @@ ZSTD_max_threads_count (): int
   Returns ZSTD library determined maximum working threads count.
 
   Since: 1.5.4.1
+
+ZSTD_max_compression_level (): int
+  Returns ZSTD library determined maximum number of compression level .
+
+  Since: 1.5.6.3
+
+ZSTD_min_compression_level (): int
+  Returns ZSTD library determined minimum number of compression level .
+
+  Since: 1.5.6.3
 
 ZSTD_external (): int
   Returns 0 of 1 if ZSTD library build as external.
