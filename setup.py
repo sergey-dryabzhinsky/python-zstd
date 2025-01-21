@@ -66,10 +66,10 @@ if "--debug-trace" in sys.argv:
     SUP_TRACE=True
     sys.argv.remove("--debug-trace")
 
-BUILD_SMALL="ZSTD_SMALL" in os.environ or True 
+BUILD_SMALL="ZSTD_SMALL" in os.environ
 if "--small" in sys.argv:
     # Support tracing for debug
-    BUILD_SMALL=False
+    BUILD_SMALL=True 
     sys.argv.remove("--small")
     
 SUP_EXTERNAL="ZSTD_EXTERNAL" in os.environ
