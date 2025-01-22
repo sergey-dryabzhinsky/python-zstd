@@ -90,9 +90,11 @@ if "--external" in sys.argv:
             # It's bytes in PY3
             VERSION_STR = VERSION_STR.decode()
             print("Found libzstd version %r" % VERSION_STR)
-        if VERSION_STR>="1.3.0":
+        if VERSION_STR>="1.4.0":
             SUP_EXTERNAL=True
             ext_libraries=[]
+        else:
+            print("Need library verion >= 1.4.0")
         VERSION = tuple(int(v) for v in VERSION_STR.split("."))
     if "--libraries" not in sys.argv:
         # Add something default
