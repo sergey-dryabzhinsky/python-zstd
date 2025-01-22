@@ -26,6 +26,9 @@ log.info("libzstd linked external:%r"% zstd.ZSTD_external())
 log.info("zstd max number of threads:%r"% zstd.ZSTD_max_threads_count())
 log.info("zstd max compression level:%r"% zstd.ZSTD_max_compression_level())
 log.info("zstd min compression level:%r"% zstd.ZSTD_min_compression_level())
+log.info("pyzstd module version: %r"% zstd.version())
+log.info("libzstd version: %r"% zstd.ZSTD_version())
+
 
 # Classic lorem ipsum
 # + За словесными горами
