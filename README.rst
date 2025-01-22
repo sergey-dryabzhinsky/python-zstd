@@ -242,7 +242,7 @@ ZSTD_min_compression_level (): int
   Since: 1.5.6.3
 
 ZSTD_external (): int
-  Returns 0 of 1 if ZSTD library build as external.
+  Returns 0 of 1 if ZSTD library linked as external.
 
   Since: 1.5.0.2
 
