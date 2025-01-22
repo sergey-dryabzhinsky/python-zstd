@@ -128,7 +128,7 @@ jobs:
           CIBW_ARCHS_LINUX: i686 x86_64
           CIBW_BEFORE_ALL_LINUX: >
             python -m pip install --upgrade pip
-          CIBW_BBEFORE_BUILD_LINUX: apr install -y linzstd-dev
+          CIBW_BEFORE_BUILD: apt install -y linzstd-dev || apk add zstd-dev
           # CIBW_ARCHS_MACOS: x86_64 arm64 universal2
           # Building two wheels for MacOS and skipping Universal
           CIBW_ARCHS_MACOS: x86_64
