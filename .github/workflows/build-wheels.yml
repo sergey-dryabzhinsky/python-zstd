@@ -152,9 +152,9 @@ jobs:
           CIBW_BUILD: ${{ matrix.cibw.build }}
           # Skip 32-bit builds // NO
           # CIBW_SKIP: '*-win32 *_i686'
-          CIBW_MANYLINUX_I686_IMAGE: manylinux2014
-          CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
-          CIBW_MANYLINUX_AARCH64_IMAGE: manylinux2014
+          CIBW_MANYLINUX_I686_IMAGE: manylinux_2_24
+          CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_24
+          CIBW_MANYLINUX_AARCH64_IMAGE: manylinux_2_24
           CIBW_MUSLLINUX_I686_IMAGE: musllinux_1_1
           CIBW_MUSLLINUX_X86_64_IMAGE: musllinux_1_1
           # Only build on x86 and arm64 for linux
