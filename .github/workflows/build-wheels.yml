@@ -130,7 +130,10 @@ jobs:
             python -m pip install --upgrade pip;
             export PATH=/usr/sbin:$PATH;
             [ -x /usr/sbin/dnf ]& echo DNF;
-            dnf install -y libzstd-devel || apt install -y libzstd-dev || apk add zstd-dev || true
+            [ -x /usr/sbin/yum ]& echo YUM;
+            [ -x /usr/sbin/apt ]& echo APT;
+            [ -x /usr/sbin/apk ]& echo APK;
+            /usr/sbin/dnf install -y libzstd-devel || /usr/sbin/apt install -y libzstd-dev || /usr/sbin/apk add zstd-dev || true
           # CIBW_ARCHS_MACOS: x86_64 arm64 universal2
           # Building two wheels for MacOS and skipping Universal
           CIBW_ARCHS_MACOS: x86_64
