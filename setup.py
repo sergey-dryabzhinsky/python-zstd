@@ -83,6 +83,7 @@ if "--external" in sys.argv:
     # We need pkg-config here!
     pkgconf = "/usr/bin/pkg-config"
     if os.path.exists(pkgconf):
+        print("pkg-config exists")
         cmd = [pkgconf, "libzstd", "--modversion"]
         if sys.hexversion >= 0x02070000:
             VERSION_STR = subprocess.check_output(cmd)
