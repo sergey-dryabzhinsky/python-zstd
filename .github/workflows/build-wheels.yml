@@ -108,7 +108,9 @@ jobs:
       - name: Build source distribution with Ubuntu
         if: matrix.os.matrix == 'linux'
         run: |
-          pip install build
+          sudo apt update;
+          sudo apt install -y libzstd-dev
+          pip install build;
           python -m build --sdist --outdir dist .
 
       - name: Build ${{ matrix.os.name }} wheels and test (old)
