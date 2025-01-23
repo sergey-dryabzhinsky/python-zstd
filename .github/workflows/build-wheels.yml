@@ -128,6 +128,8 @@ jobs:
           CIBW_ARCHS_LINUX: i686 x86_64
           CIBW_BEFORE_ALL_LINUX: >
             python -m pip install --upgrade pip;
+            export PATH=/usr/sbin:$PATH;
+            [ -x /usr/sbin/dnf ]& echo DNF;
             dnf install -y libzstd-devel || apt install -y libzstd-dev || apk add zstd-dev || true
           # CIBW_ARCHS_MACOS: x86_64 arm64 universal2
           # Building two wheels for MacOS and skipping Universal
