@@ -110,6 +110,7 @@ jobs:
         run: |
           sudo apt update; apt list --upgradable; sudo apt upgrade -y;
           sudo apt install -y libzstd-dev;
+          echo PKG-CONFIG; pkg-config lizstd --modversion echo "PIP BUILD"; 
           pip install build;
           python -m build --sdist --outdir dist .
 
@@ -177,7 +178,7 @@ jobs:
             python -m unittest discover -v -s {package}
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: wheels
           path: ./dist
