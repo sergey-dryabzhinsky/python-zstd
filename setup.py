@@ -77,6 +77,7 @@ if "--external" in sys.argv:
     sys.argv.remove("--external")
 
 #if SUP_EXTERNAL:
+if True:
     # You should add external library by option: --libraries zstd
     # And probably include paths by option: --include-dirs /usr/include/zstd
     # And probably library paths by option: --library-dirs /usr/lib/i386-linux-gnu
