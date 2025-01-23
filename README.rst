@@ -74,6 +74,16 @@ Build from source
    >>> $ python setup.py build_ext clean
    >>> $ python3 setup.py build_ext clean
 
+And you need to install `libzstd` developer files at least version *1.4.0*:
+
+    >>> $ dnf install -y libzstd-devel
+    # or
+    >>> $ apt install libzstd-dev
+    # or
+    >>> $ apk add zstd-dev
+
+or do manual installation of zstd from source.
+
 Note: Zstd legacy format support disabled by default.
 To build with Zstd legacy versions support - pass ``--legacy`` option to setup.py script:
 
