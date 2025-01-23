@@ -92,12 +92,12 @@ if True:
             VERSION_STR=""
         if sys.hexversion >= 0x02070000:
             try:
-                VERSION_STR = subprocess.check_output(cmd)
+                VERSION_STR = subprocess.check_output(cmd).trim()
             except:
                 pass
         else:
             # Pure Python 2.6
-            VERSION_STR = subprocess.Popen(cmd, stdout=subprocess.PIPE).communicate()[0]
+            VERSION_STR = subprocess.Popen(cmd, stdout=subprocess.PIPE).communicate()[0].trim()
         if sys.hexversion >= 0x03000000:
             # It's bytes in PY3
             VERSION_STR = VERSION_STR.decode()
