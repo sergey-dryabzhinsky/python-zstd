@@ -86,7 +86,10 @@ if True:
     if os.path.exists(pkgconf):
         print("pkg-config exists")
         cmd = [pkgconf, "libzstd", "--modversion"]
-        VERSION_STR=""
+        if sys.hexversion >= 0x03000000:
+            VERSION_STR=b''
+        else:
+            VERSION_STR=""
         if sys.hexversion >= 0x02070000:
             try:
                 VERSION_STR = subprocess.check_output(cmd)
