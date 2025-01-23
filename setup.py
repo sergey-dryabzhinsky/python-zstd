@@ -98,7 +98,7 @@ if "--external" in sys.argv:
                 SUP_EXTERNAL=True
                 ext_libraries=[]
             else:
-                raise Exception("Need library verion >= 1.4.0")
+                raise RuntimeError("Need zstd library verion >= 1.4.0")
         VERSION = tuple(int(v) for v in VERSION_STR.split("."))
     if "--libraries" not in sys.argv:
         # Add something default
