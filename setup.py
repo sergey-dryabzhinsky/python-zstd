@@ -2,6 +2,9 @@
 
 import os
 import sys
+
+print("\ncmdline: %r" % (sys.argv,))
+
 import subprocess
 
 from setuptools import setup, find_packages, Extension
@@ -89,7 +92,7 @@ if "--external" in sys.argv:
         if sys.hexversion >= 0x03000000:
             # It's bytes in PY3
             VERSION_STR = VERSION_STR.decode()
-            print("Found libzstd version %r" % VERSION_STR)
+        print("\nFound libzstd version %r" % VERSION_STR)
         if VERSION_STR:
             if VERSION_STR>="1.4.0":
                 SUP_EXTERNAL=True
