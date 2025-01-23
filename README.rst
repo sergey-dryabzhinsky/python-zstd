@@ -78,7 +78,7 @@ And you need to install `libzstd` developer files at least version *1.4.0*:
 
     >>> $ dnf install -y libzstd-devel
     # or
-    >>> $ apt install libzstd-dev
+    >>> $ apt install -y libzstd-dev
     # or
     >>> $ apk add zstd-dev
 
