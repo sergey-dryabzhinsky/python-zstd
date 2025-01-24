@@ -108,7 +108,8 @@ jobs:
       - name: Build source distribution with Ubuntu
         if: matrix.os.matrix == 'linux'
         run: |
-          sudo apt purge -y firefox snapd
+          echo OS-RELEASE; cat /etc/oss-release;
+          sudo apt purge -y firefox snapd;
           sudo apt update; apt list --upgradable; sudo apt upgrade -y;
           sudo apt install -y libzstd-dev;
           echo PKG-CONFIG;
