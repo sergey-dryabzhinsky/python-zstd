@@ -121,11 +121,6 @@ if "build_ext" in sys.argv or "build" in sys.argv:
         # Add something default
         ext_libraries=["zstd"]
 
-    
-#SUP_EXTERNAL="ZSTD_EXTERNAL" in os.environ
-#ext_libraries=[]
-
-    
 
 # Package version, even external 
 PKG_VERSION = VERSION
