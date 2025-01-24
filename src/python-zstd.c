@@ -353,7 +353,7 @@ static PyObject *py_zstd_max_threads_count(PyObject* self, PyObject *args)
  */
 static PyObject *py_zstd_min_compression_level(PyObject* self, PyObject *args)
 {
-    return Py_BuildValue("i", ZSTD_MIN_CLEVEL);
+    return Py_BuildValue("i", ZSTD_minCLevel());
 }
 
 /**
@@ -361,7 +361,7 @@ static PyObject *py_zstd_min_compression_level(PyObject* self, PyObject *args)
  */
 static PyObject *py_zstd_max_compression_level(PyObject* self, PyObject *args)
 {
-    return Py_BuildValue("i", ZSTD_MAX_CLEVEL);
+    return Py_BuildValue("i", ZSTD_maxCLevel());
 }
 
 
