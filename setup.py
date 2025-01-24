@@ -6,6 +6,7 @@ import sys
 print("\ncmdline: %r" % (sys.argv,))
 
 import subprocess
+import platform 
 
 from setuptools import setup, find_packages, Extension
 from setuptools.command.build_ext import build_ext
@@ -84,7 +85,7 @@ if "--libzstd-bundled" in sys.argv:
     pkgconf = "/usr/bin/do-not-use-pkg-config"
     
 #if SUP_EXTERNAL:
-if "build_ext" in sys.argv or "build" in sys.argv:
+if platform.stystem() = "Linux" and "build_ext" in sys.argv or "build" in sys.argv:
     # You should add external library by option: --libraries zstd
     # And probably include paths by option: --include-dirs /usr/include/zstd
     # And probably library paths by option: --library-dirs /usr/lib/i386-linux-gnu
