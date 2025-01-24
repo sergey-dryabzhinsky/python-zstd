@@ -115,7 +115,7 @@ if platform.system() == "Linux" and "build_ext" in sys.argv or "build" in sys.ar
                 ext_libraries=[]
             else:
                 raise RuntimeError("Need zstd library verion >= 1.4.0")
-        VERSION = tuple(int(v) for v in VERSION_STR.split("."))
+            VERSION = tuple(int(v) for v in VERSION_STR.split("."))
     else:
         if SUP_EXTERNAL:
             # Require pkg config
