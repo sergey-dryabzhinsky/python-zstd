@@ -117,6 +117,9 @@ if platform.stystem() = "Linux" and "build_ext" in sys.argv or "build" in sys.ar
                 raise RuntimeError("Need zstd library verion >= 1.4.0")
         VERSION = tuple(int(v) for v in VERSION_STR.split("."))
     else:
+        if SUP_EXTERNAL:
+            # Require pkg config
+            raise RuntimeError("Need pkg-config to find system libzstd.")
         print("\n Need pkg-config to find system libzstd. Or we try bundled one.")
     if "--libraries" not in sys.argv:
         # Add something default
