@@ -126,6 +126,7 @@ jobs:
           output-dir: dist
         env:
           CIBW_BUILD: ${{ matrix.cibw.build }}
+          CIBW_BUILD_VERBOSITY_LINUX: 1
           # Skip 32-bit builds // NO
           # CIBW_SKIP: '*-win32 *_i686'
           CIBW_MANYLINUX_I686_IMAGE: manylinux1
@@ -157,6 +158,7 @@ jobs:
           output-dir: dist
         env:
           CIBW_BUILD: ${{ matrix.cibw.build }}
+          CIBW_BUILD_VERBOSITY_LINUX: 1
           # Skip 32-bit builds // NO
           # CIBW_SKIP: '*-win32 *_i686'
           CIBW_MANYLINUX_I686_IMAGE: manylinux_2_24
