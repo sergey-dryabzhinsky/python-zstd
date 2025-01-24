@@ -76,13 +76,19 @@ if "--external" in sys.argv:
     SUP_EXTERNAL=True
     sys.argv.remove("--external")
 
+pkgconf = "/usr/bin/pkg-config"
+if "--libzstd-bundled" in sys.argv:
+    # You want use external Zstd library?
+    SUP_EXTERNAL=False
+    sys.argv.remove("--libzstd-bundled")
+    pkgconf = "/usr/bin/do-not-use-pkg-config"
+    
 #if SUP_EXTERNAL:
 if True:
     # You should add external library by option: --libraries zstd
     # And probably include paths by option: --include-dirs /usr/include/zstd
     # And probably library paths by option: --library-dirs /usr/lib/i386-linux-gnu
     # We need pkg-config here!
-    pkgconf = "/usr/bin/pkg-config"
     if os.path.exists(pkgconf):
         print("pkg-config exists")
         cmd = [pkgconf, "libzstd", "--modversion"]
@@ -109,6 +115,8 @@ if True:
             else:
                 raise RuntimeError("Need zstd library verion >= 1.4.0")
         VERSION = tuple(int(v) for v in VERSION_STR.split("."))
+    else:
+        print("\n Need pkg-config to find system libzstd. Or we try bundled one.")
     if "--libraries" not in sys.argv:
         # Add something default
         ext_libraries=["zstd"]
@@ -116,10 +124,7 @@ if True:
     
 #SUP_EXTERNAL="ZSTD_EXTERNAL" in os.environ
 #ext_libraries=[]
-if "--bundled" in sys.argv:
-    # You want use external Zstd library?
-    SUP_EXTERNAL=False
-    sys.argv.remove("--bundled")
+
     
 
 # Package version, even external 
