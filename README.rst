@@ -141,6 +141,14 @@ If paths to header file ``zstd.h`` and libraries is uncommon - use common ``buil
 
    >>> $ python setup.py build_ext --external --include-dirs /opt/zstd/usr/include --libraries zstd --library-dirs /opt/zstd/lib clean
 
+But If you want to build with bundled distribution of libzstd just add ``--
+libzstd-bundlec`` option
+
+   >>> $ python setup.py build_ext --libzstd-bundled clean
+
+When using a PEP 517 builder you can use ``ZSTD_BUNDLED`` environment variable instead:
+
+   >>> $ ZSTD_BUNDLED=1 python -m build -w
 
 Install from pypi
 -----------------
