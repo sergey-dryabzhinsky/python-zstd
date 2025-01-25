@@ -186,7 +186,7 @@ jobs:
             python -m unittest discover -v -s {package}
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4.6
+        uses: actions/upload-artifact@v4.6.0
         with:
           name: wheels
           path: ./dist
