@@ -189,7 +189,7 @@ ZSTD_uncompress (data): string|bytes
 
   Since: 0.1
 
-ZSTD_check (data): string|bytes
+ZSTD_check (data): int
   Function, checks if input is zstd compressed data block, returns 1 if yes, 0 if no, or raises Error.
 
   Support compressed data with multiple/concatenated frames (blocks) .
