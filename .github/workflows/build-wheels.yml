@@ -20,8 +20,11 @@ jobs:
           - name: macOS Latest
             runs-on: macos-latest # arm
             matrix: macos
-          - name: Linux
+          - name: Ubuntu 24.04
             runs-on: ubuntu-latest
+            matrix: linux
+          - name: LUbuntu 16.04
+            runs-on: ubuntu-16
             matrix: linux
           - name: Windows
             runs-on: windows-latest
