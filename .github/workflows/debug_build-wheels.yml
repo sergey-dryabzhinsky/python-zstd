@@ -51,6 +51,7 @@ jobs:
       - name: Build source distribution with Ubuntu
         if: matrix.os.matrix == 'linux'
         run: |
+          su. which apt
           sudo apt update; 
           sudo apt purge -y firefox snapd;
           sudo apt list --upgradable;
@@ -71,7 +72,7 @@ jobs:
           echo 'deb http://packages.rusoft.ru/ppa/rusoft/packages ubuntu-xenial'> rusoft-packages.list
           find ./ubuntu-xenial-x86/etc/apt
           sudo cp -v ./*.list ./ubuntu-xenial-x86/etc/apt/sources.list.d
-          sudo chroot ./ubuntu-xenial-x86 --cd /etc/apt/trusted.gpg.d && wget http://packages.rusoft.ru/apt/public.gpg -Orusoft.gpg
+          sudo chroot ./ubuntu-xenial-x86 -- cd /etc/apt/trusted.gpg.d && wget http://packages.rusoft.ru/apt/public.gpg -Orusoft.gpg
           sudo chroot ./ubuntu-xenial-x86 /usr/sbin/apt update
           sudo chroot ./ubuntu-xenial-x86 /usr/sbin/apt upgrade -y
           sudo chroot ./ubuntu-xenial-x86 /usr/sbin/apt install -y libzstd-dev python2.7-dev
