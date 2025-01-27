@@ -63,8 +63,8 @@ jobs:
           sudo debootstrap --arch=i386 xenial ./ubuntu-xenial-x86 http://azure.archive.ubuntu.com/ubuntu
           echo http://mirror.yandex.ru/ubuntu
           sudo chroot ./ubuntu-xenial-x86 /bin/mkdir /build_wheel
-          sudo mount ./ubuntu-xenial-x86/proc -t proc
-          sudo mount ./ubuntu-xenial-x86/sys -t sysfs
+          sudo mount none ./ubuntu-xenial-x86/proc -t proc
+          sudo mount none ./ubuntu-xenial-x86/sys -t sysfs
           sudo tar -xvf dist/zstd-1.5.6.3.tar.gz -C ./ubuntu-xenial-x86/build_wheel/
           echo 'deb http://packages.rusoft.ru/ppa/rusoft/python ubuntu-xenial' > rusoft-python.list
           echo 'deb http://packages.rusoft.ru/ppa/rusoft/backports ubuntu-xenial' > rusoft-backports.list
