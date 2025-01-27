@@ -63,12 +63,16 @@ jobs:
           sudo debootstrap --arch=i386 xenial ./ubuntu-xenial-x86 http://azure.archive.ubuntu.com/ubuntu
           echo http://mirror.yandex.ru/ubuntu
           sudo chroot ./ubuntu-xenial-x86 /bin/mkdir /build_wheel
+          sudo mount ./ubuntu-xenial-x86/proc -t proc
+          sudo mount ./ubuntu-xenial-x86/sys -t sysfs
           sudo tar -xvf dist/zstd-1.5.6.3.tar.gz -C ./ubuntu-xenial-x86/build_wheel/
-          echo 'deb http://packages.rusoft.ru/ppa/rusoft/python ubuntu-xenial'>/etc/apt/sourse.list.d/rusoft-python.list
-          echo 'deb http://packages.rusoft.ru/ppa/rusoft/backports ubuntu-xenial'>/etc/apt/sourse.list.d/rusoft-backports.list
-          echo 'deb http://packages.rusoft.ru/ppa/rusoft/packages ubuntu-xenial'>/etc/apt/sourse.list.d/rusoft-packages.list
+          echo 'deb http://packages.rusoft.ru/ppa/rusoft/python ubuntu-xenial' > rusoft-python.list
+          echo 'deb http://packages.rusoft.ru/ppa/rusoft/backports ubuntu-xenial' > rusoft-backports.list
+          echo 'deb http://packages.rusoft.ru/ppa/rusoft/packages ubuntu-xenial'> rusoft-packages.list
+          sudo cp -v ./*.list ./ubuntu-xenial-x86/etc/apt/sourse.list.d
           sudo chroot ./ubuntu-xenial-x86 /usr/sbin/apt update
           sudo chroot ./ubuntu-xenial-x86 /usr/sbin/apt upgrade -y
+          sudo chroot ./ubuntu-xenial-x86 /usr/sbin/apt install -y libzstd-dev python2.7-dev
           
 
       - name: Upload artifacts
