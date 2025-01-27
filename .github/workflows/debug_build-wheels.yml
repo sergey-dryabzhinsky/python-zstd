@@ -74,7 +74,7 @@ jobs:
           sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt update
            false && sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt install -y wget
           sudo cp -v ./*.list ./ubuntu-xenial-x86/etc/apt/sources.list.d
-          sudo rm -fv ./ubuntu-xenial-x86/etc/apt/trusted.gpg.d/* && rm -fv ./ubuntu-xenial-x86/etc/apt/trusted.gpg
+          sudo rm -fv ./ubuntu-xenial-x86/etc/apt/trusted.gpg.d/* && sudo rm -fv ./ubuntu-xenial-x86/etc/apt/trusted.gpg
           sudo chroot ./ubuntu-xenial-x86 /bin/bash -c 'cd /etc/apt/trusted.gpg.d && wget http://packages.rusoft.ru/apt/public.gpg -Orusoft.gpg'
           false && wget -q -O- http://packages.rusoft.ru/apt/public.gpg | sudo chroot ./ubuntu-xenial-x86 /bin/bash -c 'apt-key add -'
           sudo chroot ./ubuntu-xenial-x86 /bin/bash -c 'cd /etc/apt/trusted.gpg.d && wget http://packages.rusoft.ru/apt/public-old.gpg -Orusoft-old.gpg'
