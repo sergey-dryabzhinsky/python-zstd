@@ -73,9 +73,9 @@ jobs:
           find ./ubuntu-xenial-x86/etc/apt
           sudo cp -v ./*.list ./ubuntu-xenial-x86/etc/apt/sources.list.d
           sudo chroot ./ubuntu-xenial-x86 -- cd /etc/apt/trusted.gpg.d && wget http://packages.rusoft.ru/apt/public.gpg -Orusoft.gpg
-          sudo chroot ./ubuntu-xenial-x86 /usr/sbin/apt update
-          sudo chroot ./ubuntu-xenial-x86 /usr/sbin/apt upgrade -y
-          sudo chroot ./ubuntu-xenial-x86 /usr/sbin/apt install -y libzstd-dev python2.7-dev
+          sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt update
+          sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt upgrade -y
+          sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt install -y libzstd-dev python2.7-dev
           
 
       - name: Upload artifacts
