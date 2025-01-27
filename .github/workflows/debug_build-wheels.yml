@@ -53,7 +53,8 @@ jobs:
         run: |
           sudo apt update; 
           sudo apt purge -y firefox snapd;
-          sudo apt apgrade -y;
+          sudo apt list --upgradable;
+          sudo apt upgrade -y;
           sudo apt install -y libzstd-dev devscripts qemu-user;
           pip install build;
           python -m build --sdist --outdir dist .
