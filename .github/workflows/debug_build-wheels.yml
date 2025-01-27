@@ -55,18 +55,20 @@ jobs:
           sudo apt purge -y firefox snapd;
           sudo apt list --upgradable;
           sudo apt upgrade -y;
-          sudo apt install -y libzstd-dev devscripts debootstrap qemu-user;
+          sudo apt install -y devscripts debootstrap qemu-user;
           pip install build;
           python -m build --sdist --outdir dist .
           echo LIST-FILES;
           find .
-          sudo debootstrap --arch=i386 xenial ./ubuntu-xenial-x86 http://mirror.yandex.ru/ubuntu
+          sudo debootstrap --arch=i386 xenial ./ubuntu-xenial-x86 http://azure.archive.ubuntu.com/ubuntu
+          echo http://mirror.yandex.ru/ubuntu
           sudo chroot ./ubuntu-xenial-x86 /bin/mkdir /build_wheel
-          sudo tar -xcf dist/zstd-1.5.6.3.tar.gz -C ./ubuntu-xenial-x86/build_wheel/
+          sudo tar -xvf dist/zstd-1.5.6.3.tar.gz -C ./ubuntu-xenial-x86/build_wheel/
           echo 'deb http://packages.rusoft.ru/ppa/rusoft/python ubuntu-xenial'>/etc/apt/sourse.list.d/rusoft-python.list
           echo 'deb http://packages.rusoft.ru/ppa/rusoft/backports ubuntu-xenial'>/etc/apt/sourse.list.d/rusoft-backports.list
           echo 'deb http://packages.rusoft.ru/ppa/rusoft/packages ubuntu-xenial'>/etc/apt/sourse.list.d/rusoft-packages.list
           sudo chroot ./ubuntu-xenial-x86 /usr/sbin/apt update
+          sudo chroot ./ubuntu-xenial-x86 /usr/sbin/apt upgrade -y
           
 
       - name: Upload artifacts
