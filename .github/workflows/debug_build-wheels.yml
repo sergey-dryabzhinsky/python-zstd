@@ -69,7 +69,8 @@ jobs:
           echo 'deb http://packages.rusoft.ru/ppa/rusoft/python ubuntu-xenial' > rusoft-python.list
           echo 'deb http://packages.rusoft.ru/ppa/rusoft/backports ubuntu-xenial' > rusoft-backports.list
           echo 'deb http://packages.rusoft.ru/ppa/rusoft/packages ubuntu-xenial'> rusoft-packages.list
-          sudo cp -v ./*.list ./ubuntu-xenial-x86/etc/apt/source.list.d
+          find ./ubuntu-xenial-x86/etc/apt
+          sudo cp -v ./*.list ./ubuntu-xenial-x86/etc/apt/sources.list.d
           sudo chroot ./ubuntu-xenial-x86 - wget -q http://packages.rusoft.ru/apt/public.gpg -O- | sudo apt-key add -
           sudo chroot ./ubuntu-xenial-x86 /usr/sbin/apt update
           sudo chroot ./ubuntu-xenial-x86 /usr/sbin/apt upgrade -y
