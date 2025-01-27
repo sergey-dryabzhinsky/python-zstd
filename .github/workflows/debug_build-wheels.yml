@@ -72,12 +72,12 @@ jobs:
           echo 'deb http://packages.rusoft.ru/ppa/rusoft/packages ubuntu-xenial main'> rusoft-packages.list
           find ./ubuntu-xenial-x86/etc/apt
           sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt update
-          sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt install -y wget
+           false && sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt install -y wget
           sudo cp -v ./*.list ./ubuntu-xenial-x86/etc/apt/sources.list.d
           sudo chroot ./ubuntu-xenial-x86 /bin/bash -c 'cd /etc/apt/trusted.gpg.d && wget http://packages.rusoft.ru/apt/public.gpg -Orusoft.gpg'
-           sudo chroot ./ubuntu-xenial-x86 /bin/bash -c 'wget -q -O- http://packages.rusoft.ru/apt/public.gpg | apt-key add -'
+          wget -q -O- http://packages.rusoft.ru/apt/public.gpg | sudo chroot ./ubuntu-xenial-x86 /bin/bash -c 'apt-key add -'
           sudo chroot ./ubuntu-xenial-x86 /bin/bash -c 'cd /etc/apt/trusted.gpg.d && wget http://packages.rusoft.ru/apt/public-old.gpg -Orusoft-old.gpg'
-          sudo chroot ./ubuntu-xenial-x86 /bin/bash -c 'wget -q -O- http://packages.rusoft.ru/apt/public-old.gpg | apt-key add -'
+          wget -q -O- http://packages.rusoft.ru/apt/public-old.gpg |sudo chroot ./ubuntu-xenial-x86 /bin/bash -c 'apt-key add -'
           sudo false && chroot ./ubuntu-xenial-x86 /bin/bash -c 'apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A2CE4BCCC50209DD'
           sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt update
           sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt upgrade -y
