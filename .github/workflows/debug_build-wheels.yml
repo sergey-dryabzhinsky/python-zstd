@@ -27,28 +27,6 @@ jobs:
             runs-on: windows-latest
             matrix: windows
 
-        exclude:
-          - os:
-              matrix: windows
-            cibw:
-              build: cp27-*
-          - os:
-              matrix: macos
-            cibw:
-              build: pp27-*
-          - os:
-              matrix: macos
-            cibw:
-              build: pp36-*
-          - os:
-              matrix: macos
-            cibw:
-              build: cp35-*
-          - os:
-              matrix: windows
-            cibw:
-              build: pp27-*
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
