@@ -55,11 +55,18 @@ jobs:
           sudo apt purge -y firefox snapd;
           sudo apt list --upgradable;
           sudo apt upgrade -y;
-          sudo apt install -y libzstd-dev devscripts qemu-user;
+          sudo apt install -y libzstd-dev devscripts debootstrap qemu-user;
           pip install build;
           python -m build --sdist --outdir dist .
           echo LIST-FILES;
           find .
+          debootstrap --arch=i386 xenial ./ubuntu-xenial-x86 http://mirror.yandex.ru/ubuntu
+          chroot ./ubuntu-xenial-x86 /bin/mkdir /build_wheel
+          echo 'deb http://packages.rusoft.ru/ppa/rusoft/python ubuntu-xenial'>/etc/apt/sourse.list.d/rusoft-python.list
+          echo 'deb http://packages.rusoft.ru/ppa/rusoft/backports ubuntu-xenial'>/etc/apt/sourse.list.d/rusoft-backports.list
+          echo 'deb http://packages.rusoft.ru/ppa/rusoft/packages ubuntu-xenial'>/etc/apt/sourse.list.d/rusoft-packages.list
+          chroot ./ubuntu-xenial-x86 /usr/sbin/apt update
+          
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
