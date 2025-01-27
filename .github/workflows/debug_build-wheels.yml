@@ -60,12 +60,13 @@ jobs:
           python -m build --sdist --outdir dist .
           echo LIST-FILES;
           find .
-          debootstrap --arch=i386 xenial ./ubuntu-xenial-x86 http://mirror.yandex.ru/ubuntu
-          chroot ./ubuntu-xenial-x86 /bin/mkdir /build_wheel
+          sudo debootstrap --arch=i386 xenial ./ubuntu-xenial-x86 http://mirror.yandex.ru/ubuntu
+          sudo chroot ./ubuntu-xenial-x86 /bin/mkdir /build_wheel
+          sudo tar -xcf dist/zstd-1.5.6.3.tar.gz -C ./ubuntu-xenial-x86/build_wheel/
           echo 'deb http://packages.rusoft.ru/ppa/rusoft/python ubuntu-xenial'>/etc/apt/sourse.list.d/rusoft-python.list
           echo 'deb http://packages.rusoft.ru/ppa/rusoft/backports ubuntu-xenial'>/etc/apt/sourse.list.d/rusoft-backports.list
           echo 'deb http://packages.rusoft.ru/ppa/rusoft/packages ubuntu-xenial'>/etc/apt/sourse.list.d/rusoft-packages.list
-          chroot ./ubuntu-xenial-x86 /usr/sbin/apt update
+          sudo chroot ./ubuntu-xenial-x86 /usr/sbin/apt update
           
 
       - name: Upload artifacts
