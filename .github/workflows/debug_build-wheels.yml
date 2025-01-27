@@ -61,7 +61,7 @@ jobs:
           python -m build --sdist --outdir dist .
           echo LIST-FILES;
           find .
-          sudo debootstrap --arch=i386 xenial ./ubuntu-xenial-x86 http://azure.archive.ubuntu.com/ubuntu
+          sudo debootstrap --include=sudo,wget --arch=i386 xenial ./ubuntu-xenial-x86 http://azure.archive.ubuntu.com/ubuntu
           echo http://mirror.yandex.ru/ubuntu
           sudo chroot ./ubuntu-xenial-x86 /bin/mkdir /build_wheel
           sudo mount none ./ubuntu-xenial-x86/proc -t proc
