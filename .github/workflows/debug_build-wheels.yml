@@ -68,7 +68,7 @@ jobs:
         if: matrix.os.matrix == 'linux'
         uses: docker/setup-qemu-action@v1
         with:
-          platforms: [ 'arm64', 'riscv64']
+          platforms: 'arm64, riscv64'
 
       - name: Build source distribution with Ubuntu
         if: matrix.os.matrix == 'linux'
