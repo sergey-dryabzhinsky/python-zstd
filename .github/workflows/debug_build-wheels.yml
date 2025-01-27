@@ -70,9 +70,10 @@ jobs:
           echo 'deb http://packages.rusoft.ru/ppa/rusoft/python ubuntu-xenial' > rusoft-python.list
           echo 'deb http://packages.rusoft.ru/ppa/rusoft/backports ubuntu-xenial' > rusoft-backports.list
           echo 'deb http://packages.rusoft.ru/ppa/rusoft/packages ubuntu-xenial'> rusoft-packages.list
+          cat rusoft-backports.list
           find ./ubuntu-xenial-x86/etc/apt
           sudo cp -v ./*.list ./ubuntu-xenial-x86/etc/apt/sources.list.d
-          sudo chroot ./ubuntu-xenial-x86 -- cd /etc/apt/trusted.gpg.d && wget http://packages.rusoft.ru/apt/public.gpg -Orusoft.gpg
+          sudo chroot ./ubuntu-xenial-x86 /bin/bash -c 'cd /etc/apt/trusted.gpg.d && wget http://packages.rusoft.ru/apt/public.gpg -Orusoft.gpg'
           sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt update
           sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt upgrade -y
           sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt install -y libzstd-dev python2.7-dev
