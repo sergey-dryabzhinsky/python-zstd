@@ -51,11 +51,14 @@ jobs:
       - name: Build source distribution with Ubuntu
         if: matrix.os.matrix == 'linux'
         run: |
-          sudo apt update; sudo apt apgrade;
-          sudo apt install libzstd-dev devscripts qemu-user;
+          sudo apt update; 
+          sudo apt purge -y firefox snapd;
+          sudo apt apgrade -y;
+          sudo apt install -y libzstd-dev devscripts qemu-user;
           pip install build;
           python -m build --sdist --outdir dist .
-
+          echo LIST-FILES;
+          find .
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
