@@ -59,8 +59,6 @@ jobs:
           sudo apt install -y devscripts debootstrap qemu-user;
           pip install build;
           python -m build --sdist --outdir dist .
-          echo LIST-FILES;
-          find .
           sudo debootstrap --include=sudo,wget --arch=i386 xenial ./ubuntu-xenial-x86 http://azure.archive.ubuntu.com/ubuntu
           echo http://mirror.yandex.ru/ubuntu
           sudo chroot ./ubuntu-xenial-x86 /bin/mkdir /build_wheel
@@ -83,7 +81,7 @@ jobs:
           sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt update
           sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt upgrade -y
           sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt install -y libzstd-dev python2.7-dev
-          
+          sudo chroot ./ubuntu-xenial-x86 cd /build_wheel/ && python2.7 setup.py bdist_wheel clean
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
