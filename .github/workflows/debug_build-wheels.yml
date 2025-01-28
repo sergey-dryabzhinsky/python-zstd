@@ -122,8 +122,7 @@ jobs:
         if: matrix.os.matrix == 'linux'
         run: |
            sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt install -y python2.7-dev
-           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "wget https://bootstrap.pypa.io/pip/2.7/get-pip.py -O get-pip.py &&python2.7 get-pip.py"
-           false && python2.7 -m pip install wheel
+           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "wget https://bootstrap.pypa.io/pip/2.7/get-pip.py -O get-pip.py && python2.7 get-pip.py || true"
          
       - name: Pepare source and build wheel for python2.7 ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
