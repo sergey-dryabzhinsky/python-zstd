@@ -20,10 +20,22 @@ jobs:
           - name: macOS Latest
             runs-on: macos-latest # arm
             matrix: macos
-          - name: Linux
+          - name: Ubuntu 24+16 i386
             runs-on: ubuntu-latest
             matrix: linux
-            arch: [ i386, amd64, armhf, arm64, riscv64 ]
+            arch: i386
+          - name: Ubuntu 24+16 amd64
+            runs-on: ubuntu-latest
+            matrix: linux
+            arch: amd64
+          - name: Ubuntu 24+16 armhf
+            runs-on: ubuntu-latest
+            matrix: linux
+            arch: armh
+          - name: Ubuntu 24+16 arm64
+            runs-on: ubuntu-latest
+            matrix: linux
+            arch: arm64
           - name: Windows
             runs-on: windows-latest
             matrix: windows
@@ -60,7 +72,7 @@ jobs:
           sudo apt install -y devscripts debootstrap qemu-user;
           pip install build;
           python -m build --sdist --outdir dist .
-          sudo debootstrap --include=sudo,wget --arch=${{os.arch}} xenial ./ubuntu-xenial-x86 http://azure.archive.ubuntu.com/ubuntu
+          sudo debootstrap --include=sudo,wget --arch=${{matrix.os.arch}} xenial ./ubuntu-xenial-x86 http://azure.archive.ubuntu.com/ubuntu
           echo http://mirror.yandex.ru/ubuntu
           sudo chroot ./ubuntu-xenial-x86 /bin/mkdir /build_wheel
           sudo mount none ./ubuntu-xenial-x86/proc -t proc
