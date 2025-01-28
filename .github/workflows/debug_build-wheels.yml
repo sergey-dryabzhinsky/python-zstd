@@ -67,9 +67,9 @@ jobs:
           sudo mount none ./ubuntu-xenial-x86/proc -t proc
           sudo mount none ./ubuntu-xenial-x86/sys -t sysfs
           sudo tar -xvf dist/zstd-1.5.6.3.tar.gz -C ./ubuntu-xenial-x86/build_wheel/
-          echo 'deb[trusted=yes] http://packages.rusoft.ru/ppa/rusoft/python ubuntu-xenial main' > rusoft-python.list
-          echo 'deb[trusted=yes] http://packages.rusoft.ru/ppa/rusoft/backports ubuntu-xenial main' > rusoft-backports.list
-          echo 'deb[trusted=yes] http://packages.rusoft.ru/ppa/rusoft/packages ubuntu-xenial main'> rusoft-packages.list
+          echo " deb [trusted=yes] http://packages.rusoft.ru/ppa/rusoft/python ubuntu-xenial main" > rusoft-python.list
+          echo " deb [trusted=yes] http://packages.rusoft.ru/ppa/rusoft/backports ubuntu-xenial main" > rusoft-backports.list
+          echo " deb [trusted=yes] http://packages.rusoft.ru/ppa/rusoft/packages ubuntu-xenial main" > rusoft-packages.list
           find ./ubuntu-xenial-x86/etc/apt
           sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt update
           false && sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt install -y wget
