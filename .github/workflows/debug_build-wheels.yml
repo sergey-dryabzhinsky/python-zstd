@@ -61,7 +61,8 @@ jobs:
         with:
           platforms: 'arm64'
 
-      - name: Build source distribution with Ubuntu
+
+      - name: BUpdate and upgrr Ubuntu 24
         if: matrix.os.matrix == 'linux'
         run: |
           sudo which apt
@@ -69,35 +70,48 @@ jobs:
           sudo apt purge -y firefox snapd;
           sudo apt list --upgradable;
           sudo apt upgrade -y;
+
+      - name: Build source distribution with Ubuntu
+        if: matrix.os.matrix == 'linux'
+        run: |
           sudo apt install -y devscripts debootstrap qemu-user;
           pip install build;
           python -m build --sdist --outdir dist .
+         
+      - name: Debootstrap Ubuntu 16 ${{matrix.os.arch}}
+        if: matrix.os.matrix == 'linux'
+        run: |
           sudo debootstrap --include=sudo,wget --arch=${{matrix.os.arch}} xenial ./ubuntu-xenial-x86 http://azure.archive.ubuntu.com/ubuntu
           echo http://mirror.yandex.ru/ubuntu
+     
+      - name: Update and Upgrade Ubuntu 16
+        if: matrix.os.matrix == 'linux'
+        run: |
           sudo chroot ./ubuntu-xenial-x86 /bin/mkdir /build_wheel
           sudo mount none ./ubuntu-xenial-x86/proc -t proc
           sudo mount none ./ubuntu-xenial-x86/sys -t sysfs
-          sudo tar -xvf dist/zstd-1.5.6.3.tar.gz -C ./ubuntu-xenial-x86/build_wheel/
           echo " deb [trusted=yes] http://packages.rusoft.ru/ppa/rusoft/python ubuntu-xenial main" > rusoft-python.list
           echo " deb [trusted=yes] http://packages.rusoft.ru/ppa/rusoft/backports ubuntu-xenial main" > rusoft-backports.list
           echo " deb [trusted=yes] http://packages.rusoft.ru/ppa/rusoft/packages ubuntu-xenial main" > rusoft-packages.list
           find ./ubuntu-xenial-x86/etc/apt
           sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt update
-          false && sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt install -y wget
           sudo cp -v ./*.list ./ubuntu-xenial-x86/etc/apt/sources.list.d
           sudo rm -fv ./ubuntu-xenial-x86/etc/apt/trusted.gpg.d/* && sudo rm -fv ./ubuntu-xenial-x86/etc/apt/trusted.gpg
           sudo chroot ./ubuntu-xenial-x86 /bin/bash -c 'cd /etc/apt/trusted.gpg.d && wget http://packages.rusoft.ru/apt/public.gpg -Orusoft.gpg'
-          false && wget -q -O- http://packages.rusoft.ru/apt/public.gpg | sudo chroot ./ubuntu-xenial-x86 /bin/bash -c 'apt-key add -'
           sudo chroot ./ubuntu-xenial-x86 /bin/bash -c 'cd /etc/apt/trusted.gpg.d && wget http://packages.rusoft.ru/apt/public-old.gpg -Orusoft-old.gpg'
-          false && wget -q -O- http://packages.rusoft.ru/apt/public-old.gpg | sudo chroot ./ubuntu-xenial-x86 /bin/bash -c 'apt-key add -'
           sudo false && chroot ./ubuntu-xenial-x86 /bin/bash -c 'apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A2CE4BCCC50209DD'
           sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt update
           sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt upgrade -y
-          sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt install -y libzstd-dev python2.7-dev pithon2.7-pip; pythom2.7 -m pip install wheel
-          false && sudo chroot ./ubuntu-xenial-x86 /bin/bash-c "wget https://bootstrap.pypa.io/get-pip.py && python2.7 get-pip.py"
-          
-          sudo chroot ./ubuntu-xenial-x86 /bin/bash-c "cd /build_wheel/ && python2.7 setup.py bdist_wheel clean"
+          sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt install -y libzstd-dev python2.7-dev pithon2.7-pip; python2.7 -m pip install wheel
 
+
+      - name: Pepare and build wheel ${{matrix.os.arch}}
+        if: matrix.os.matrix == 'linux'
+        run: |
+          sudo tar -xvf dist/zstd-1.5.6.3.tar.gz -C ./ubuntu-xenial-x86/build_wheel/
+          sudo chroot ./ubuntu-xenial-x86 /bin/bash -c "cd /build_wheel/ && python2.7 setup.py bdist_wheel clean"
+
+      
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
