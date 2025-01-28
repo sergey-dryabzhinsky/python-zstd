@@ -129,12 +129,12 @@ jobs:
         run: |
           sudo mkdir -p ./ubuntu-xenial-x86/build_wheel/
           sudo tar -xvf dist/zstd-1.5.6.3.tar.gz -C ./ubuntu-xenial-x86/build_wheel/
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/ && python2.7 setup.py bdist_wheel clean"
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-1.5.6.3 && python2.7 setup.py bdist_wheel clean"
 
       - name: Pepare wheel for upload
         if: matrix.os.matrix == 'linux'
         run: |
-           sudo cp -v ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/dist/* ./dist
+           sudo cp -v ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/zstd-1.5.6.3/dist/* ./dist
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
