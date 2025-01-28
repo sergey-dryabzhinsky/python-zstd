@@ -35,7 +35,7 @@ jobs:
           - name: Ubuntu 24+16 armhf
             runs-on: ubuntu-latest
             matrix: linux
-            arch: armh
+            arch: armhf
             release: xenial
             mirror: http://ports.ubuntu.com/ubuntu-ports
           - name: Ubuntu 24+16 arm64
