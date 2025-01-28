@@ -93,8 +93,8 @@ jobs:
           sudo false && chroot ./ubuntu-xenial-x86 /bin/bash -c 'apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A2CE4BCCC50209DD'
           sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt update
           sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt upgrade -y
-          sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt install -y libzstd-dev python2.7-dev
-          sudo chroot ./ubuntu-xenial-x86 /bin/bash-c "wget https://bootstrap.pypa.io/get-pip.py && python2.7 get-pip.py"
+          sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt install -y libzstd-dev python2.7-dev pithon2.7-pip; pythom2.7 -m pip install wheel
+          false && sudo chroot ./ubuntu-xenial-x86 /bin/bash-c "wget https://bootstrap.pypa.io/get-pip.py && python2.7 get-pip.py"
           
           sudo chroot ./ubuntu-xenial-x86 /bin/bash-c "cd /build_wheel/ && python2.7 setup.py bdist_wheel clean"
 
