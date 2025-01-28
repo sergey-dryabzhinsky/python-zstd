@@ -102,16 +102,28 @@ jobs:
           sudo false && chroot ./ubuntu-xenial-x86 /bin/bash -c 'apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A2CE4BCCC50209DD'
           sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt update
           sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt upgrade -y
-          sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt install -y libzstd-dev python2.7-dev pithon2.7-pip; python2.7 -m pip install wheel
+           
+      - name: Pepare dev files
+        if: matrix.os.matrix == 'linux'
+        run: |
+           sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt install -y libzstd-dev
 
-
-      - name: Pepare and build wheel ${{matrix.os.arch}}
+      - name: Pepare for python2.7 ${{matrix.os.arch}}
+        if: matrix.os.matrix == 'linux'
+        run: |
+           sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt install -y python2.7-dev pithon2.7-pip; python2.7 -m pip install wheel
+         
+      - name: Pepare source and build wheel for python2.7 ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
         run: |
           sudo tar -xvf dist/zstd-1.5.6.3.tar.gz -C ./ubuntu-xenial-x86/build_wheel/
           sudo chroot ./ubuntu-xenial-x86 /bin/bash -c "cd /build_wheel/ && python2.7 setup.py bdist_wheel clean"
 
-      
+      - name: Pepare wheel for upload
+        if: matrix.os.matrix == 'linux'
+        run: |
+           sudo cp -v ./ubuntu-xenial-x86/build_wheel/dist/* ./disst
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
