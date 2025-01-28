@@ -95,44 +95,45 @@ jobs:
       - name: Update and Upgrade Ubuntu 16
         if: matrix.os.matrix == 'linux'
         run: |
-          sudo chroot ./ubuntu-xenial-x86 /bin/mkdir /build_wheel
-          sudo mount none ./ubuntu-xenial-x86/proc -t proc
-          sudo mount none ./ubuntu-xenial-x86/sys -t sysfs
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/mkdir /build_wheel
+          sudo mount none ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/proc -t proc
+          sudo mount none ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/dev/pts -t devpts
+          sudo mount none ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/sys -t sysfs
           echo " deb [trusted=yes] http://packages.rusoft.ru/ppa/rusoft/python ubuntu-xenial main" > rusoft-python.list
           echo " deb [trusted=yes] http://packages.rusoft.ru/ppa/rusoft/backports ubuntu-xenial main" > rusoft-backports.list
           echo " deb [trusted=yes] http://packages.rusoft.ru/ppa/rusoft/packages ubuntu-xenial main" > rusoft-packages.list
-          find ./ubuntu-xenial-x86/etc/apt
-          sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt update
-          sudo cp -v ./*.list ./ubuntu-xenial-x86/etc/apt/sources.list.d
-          sudo rm -fv ./ubuntu-xenial-x86/etc/apt/trusted.gpg.d/* && sudo rm -fv ./ubuntu-xenial-x86/etc/apt/trusted.gpg
-          sudo chroot ./ubuntu-xenial-x86 /bin/bash -c 'cd /etc/apt/trusted.gpg.d && wget http://packages.rusoft.ru/apt/public.gpg -Orusoft.gpg'
-          sudo chroot ./ubuntu-xenial-x86 /bin/bash -c 'cd /etc/apt/trusted.gpg.d && wget http://packages.rusoft.ru/apt/public-old.gpg -Orusoft-old.gpg'
-          sudo false && chroot ./ubuntu-xenial-x86 /bin/bash -c 'apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A2CE4BCCC50209DD'
-          sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt update
-          sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt upgrade -y
+          false && find ./ubuntu-xenial-x86/etc/apt
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt update
+          sudo cp -v ./*.list ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/etc/apt/sources.list.d
+          sudo rm -fv ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/etc/apt/trusted.gpg.d/* && sudo rm -fv ./ubuntu-xenial-x86/etc/apt/trusted.gpg
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c 'cd /etc/apt/trusted.gpg.d && wget http://packages.rusoft.ru/apt/public.gpg -Orusoft.gpg'
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c 'cd /etc/apt/trusted.gpg.d && wget http://packages.rusoft.ru/apt/public-old.gpg -Orusoft-old.gpg'
+          false && chroot ./ubuntu-xenial-x86 /bin/bash -c 'apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A2CE4BCCC50209DD'
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt update
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt upgrade -y
            
       - name: Pepare dev files
         if: matrix.os.matrix == 'linux'
         run: |
-           sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt install -y libzstd-dev
+           sudo chroot ./uubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt install -y libzstd-dev
 
       - name: Pepare for python2.7 ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
         run: |
-           sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt install -y python2.7-dev
-           sudo chroot ./ubuntu-xenial-x86 /bin/bash -c "wget https://bootstrap.pypa.io/pip/2.7/get-pip.py -O get-pip.py &&python2.7 get-pip.py"
+           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt install -y python2.7-dev
+           sudo chroot . /bin/bash -c "wget https://bootstrap.pypa.io/pip/2.7/get-pip.py -O get-pip.py &&python2.7 get-pip.py"
            false && python2.7 -m pip install wheel
          
       - name: Pepare source and build wheel for python2.7 ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
         run: |
           sudo tar -xvf dist/zstd-1.5.6.3.tar.gz -C ./ubuntu-xenial-x86/build_wheel/
-          sudo chroot ./ubuntu-xenial-x86 /bin/bash -c "cd /build_wheel/ && python2.7 setup.py bdist_wheel clean"
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/ && python2.7 setup.py bdist_wheel clean"
 
       - name: Pepare wheel for upload
         if: matrix.os.matrix == 'linux'
         run: |
-           sudo cp -v ./ubuntu-xenial-x86/build_wheel/dist/* ./disst
+           sudo cp -v ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/dist/* ./dist
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
