@@ -23,8 +23,8 @@ jobs:
           - name: Ubuntu 24.04
             runs-on: ubuntu-latest
             matrix: linux
-          - name: Ubuntu 16.04
-            runs-on: ubuntu-16
+          - name: Ubuntu 20.04
+            runs-on: ubuntu-20
             matrix: linux
           - name: Windows
             runs-on: windows-latest
