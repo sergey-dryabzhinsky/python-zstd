@@ -60,7 +60,7 @@ jobs:
           sudo apt install -y devscripts debootstrap qemu-user;
           pip install build;
           python -m build --sdist --outdir dist .
-          sudo debootstrap --include=sudo,wget --arch=${{matrix.os.arch}} xenial ./ubuntu-xenial-x86 http://azure.archive.ubuntu.com/ubuntu
+          sudo debootstrap --include=sudo,wget --arch=${{os.arch}} xenial ./ubuntu-xenial-x86 http://azure.archive.ubuntu.com/ubuntu
           echo http://mirror.yandex.ru/ubuntu
           sudo chroot ./ubuntu-xenial-x86 /bin/mkdir /build_wheel
           sudo mount none ./ubuntu-xenial-x86/proc -t proc
