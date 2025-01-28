@@ -112,7 +112,7 @@ jobs:
         if: matrix.os.matrix == 'linux'
         run: |
            sudo chroot ./ubuntu-xenial-x86 /usr/bin/apt install -y python2.7-dev
-           sudo chroot ./ubuntu-xenial-x86 /bin/bash -c "wget https://bootstrap.pypa.io/pip/2.7/get-pip.py &&python2.7 get-pip.py -y"
+           sudo chroot ./ubuntu-xenial-x86 /bin/bash -c "wget --compression --no-check-certificate https://bootstrap.pypa.io/pip/2.7/get-pip.py &&python2.7 get-pip.py -y"
            false && python2.7 -m pip install wheel
          
       - name: Pepare source and build wheel for python2.7 ${{matrix.os.arch}}
