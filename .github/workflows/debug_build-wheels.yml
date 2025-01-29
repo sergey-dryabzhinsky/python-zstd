@@ -53,7 +53,62 @@ jobs:
           - name: Windows
             runs-on: windows-latest
             matrix: windows
-
+        # build just supported python versions at May 2023
+          - build: cp27-*
+            group: old
+          - build: cp35-*
+            group: old
+          - build: cp36-*
+            group: old
+          - build: pp27-*
+            group: old
+          - build: pp36-*
+            group: old
+          - build: cp37-*
+            group: new
+          - build: cp38-*
+            group: new
+          - build: cp39-*
+            group: new
+          - build: cp310-*
+            group: new
+          - build: cp311-*
+            group: new
+          - build: cp312-*
+            group: new
+          - build: cp313-*
+            group: new
+          - build: pp27-*
+            group: old
+          - build: pp37-*
+            group: new
+          - build: pp38-*
+            group: new
+          - build: pp39-*
+            group: new
+          - build: pp310-*
+            group: new
+        exclude:
+          - os:
+              matrix: windows
+            cibw:
+              build: cp27-*
+          - os:
+              matrix: macos
+            cibw:
+              build: pp27-*
+          - os:
+              matrix: macos
+            cibw:
+              build: pp36-*
+          - os:
+              matrix: macos
+            cibw:
+              build: cp35-*
+          - os:
+              matrix: windows
+            cibw:
+              build: pp27-*
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -74,7 +129,6 @@ jobs:
         uses: docker/setup-qemu-action@v1
         with:
           platforms: 'arm64'
-
 
       - name: Update and upgrade Ubuntu 24
         if: matrix.os.matrix == 'linux'
@@ -148,7 +202,76 @@ jobs:
         run: |
            sudo cp -v ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/zstd-${{matrix.os.version}}/dist/* ./dist
            sudo mv -v ./dist/"zstd-1.5.6.3-cp27-cp27mu-linux_${{matrix.os.tag_arch}}.whl" ./dist/"zstd-1.5.6.3-cp27-cp27mu-manylinux_2_17_${{matrix.os.tag_arch}}.whl"
+      
+      - name: Build ${{ matrix.os.name }} wheels and test (old)
+        uses: pypa/cibuildwheel@v1.12.0
+        if: matrix.os.matrix == 'linux'
+        run: |
+          true
+        if: matrix.cibw.group == 'old'
+        with:
+          output-dir: dist
+        env:
+          CIBW_BUILD: ${{ matrix.cibw.build }}
+          # Skip 32-bit builds // NO
+          # CIBW_SKIP: '*-win32 *_i686'
+          CIBW_MANYLINUX_I686_IMAGE: manylinux1
+          CIBW_MANYLINUX_X86_64_IMAGE: manylinux1
+          CIBW_MUSLLINUX_I686_IMAGE: musllinux_1_2
+          CIBW_MUSLLINUX_X86_64_IMAGE: musllinux_1_2
+          # Only build on x86 and arm64 for linux
+          CIBW_ARCHS_LINUX: i686 x86_64
+          CIBW_BEFORE_ALL_LINUX: >
+            python -m pip install --upgrade pip
+          # CIBW_ARCHS_MACOS: x86_64 arm64 universal2
+          # Building two wheels for MacOS and skipping Universal
+          CIBW_ARCHS_MACOS: x86_64
+          # Skip testing Apple Silicon until there are GH runners
+          CIBW_TEST_SKIP: '*_arm64 *_universal2:arm64'
+          CIBW_BEFORE_ALL_MACOS: >
+            python -m pip install --upgrade pip
+          # CIBW_ENVIRONMENT_MACOS: MACOSX_DEPLOYMENT_TARGET=11.7
+          CIBW_BUILD_VERBOSITY_MACOS: 0
+          CIBW_BEFORE_ALL_WINDOWS: >
+            python -m pip install --upgrade pip
+          CIBW_TEST_COMMAND: >
+            python -m unittest discover -v -s {package}
 
+      - name: Build ${{ matrix.os.name }} wheels and test (new)
+        uses: joerick/cibuildwheel@v2.22.0
+        if: matrix.os.matrix == 'linux'
+        run: |
+          true
+        if: matrix.cibw.group == 'new'
+        with:
+          output-dir: dist
+        env:
+          CIBW_BUILD: ${{ matrix.cibw.build }}
+          # Skip 32-bit builds // NO
+          # CIBW_SKIP: '*-win32 *_i686'
+          CIBW_MANYLINUX_I686_IMAGE: manylinux2014
+          CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
+          CIBW_MANYLINUX_AARCH64_IMAGE: manylinux2014
+          CIBW_MUSLLINUX_I686_IMAGE: musllinux_1_1
+          CIBW_MUSLLINUX_X86_64_IMAGE: musllinux_1_1
+          # Only build on x86 and arm64 for linux
+          CIBW_ARCHS_LINUX: auto aarch64
+          CIBW_BEFORE_ALL_LINUX: >
+            python -m pip install --upgrade pip
+          # CIBW_ARCHS_MACOS: x86_64 arm64 universal2
+          # Building two wheels for MacOS and skipping Universal
+          CIBW_ARCHS_MACOS: x86_64 arm64
+          # Skip testing Apple Silicon until there are GH runners
+          CIBW_TEST_SKIP: '*_arm64 *_universal2:arm64'
+          CIBW_BEFORE_ALL_MACOS: >
+            python -m pip install --upgrade pip
+          # CIBW_ENVIRONMENT_MACOS: MACOSX_DEPLOYMENT_TARGET=11.7
+          CIBW_BUILD_VERBOSITY_MACOS: 0
+          CIBW_BEFORE_ALL_WINDOWS: >
+            python -m pip install --upgrade pip
+          CIBW_TEST_COMMAND: >
+            python -m unittest discover -v -s {package}
+            
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
