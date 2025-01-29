@@ -135,14 +135,14 @@ jobs:
         run: |
           sudo mkdir -p ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/
           sudo tar -xvf dist/zstd-${{matrix.os.version}}.tar.gz -C ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} env 
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}} && ZSTD_ASM=1 ZSTD_THREADS=1 python2.7 setup.py bdist_wheel clean"
+          false && sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} env 
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}} && ZSTD_ASM=1 ZSTD_ASM_BMI2=1 ZSTD_THREADS=1 python2.7 setup.py bdist_wheel clean"
 
       - name: Pepare wheel for upload
         if: matrix.os.matrix == 'linux'
         run: |
            sudo cp -v ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/zstd-${{matrix.os.version}}/dist/* ./dist
-           sudo mv -v ./dist/"zstd-1.5.6.3-cp27-cp27mu-linux_${{matrix.os.tag_arch}}.whl" ./dist/"zstd-1.5.6.3-cp27-cp27mu-manylinux_${{matrix.os.tag_arch}}.whl"
+           sudo mv -v ./dist/"zstd-1.5.6.3-cp27-cp27mu-linux_${{matrix.os.tag_arch}}.whl" ./dist/"zstd-1.5.6.3-cp27-cp27mu-manylinux_${{matrix.os.arch}}.whl"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
