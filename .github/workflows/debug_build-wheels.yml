@@ -54,6 +54,7 @@ jobs:
             runs-on: windows-latest
             matrix: windows
         # build just supported python versions at May 2023
+        cibw:
           - build: cp27-*
             group: old
           - build: cp35-*
