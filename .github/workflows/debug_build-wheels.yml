@@ -34,18 +34,18 @@ jobs:
             release: xenial
             mirror: http://azure.archive.ubuntu.com/ubuntu
             version: 1.5.6.3
-          - name: Ubuntu 24+16 armhf
+          - name: Ubuntu 24+18 armhf
             runs-on: ubuntu-latest
             matrix: linux
             arch: armhf
-            release: xenial
+            release: bionic
             mirror: http://ports.ubuntu.com/ubuntu-ports
             version: 1.5.6.3
-          - name: Ubuntu 24+16 arm64
+          - name: Ubuntu 24+18 arm64
             runs-on: ubuntu-latest
             matrix: linux
             arch: arm64
-            release: xenial
+            release: bionic
             mirror: http://ports.ubuntu.com/ubuntu-ports
             version: 1.5.6.3
           - name: Windows
@@ -97,7 +97,7 @@ jobs:
           sudo debootstrap --include=sudo,wget,curl,ca-certificates --arch=${{matrix.os.arch}} ${{matrix.os.release}} ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} ${{matrix.os.mirror}}
           echo http://mirror.yandex.ru/ubuntu
      
-      - name: Update and Upgrade Ubuntu 16
+      - name: Update and Upgrade Ubuntu ${{matrix.os.release}}
         if: matrix.os.matrix == 'linux'
         run: |
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/mkdir /build_wheel
