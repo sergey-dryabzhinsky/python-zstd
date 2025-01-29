@@ -138,6 +138,11 @@ jobs:
           false && sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} env 
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}} && ZSTD_ASM=1 ZSTD_ASM_BMI2=1 ZSTD_THREADS=1 python2.7 setup.py bdist_wheel clean"
 
+      - name: Test wheel for python2.7 ${{matrix.os.arch}}
+        if: matrix.os.matrix == 'linux'
+        run: |
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}} &&  python2.7 setup.py test"
+
       - name: Pepare wheel for upload
         if: matrix.os.matrix == 'linux'
         run: |
