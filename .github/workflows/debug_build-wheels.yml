@@ -205,9 +205,6 @@ jobs:
       
       - name: Build ${{ matrix.os.name }} wheels and test (old)
         uses: pypa/cibuildwheel@v1.12.0
-        if: matrix.os.matrix == 'linux'
-        run: |
-          true
         if: matrix.cibw.group == 'old'
         with:
           output-dir: dist
@@ -239,9 +236,6 @@ jobs:
 
       - name: Build ${{ matrix.os.name }} wheels and test (new)
         uses: joerick/cibuildwheel@v2.22.0
-        if: matrix.os.matrix == 'linux'
-        run: |
-          true
         if: matrix.cibw.group == 'new'
         with:
           output-dir: dist
