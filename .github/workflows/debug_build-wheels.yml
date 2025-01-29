@@ -142,7 +142,7 @@ jobs:
         if: matrix.os.matrix == 'linux'
         run: |
            sudo cp -v ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/zstd-${{matrix.os.version}}/dist/* ./dist
-           sudo mv -v "zstd-1.5.6.3-cp27-cp27mu-linux_${{matrix.os.tag_arch}}.whl" "zstd-1.5.6.3-cp27-cp27mu-manylinux_${{matrix.os.tag_arch}}.whl"
+           sudo mv -v ./dist/"zstd-1.5.6.3-cp27-cp27mu-linux_${{matrix.os.tag_arch}}.whl" ./dist/"zstd-1.5.6.3-cp27-cp27mu-manylinux_${{matrix.os.tag_arch}}.whl"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
