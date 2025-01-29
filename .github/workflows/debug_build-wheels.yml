@@ -33,18 +33,21 @@ jobs:
             arch: amd64
             release: xenial
             mirror: http://azure.archive.ubuntu.com/ubuntu
+            version: 1.5.6.3
           - name: Ubuntu 24+16 armhf
             runs-on: ubuntu-latest
             matrix: linux
             arch: armhf
             release: xenial
             mirror: http://ports.ubuntu.com/ubuntu-ports
+            version: 1.5.6.3
           - name: Ubuntu 24+16 arm64
             runs-on: ubuntu-latest
             matrix: linux
             arch: arm64
             release: xenial
             mirror: http://ports.ubuntu.com/ubuntu-ports
+            version: 1.5.6.3
           - name: Windows
             runs-on: windows-latest
             matrix: windows
@@ -129,7 +132,7 @@ jobs:
         if: matrix.os.matrix == 'linux'
         run: |
           sudo mkdir -p ./ubuntu-xenial-x86/build_wheel/
-          sudo tar -xvf dist/zstd-${{}matrix.os.version}}.tar.gz -C ./ubuntu-xenial-x86/build_wheel/
+          sudo tar -xvf dist/zstd-${{matrix.os.version}}.tar.gz -C ./ubuntu-xenial-x86/build_wheel/
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "find .; cd /build_wheel/zstd-${{matrix.os.version}} && python2.7 setup.py bdist_wheel clean"
 
       - name: Pepare wheel for upload
