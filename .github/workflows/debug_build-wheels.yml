@@ -45,8 +45,8 @@ jobs:
             mirror: http://ports.ubuntu.com/ubuntu-ports
             version: 1.5.6.3
         # build just supported python versions at May 2023
-     
-     steps:
+    
+    steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
