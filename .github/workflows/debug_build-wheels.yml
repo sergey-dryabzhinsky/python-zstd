@@ -14,7 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - name: Ubuntu 24+16 i386
+          - name: Ubuntu 24+16 i386 ${{pyver.name}} 
             runs-on: ubuntu-latest
             matrix: linux
             arch: i386
@@ -22,7 +22,7 @@ jobs:
             release: xenial
             mirror: http://azure.archive.ubuntu.com/ubuntu
             version: 1.5.6.3
-          - name: Ubuntu 24+16 amd64
+          - name: Ubuntu 24+16 amd64 ${{pyver.name}}
             runs-on: ubuntu-latest
             matrix: linux
             arch: amd64
@@ -46,9 +46,12 @@ jobs:
             version: 1.5.6.3
      
      pyver:
-     - name:Python 2.7
-       core:cpython
-       version:2.7
+       - name: Python 2.7
+         core:  cpython
+         version: 2.7
+       - name: Python 3.4
+         core:  cpython
+         version: 3.4
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -118,13 +121,13 @@ jobs:
         run: |
            sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt install -y libzstd-dev
 
-      - name: Pepare for python2.7 ${{matrix.os.arch}}
+      - name: Pepare for python${{pyver.version}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
         run: |
-           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt install -y python2.7-dev gcc pkg-config
-           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "wget https://bootstrap.pypa.io/pip/2.7/get-pip.py -O get-pip.py && python2.7 get-pip.py || true"
+           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt install -y python${{pyver.version}}-dev gcc pkg-config
+           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "wget https://bootstrap.pypa.io/pip/2.7/get-pip.py -O get-pip.py && python${{pyver.version}} get-pip.py || true"
          
-      - name: Pepare source and build wheel for python2.7 ${{matrix.os.arch}}
+      - name: Pepare source and build wheel for python${{pyver.version}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
         run: |
           sudo mkdir -p ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/
@@ -132,10 +135,10 @@ jobs:
           false && sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} env 
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}} && ZSTD_ASM=1 ZSTD_ASM_BMI2=1 ZSTD_THREADS=1 python2.7 setup.py bdist_wheel clean"
 
-      - name: Test wheel for python2.7 ${{matrix.os.arch}}
+      - name: Test wheel for python${{pyver.version}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
         run: |
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}} &&  python2.7 setup.py test"
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}} && python${{pyver.version}} setup.py test"
 
       - name: Pepare wheel for upload
         if: matrix.os.matrix == 'linux'
