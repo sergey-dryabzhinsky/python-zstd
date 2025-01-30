@@ -14,12 +14,6 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - name: macOS old
-            runs-on: macos-13 # x86
-            matrix: macos
-          - name: macOS Latest
-            runs-on: macos-latest # arm
-            matrix: macos
           - name: Ubuntu 24+16 i386
             runs-on: ubuntu-latest
             matrix: linux
@@ -50,67 +44,9 @@ jobs:
             release: xenial 
             mirror: http://ports.ubuntu.com/ubuntu-ports
             version: 1.5.6.3
-          - name: Windows
-            runs-on: windows-latest
-            matrix: windows
         # build just supported python versions at May 2023
-        cibw:
-          - build: cp27-*
-            group: old
-          - build: cp35-*
-            group: old
-          - build: cp36-*
-            group: old
-          - build: pp27-*
-            group: old
-          - build: pp36-*
-            group: old
-          - build: cp37-*
-            group: new
-          - build: cp38-*
-            group: new
-          - build: cp39-*
-            group: new
-          - build: cp310-*
-            group: new
-          - build: cp311-*
-            group: new
-          - build: cp312-*
-            group: new
-          - build: cp313-*
-            group: new
-          - build: pp27-*
-            group: old
-          - build: pp37-*
-            group: new
-          - build: pp38-*
-            group: new
-          - build: pp39-*
-            group: new
-          - build: pp310-*
-            group: new
-        exclude:
-          - os:
-              matrix: windows
-            cibw:
-              build: cp27-*
-          - os:
-              matrix: macos
-            cibw:
-              build: pp27-*
-          - os:
-              matrix: macos
-            cibw:
-              build: pp36-*
-          - os:
-              matrix: macos
-            cibw:
-              build: cp35-*
-          - os:
-              matrix: windows
-            cibw:
-              build: pp27-*
-    steps:
+     
+     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
