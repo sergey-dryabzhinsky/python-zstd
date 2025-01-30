@@ -45,13 +45,13 @@ jobs:
             mirror: http://ports.ubuntu.com/ubuntu-ports
             version: 1.5.6.3
      
-       pyver:
+     pyver:
        - name: Python 2.7
-         core:  cpython
+         core: cpython
          tag_code: cp27-cp27mu
          version: 2.7
        - name: Python 3.4
-         core:  cpython
+         core: cpython
          tag_code: cp34-cp34
          version: 3.4
     steps:
