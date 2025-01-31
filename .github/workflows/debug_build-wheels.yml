@@ -142,7 +142,7 @@ jobs:
       - name: Debootstrap Ubuntu 16 ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
         run: |
-          sudo debootstrap --verbose --include=sudo,wget,curl,apt-https,ca-certificates --arch=${{matrix.os.arch}} ${{matrix.os.release}} ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} ${{matrix.os.mirror}}
+          sudo debootstrap --verbose --include=sudo,wget,curl,apt-transport-https,ca-certificates --arch=${{matrix.os.arch}} ${{matrix.os.release}} ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} ${{matrix.os.mirror}}
      
       - name: Update and Upgrade Ubuntu ${{matrix.os.release}}
         if: matrix.os.matrix == 'linux'
