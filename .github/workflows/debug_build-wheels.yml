@@ -170,7 +170,7 @@ jobs:
         run: |
            sudo cp -v ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/zstd-${{matrix.os.version}}/dist/* ./dist
            sudo mv -v ./dist/"zstd-${{matrix.os.version}}-${{matrix.os.pyengine_tag}}-linux_${{matrix.os.tag_arch}}.whl" ./dist/"zstd-${{matrix.os.version}}-${{matrix.os.pyengine_tag}}-manylinux_2_17_${{matrix.os.tag_arch}}.whl"
-           find ./dist
+           sudo rm -vf ./dist/*.tar.gz
       
       - name: Build ${{ matrix.os.name }} wheels and test (old)
         uses: pypa/cibuildwheel@v1.12.0
@@ -240,7 +240,7 @@ jobs:
         with:
           name: wheels
           path: ./dist
-          compression: 0
+          compression-level: 0
           
       - name: Test for secrets access
         id: check_secrets
