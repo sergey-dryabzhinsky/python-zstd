@@ -23,7 +23,7 @@ jobs:
             mirror: http://azure.archive.ubuntu.com/ubuntu
             version: 1.5.6.3
             pyver: "2.7" 
-            pypgk: python2.7
+            pypkg: python2.7
             pyengine_tag: cp27_cp27mu
           - name: Ubuntu 24+16 i386 CPython 3.4
             runs-on: ubuntu-latest
@@ -34,7 +34,7 @@ jobs:
             mirror: http://azure.archive.ubuntu.com/ubuntu
             version: 1.5.6.3
             pyver: "3.4" 
-            pypgk: python3.4
+            pypkg: python3.4
             pyengine_tag: cp34_cp34mu
           - name: Ubuntu 24+16 amd64 CPython2.7
             runs-on: ubuntu-latest
@@ -44,7 +44,7 @@ jobs:
             release: xenial
             mirror: http://azure.archive.ubuntu.com/ubuntu
             version: 1.5.6.3
-            pypgk: python2.7
+            pypkg: python2.7
             pyver: "2.7" 
           - name: Ubuntu 20+16 armhf CPython 2.7
             runs-on: ubuntu-20
@@ -53,7 +53,7 @@ jobs:
             release: xenial
             mirror: http://ports.ubuntu.com/ubuntu-ports
             version: 1.5.6.3
-            pypgk: python2.7
+            pypkg: python2.7
             pyver: "2.7" 
           - name: Ubuntu 20+16 arm64 CPythoon 2.7
             runs-on: ubuntu-20
@@ -62,7 +62,7 @@ jobs:
             release: xenial 
             mirror: http://ports.ubuntu.com/ubuntu-ports
             version: 1.5.6.3
-            pypgk: python2.7
+            pypkg: python2.7
             pyver: "2.7" 
      
     steps:
