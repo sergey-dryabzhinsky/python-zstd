@@ -235,12 +235,12 @@ jobs:
           CIBW_TEST_COMMAND: >
             python -m unittest discover -v -s {package}
             
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: wheels
-          path: ./dist
-          compression-level: 0
+#      - name: Upload artifacts
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: wheels
+#.         path: ./dist
+#          compression-level: 0
           
       - name: Test for secrets access
         id: check_secrets
