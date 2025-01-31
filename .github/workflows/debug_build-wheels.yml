@@ -35,7 +35,7 @@ jobs:
             version: 1.5.6.3
             pypgk: python2.7
             pyver: 2.7
-          - name: Ubuntu 20+16 armhf
+          - name: Ubuntu 20+16 armhf CPython 2.7
             runs-on: ubuntu-20
             matrix: linux
             arch: armhf
@@ -44,7 +44,7 @@ jobs:
             version: 1.5.6.3
             pypgk: python2.7
             pyver: 2.7
-          - name: Ubuntu 20+16 arm64
+          - name: Ubuntu 20+16 arm64 CPythoon 2.7
             runs-on: ubuntu-20
             matrix: linux
             arch: arm64
@@ -212,7 +212,7 @@ jobs:
             python -m unittest discover -v -s {package}
             
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: wheels
           path: ./dist
