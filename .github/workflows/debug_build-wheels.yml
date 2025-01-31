@@ -105,7 +105,7 @@ jobs:
         run: |
           sudo which apt
           sudo apt update; 
-          sudo apt purge -y firefox snapd;
+          sudo apt purge -y Firefox lxd snapd;
           sudo apt install -y zram-config;
           sudo apt list --upgradable;
           sudo apt upgrade -y;
