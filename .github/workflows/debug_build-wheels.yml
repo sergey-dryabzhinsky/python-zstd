@@ -196,7 +196,8 @@ jobs:
         run: |
            sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt install -y ${{matrix.os.pypkg}}-dev gcc pkg-config
            sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "wget https://bootstrap.pypa.io/pip/${{matrix.os.pyver}}/get-pip.py -O get-pip.py && ${{matrix.os.pypkg}} get-pip.py || true"
-         
+           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "${{matrix.os.pypkg}} -m pip install -U setuptools" 
+                    
       - name: Pepare source and build wheel for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
         run: |
