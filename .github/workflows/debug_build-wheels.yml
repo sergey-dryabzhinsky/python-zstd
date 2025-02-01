@@ -148,7 +148,7 @@ jobs:
             pypkg: python2.7
             pyver: "2.7" 
             pyengine_tag: cp27-cp27mu
-          - name: Ubuntu 24+20 arm64 CPython 2.7
+          - name: Ubuntu 24+20 riscv64 CPython 2.7
             runs-on: ubuntu-latest
             matrix: linux
             arch: riscv64
