@@ -8,6 +8,7 @@ print("\ncmdline: %r" % (sys.argv,))
 import subprocess
 import platform 
 
+import setuptools
 from setuptools import setup, find_packages, Extension
 from setuptools.command.build_ext import build_ext
 

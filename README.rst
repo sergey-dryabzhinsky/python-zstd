@@ -207,7 +207,7 @@ ZSTD_uncompress (data): string|bytes
 
   Since: 0.1
 
-ZSTD_check (data): string|bytes
+ZSTD_check (data): int
   Function, checks if input is zstd compressed data block, returns 1 if yes, 0 if no, or raises Error.
 
   Support compressed data with multiple/concatenated frames (blocks) .
@@ -260,7 +260,7 @@ ZSTD_min_compression_level (): int
   Since: 1.5.6.3
 
 ZSTD_external (): int
-  Returns 0 of 1 if ZSTD library build as external.
+  Returns 0 of 1 if ZSTD library linked as external.
 
   Since: 1.5.0.2
 
