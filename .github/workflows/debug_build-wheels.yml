@@ -47,6 +47,17 @@ jobs:
             pyver: "3.5" 
             pypkg: python3.5
             pyengine_tag: cp35-cp35m
+          - name: Ubuntu 24+16 i386 CPython 3.6
+            runs-on: ubuntu-latest
+            matrix: linux
+            arch: i386
+            tag_arch: i686
+            release: xenial
+            mirror: http://azure.archive.ubuntu.com/ubuntu
+            version: 1.5.6.3
+            pyver: "3.6" 
+            pypkg: python3.6
+            pyengine_tag: cp36-cp36m
           - name: Ubuntu 24+16 amd64 CPython2.7
             runs-on: ubuntu-latest
             matrix: linux
@@ -80,6 +91,17 @@ jobs:
             pypkg: python3.5
             pyver: "3.5" 
             pyengine_tag: cp35-cp35m
+          - name: Ubuntu 24+16 amd64 CPython3.6
+            runs-on: ubuntu-latest
+            matrix: linux
+            arch: amd64
+            tag_arch: x86_64
+            release: xenial
+            mirror: http://azure.archive.ubuntu.com/ubuntu
+            version: 1.5.6.3
+            pypkg: python3.6
+            pyver: "3.6" 
+            pyengine_tag: cp36-cp36m
           - name: Ubuntu 24+16 armhf CPython 2.7
             runs-on: ubuntu-latest
             matrix: linux
