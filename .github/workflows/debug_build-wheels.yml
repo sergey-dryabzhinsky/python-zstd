@@ -23,7 +23,7 @@ jobs:
             mirror: http://azure.archive.ubuntu.com/ubuntu
             version: 1.5.6.3
             pyver: "2.7"
-            gepipurl: https://bootstrap.pypa.io/pip/2.7/get-pip.py
+            getpipurl: https://bootstrap.pypa.io/pip/2.7/get-pip.py
             pypkg: python2.7
             pyengine_tag: cp27-cp27mu
           - name: Ubuntu 24+16 i386 CPython 3.4
@@ -35,7 +35,7 @@ jobs:
             mirror: http://azure.archive.ubuntu.com/ubuntu
             version: 1.5.6.3
             pyver: "3.4"
-            gepipurl: https://bootstrap.pypa.io/pip/3.4/get-pip.py 
+            getpipurl: https://bootstrap.pypa.io/pip/3.4/get-pip.py 
             pypkg: python3.4
             pyengine_tag: cp34-cp34m
           - name: Ubuntu 24+16 i386 CPython 3.5
@@ -47,7 +47,7 @@ jobs:
             mirror: http://azure.archive.ubuntu.com/ubuntu
             version: 1.5.6.3
             pyver: "3.5"
-            gepipurl: https://bootstrap.pypa.io/pip/3.5/get-pip.py
+            getpipurl: https://bootstrap.pypa.io/pip/3.5/get-pip.py
             pypkg: python3.5
             pyengine_tag: cp35-cp35m
           - name: Ubuntu 24+16 i386 CPython 3.6
@@ -59,7 +59,7 @@ jobs:
             mirror: http://azure.archive.ubuntu.com/ubuntu
             version: 1.5.6.3
             pyver: "3.6"
-            gepipurl: https://bootstrap.pypa.io/pip/3.6/get-pip.py
+            getpipurl: https://bootstrap.pypa.io/pip/3.6/get-pip.py
             pypkg: python3.6
             pypkgadd: python3.6-distutils
             pyengine_tag: cp36-cp36m
@@ -72,7 +72,7 @@ jobs:
             mirror: http://azure.archive.ubuntu.com/ubuntu
             version: 1.5.6.3
             pyver: "3.7"
-            gepipurl: https://bootstrap.pypa.io/pip/3.7/get-pip.py
+            getpipurl: https://bootstrap.pypa.io/pip/3.7/get-pip.py
             pypkg: python3.7
             pypkgadd: python3.7-distutils
             pyengine_tag: cp37-cp37m
@@ -85,7 +85,7 @@ jobs:
             mirror: http://azure.archive.ubuntu.com/ubuntu
             version: 1.5.6.3
             pyver: "3.8"
-            gepipurl: https://bootstrap.pypa.io/pip/get-pip.py
+            getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
             pypkg: python3.8
             pypkgadd: python3.8-distutils
             pyengine_tag: cp38-cp38m
@@ -99,7 +99,7 @@ jobs:
             version: 1.5.6.3
             pypkg: python2.7
             pyver: "2.7"
-            gepipurl: https://bootstrap.pypa.io/pip/2.7/get-pip.py
+            getpipurl: https://bootstrap.pypa.io/pip/2.7/get-pip.py
             pyengine_tag: cp27-cp27mu
           - name: Ubuntu 24+16 amd64 CPython3.4
             runs-on: ubuntu-latest
@@ -111,7 +111,7 @@ jobs:
             version: 1.5.6.3
             pypkg: python3.4
             pyver: "3.4"
-            gepipurl: https://bootstrap.pypa.io/pip/3.4/get-pip.py
+            getpipurl: https://bootstrap.pypa.io/pip/3.4/get-pip.py
             pyengine_tag: cp34-cp34m
           - name: Ubuntu 24+16 amd64 CPython3.5
             runs-on: ubuntu-latest
@@ -123,7 +123,7 @@ jobs:
             version: 1.5.6.3
             pypkg: python3.5
             pyver: "3.5"
-            gepipurl: https://bootstrap.pypa.io/pip/3.5/get-pip.py
+            getpipurl: https://bootstrap.pypa.io/pip/3.5/get-pip.py
             pyengine_tag: cp35-cp35m
           - name: Ubuntu 24+16 amd64 CPython3.6
             runs-on: ubuntu-latest
@@ -136,7 +136,7 @@ jobs:
             pypkg: python3.6
             pypkgadd: python3.6-distutils
             pyver: "3.6"
-            gepipurl: https://bootstrap.pypa.io/pip/3.6/get-pip.py
+            getpipurl: https://bootstrap.pypa.io/pip/3.6/get-pip.py
             pyengine_tag: cp36-cp36m
           - name: Ubuntu 24+16 amd64 CPython3.7
             runs-on: ubuntu-latest
@@ -149,7 +149,7 @@ jobs:
             pypkg: python3.7
             pypkgadd: python3.7-distutils
             pyver: "3.7"
-            gepipurl: https://bootstrap.pypa.io/pip/3.7/get-pip.py
+            getpipurl: https://bootstrap.pypa.io/pip/3.7/get-pip.py
             pyengine_tag: cp37-cp37m
           - name: Ubuntu 24+16 amd64 CPython3.8
             runs-on: ubuntu-latest
@@ -162,7 +162,7 @@ jobs:
             pypkg: python3.8
             pypkgadd: python3.8-distutils
             pyver: "3.8"
-            gepipurl: https://bootstrap.pypa.io/pip/get-pip.py
+            getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
             pyengine_tag: cp38-cp38m
           - name: Ubuntu 24+16 armhf CPython 2.7
             runs-on: ubuntu-latest
@@ -173,7 +173,7 @@ jobs:
             version: 1.5.6.3
             pypkg: python2.7
             pyver: "2.7"
-            gepipurl: https://bootstrap.pypa.io/pip/2.7/get-pip.py
+            getpipurl: https://bootstrap.pypa.io/pip/2.7/get-pip.py
             pyengine_tag: cp27-cp27mu
           - name: Ubuntu 24+16 arm64 CPython 2.7
             runs-on: ubuntu-latest
@@ -184,7 +184,7 @@ jobs:
             version: 1.5.6.3
             pypkg: python2.7
             pyver: "2.7"
-            gepipurl: https://bootstrap.pypa.io/pip/2.7/get-pip.py
+            getpipurl: https://bootstrap.pypa.io/pip/2.7/get-pip.py
             pyengine_tag: cp27-cp27mu
           - name: Ubuntu 24+20 riscv64 CPython 2.7
             runs-on: ubuntu-latest
@@ -195,7 +195,7 @@ jobs:
             version: 1.5.6.3
             pypkg: python2.7
             pyver: "2.7"
-            gepipurl: https://bootstrap.pypa.io/pip/2.7/get-pip.py
+            getpipurl: https://bootstrap.pypa.io/pip/2.7/get-pip.py
             pyengine_tag: cp27-cp27mu
      
     steps:
