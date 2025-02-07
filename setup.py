@@ -107,7 +107,7 @@ if platform.system() == "Linux" and "build_ext" in sys.argv or "build" in sys.ar
                 pass
         else:
             # Pure Python 2.6
-            VERSION_STR = subprocess.Popen(cmd, stdout=subprocess.PIPE).communicate()[0].trim()
+            VERSION_STR = subprocess.Popen(cmd, stdout=subprocess.PIPE).communicate()[0].strip()
         if sys.hexversion >= 0x03000000:
             # It's bytes in PY3
             VERSION_STR = VERSION_STR.decode()
