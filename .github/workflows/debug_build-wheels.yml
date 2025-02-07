@@ -1,4 +1,4 @@
-Kname: Debug build wheels
+name: Debug build wheels
 
 on: [push, pull_request]
 
