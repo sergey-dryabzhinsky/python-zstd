@@ -101,7 +101,7 @@ if platform.system() == "Linux" and "build_ext" in sys.argv or "build" in sys.ar
             VERSION_STR=""
         if sys.hexversion >= 0x02070000:
             try:
-                VERSION_STR = subprocess.check_output(cmd).trim()
+                VERSION_STR = subprocess.check_output(cmd).strip()
             except Exception as e:
                 print("Error: %r" % e) 
                 pass
