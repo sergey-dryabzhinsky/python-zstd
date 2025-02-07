@@ -81,7 +81,7 @@ if "--external" in sys.argv:
 
 pkgconf = "/usr/bin/pkg-config"
 if "--libzstd-bundled" in sys.argv:
-    # You want use external Zstd library?
+    # Do you want use external Zstd library?
     SUP_EXTERNAL=False
     sys.argv.remove("--libzstd-bundled")
     pkgconf = "/usr/bin/do-not-use-pkg-config"
@@ -112,7 +112,7 @@ if platform.system() == "Linux" and "build_ext" in sys.argv or "build" in sys.ar
             # It's bytes in PY3
             VERSION_STR = VERSION_STR.decode()
         print("\nFound libzstd version %r" % VERSION_STR)
-        if VERSION_STR:
+        if VERSION_STR and SUP_EXTERNAL:
             if VERSION_STR>="1.4.0":
                 SUP_EXTERNAL=True
                 if "--libraries" not in sys.argv:
