@@ -244,7 +244,7 @@ jobs:
       - name: Update and Upgrade Ubuntu ${{matrix.os.release}}
         if: matrix.os.matrix == 'linux'
         run: |
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/mkdir /build_wheel
+          sudo mkdir -p ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel
           sudo mount none ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/proc -t proc
           sudo mount none ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/dev/pts -t devpts
           sudo mount none ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/sys -t sysfs
