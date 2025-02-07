@@ -6,3 +6,5 @@ import sys
 if sys.hexversion < 0x03000000:
     import test_compress
     import test_version
+    import test_speed
+ 
