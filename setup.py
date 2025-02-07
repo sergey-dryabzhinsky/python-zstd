@@ -3,6 +3,7 @@
 import os
 import sys
 
+#debug
 print("\ncmdline: %r" % (sys.argv,))
 
 import subprocess
@@ -101,7 +102,8 @@ if platform.system() == "Linux" and "build_ext" in sys.argv or "build" in sys.ar
         if sys.hexversion >= 0x02070000:
             try:
                 VERSION_STR = subprocess.check_output(cmd).trim()
-            except:
+            except Exception as e:
+                print("Error: %r" % e) 
                 pass
         else:
             # Pure Python 2.6
