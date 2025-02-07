@@ -47,6 +47,10 @@
 #define LIBZSTD_EXTERNAL 0
 #endif
 
+/*-=====  Do you build threads support?  =====-*/
+#ifndef ZSTD_MULTITHREAD
+#define ZSTD_MULTITHREAD 1
+#endif
 
 /*-=====  Pre-defined compression levels  =====-*/
 #ifndef ZSTD_CLEVEL_DEFAULT
