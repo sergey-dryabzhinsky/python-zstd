@@ -1,4 +1,4 @@
-name: Debug build wheels
+Kname: Debug build wheels
 
 on: [push, pull_request]
 
@@ -267,7 +267,7 @@ jobs:
             pyver: "2.7"
             getpipurl: https://bootstrap.pypa.io/pip/2.7/get-pip.py
             pyengine_tag: cp27-cp27mu
-            libc_tag: manylinux_2_17
+            libc_tag: manylinux_2_19
      
     steps:
       - name: Checkout code
