@@ -26,6 +26,7 @@ jobs:
             getpipurl: https://bootstrap.pypa.io/pip/2.7/get-pip.py
             pypkg: python2.7
             pyengine_tag: cp27-cp27mu
+            libc_tag: manylinux_2_17
           - name: Ubuntu 24+16 i386 CPython 3.4
             runs-on: ubuntu-latest
             matrix: linux
@@ -38,6 +39,7 @@ jobs:
             getpipurl: https://bootstrap.pypa.io/pip/3.4/get-pip.py 
             pypkg: python3.4
             pyengine_tag: cp34-cp34m
+            libc_tag: manylinux_2_17
           - name: Ubuntu 24+16 i386 CPython 3.5
             runs-on: ubuntu-latest
             matrix: linux
@@ -50,6 +52,7 @@ jobs:
             getpipurl: https://bootstrap.pypa.io/pip/3.5/get-pip.py
             pypkg: python3.5
             pyengine_tag: cp35-cp35m
+            libc_tag: manylinux_2_17
           - name: Ubuntu 24+16 i386 CPython 3.6
             runs-on: ubuntu-latest
             matrix: linux
@@ -63,6 +66,7 @@ jobs:
             pypkg: python3.6
             pypkgadd: python3.6-distutils
             pyengine_tag: cp36-cp36m
+            libc_tag: manylinux_2_17
           - name: Ubuntu 24+16 i386 CPython 3.7
             runs-on: ubuntu-latest
             matrix: linux
@@ -76,6 +80,7 @@ jobs:
             pypkg: python3.7
             pypkgadd: python3.7-distutils
             pyengine_tag: cp37-cp37m
+            libc_tag: manylinux_2_17
           - name: Ubuntu 24+16 i386 CPython 3.8
             runs-on: ubuntu-latest
             matrix: linux
@@ -89,6 +94,7 @@ jobs:
             pypkg: python3.8
             pypkgadd: python3.8-distutils
             pyengine_tag: cp38-cp38
+            libc_tag: manylinux_2_17
           - name: Ubuntu 24+16 i386 CPython 3.9
             runs-on: ubuntu-latest
             matrix: linux
@@ -101,7 +107,8 @@ jobs:
             getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
             pypkg: python3.9
             pypkgadd: python3.9-distutils
-            pyengine_tag: cp39-cp39 
+            pyengine_tag: cp39-cp39
+            libc_tag: manylinux_2_17
           - name: Ubuntu 24+16 amd64 CPython2.7
             runs-on: ubuntu-latest
             matrix: linux
@@ -114,6 +121,7 @@ jobs:
             pyver: "2.7"
             getpipurl: https://bootstrap.pypa.io/pip/2.7/get-pip.py
             pyengine_tag: cp27-cp27mu
+            libc_tag: manylinux_2_17
           - name: Ubuntu 24+16 amd64 CPython3.4
             runs-on: ubuntu-latest
             matrix: linux
@@ -126,6 +134,7 @@ jobs:
             pyver: "3.4"
             getpipurl: https://bootstrap.pypa.io/pip/3.4/get-pip.py
             pyengine_tag: cp34-cp34m
+            libc_tag: manylinux_2_17
           - name: Ubuntu 24+16 amd64 CPython3.5
             runs-on: ubuntu-latest
             matrix: linux
@@ -138,6 +147,7 @@ jobs:
             pyver: "3.5"
             getpipurl: https://bootstrap.pypa.io/pip/3.5/get-pip.py
             pyengine_tag: cp35-cp35m
+            libc_tag: manylinux_2_17
           - name: Ubuntu 24+16 amd64 CPython3.6
             runs-on: ubuntu-latest
             matrix: linux
@@ -151,6 +161,7 @@ jobs:
             pyver: "3.6"
             getpipurl: https://bootstrap.pypa.io/pip/3.6/get-pip.py
             pyengine_tag: cp36-cp36m
+            libc_tag: manylinux_2_17
           - name: Ubuntu 24+16 amd64 CPython3.7
             runs-on: ubuntu-latest
             matrix: linux
@@ -164,6 +175,7 @@ jobs:
             pyver: "3.7"
             getpipurl: https://bootstrap.pypa.io/pip/3.7/get-pip.py
             pyengine_tag: cp37-cp37m
+            libc_tag: manylinux_2_17
           - name: Ubuntu 24+16 amd64 CPython3.8
             runs-on: ubuntu-latest
             matrix: linux
@@ -177,6 +189,7 @@ jobs:
             pyver: "3.8"
             getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
             pyengine_tag: cp38-cp38
+            libc_tag: manylinux_2_17
           - name: Ubuntu 24+16 amd64 CPython3.9
             runs-on: ubuntu-latest
             matrix: linux
@@ -190,6 +203,7 @@ jobs:
             pyver: "3.9"
             getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
             pyengine_tag: cp39-cp39
+            libc_tag: manylinux_2_17
           - name: Ubuntu 24+16 armhf CPython 2.7
             runs-on: ubuntu-latest
             matrix: linux
@@ -201,6 +215,7 @@ jobs:
             pyver: "2.7"
             getpipurl: https://bootstrap.pypa.io/pip/2.7/get-pip.py
             pyengine_tag: cp27-cp27mu
+            libc_tag: manylinux_2_17
           - name: Ubuntu 24+16 arm64 CPython 2.7
             runs-on: ubuntu-latest
             matrix: linux
@@ -212,6 +227,7 @@ jobs:
             pyver: "2.7"
             getpipurl: https://bootstrap.pypa.io/pip/2.7/get-pip.py
             pyengine_tag: cp27-cp27mu
+            libc_tag: manylinux_2_17
           - name: Ubuntu 24+20 riscv64 CPython 2.7
             runs-on: ubuntu-latest
             matrix: linux
@@ -223,6 +239,7 @@ jobs:
             pyver: "2.7"
             getpipurl: https://bootstrap.pypa.io/pip/2.7/get-pip.py
             pyengine_tag: cp27-cp27mu
+            libc_tag: manylinux_2_17
      
     steps:
       - name: Checkout code
@@ -319,7 +336,7 @@ jobs:
         run: |
            sudo cp -v ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/zstd-${{matrix.os.version}}/dist/* ./dist
            sudo ls -lh ./dist/* 
-           sudo mv -v ./dist/"zstd-${{matrix.os.version}}-${{matrix.os.pyengine_tag}}-linux_${{matrix.os.tag_arch}}.whl" ./dist/"zstd-${{matrix.os.version}}-${{matrix.os.pyengine_tag}}-manylinux_2_17_${{matrix.os.tag_arch}}.whl"
+           sudo mv -v ./dist/"zstd-${{matrix.os.version}}-${{matrix.os.pyengine_tag}}-linux_${{matrix.os.tag_arch}}.whl" ./dist/"zstd-${{matrix.os.version}}-${{matrix.os.pyengine_tag}}-${{matrix.os.libc_tag}}_${{matrix.os.tag_arch}}.whl"
            sudo rm -vf ./dist/*.tar.gz
       
       - name: Build ${{ matrix.os.name }} wheels and test (old)
