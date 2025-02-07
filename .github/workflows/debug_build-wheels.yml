@@ -88,7 +88,7 @@ jobs:
             getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
             pypkg: python3.8
             pypkgadd: python3.8-distutils
-            pyengine_tag: cp38-cp38m
+            pyengine_tag: cp38-cp38
           - name: Ubuntu 24+16 amd64 CPython2.7
             runs-on: ubuntu-latest
             matrix: linux
@@ -163,7 +163,7 @@ jobs:
             pypkgadd: python3.8-distutils
             pyver: "3.8"
             getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
-            pyengine_tag: cp38-cp38m
+            pyengine_tag: cp38-cp38
           - name: Ubuntu 24+16 armhf CPython 2.7
             runs-on: ubuntu-latest
             matrix: linux
