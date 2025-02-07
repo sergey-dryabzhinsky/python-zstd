@@ -236,7 +236,7 @@ jobs:
           pip install build;
           python -m build --sdist --outdir dist .
          
-      - name: Debootstrap Ubuntu ${{matrix.os.arch}}
+      - name: Debootstrap Ubuntu ${{matrix.os.release}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
         run: |
           sudo debootstrap --verbose --include=sudo,wget,curl,ca-certificates --arch=${{matrix.os.arch}} ${{matrix.os.release}} ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} ${{matrix.os.mirror}} || tail ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/debootstrap/debootstrap.log
