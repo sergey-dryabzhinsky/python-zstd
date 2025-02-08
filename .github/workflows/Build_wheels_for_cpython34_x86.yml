@@ -33,12 +33,6 @@ jobs:
         with:
           submodules: 'recursive'
 
-      - name: Set up QEMU
-        if: matrix.os.matrix == 'linux'
-        uses: docker/setup-qemu-action@v1
-        with:
-          platforms: 'arm64'
-
       - name: Update and upgrade Ubuntu 24
         if: matrix.os.matrix == 'linux'
         run: |
