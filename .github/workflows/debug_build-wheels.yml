@@ -109,7 +109,7 @@ jobs:
             pypkgadd: python3.9-distutils
             pyengine_tag: cp39-cp39
             libc_tag: manylinux_2_17
-          - name: Ubuntu 24+16 i386 CPython 3.10
+          - name: Ubuntu 24+20 i386 CPython 3.10
             runs-on: ubuntu-latest
             matrix: linux
             arch: i386
@@ -123,7 +123,7 @@ jobs:
             pypkgadd: python3.10-distutils
             pyengine_tag: cp310-cp310
             libc_tag: manylinux_2_19
-          - name: Ubuntu 24+16 i386 CPython 3.11
+          - name: Ubuntu 24+20 i386 CPython 3.11
             runs-on: ubuntu-latest
             matrix: linux
             arch: i386
@@ -232,7 +232,7 @@ jobs:
             getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
             pyengine_tag: cp39-cp39
             libc_tag: manylinux_2_17
-          - name: Ubuntu 24+16 amd64 CPython3.10
+          - name: Ubuntu 24+20 amd64 CPython3.10
             runs-on: ubuntu-latest
             matrix: linux
             arch: amd64
@@ -246,7 +246,7 @@ jobs:
             getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
             pyengine_tag: cp310-cp310
             libc_tag: manylinux_2_19
-          - name: Ubuntu 24+16 amd64 CPython3.11
+          - name: Ubuntu 24+20 amd64 CPython3.11
             runs-on: ubuntu-latest
             matrix: linux
             arch: amd64
