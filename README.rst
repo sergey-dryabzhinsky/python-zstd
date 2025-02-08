@@ -14,12 +14,22 @@ python-zstd
 .. |cpython27x86| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython27_x86.yml/badge.svg
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython27_x86.yml
 
+.. |cpython34x86| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython34_x86.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython34_x86.yml
+
+.. |cpython34x64| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython34_x86_64.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython34_x86_64.yml
+
 +------------+---------------------+
 | wheels for |      status         |
 +=================+================+
 | cpython 2.7 x86 | |cpython27x86| |
 +-----------------+----------------+
 | cpython 2.7 x64 | |cpython27x64| |
++-----------------+----------------+
+| cpython 3.4 x86 | |cpython34x86| |
++-----------------+----------------+
+| cpython 3.4 x64 | |cpython34x64| |
 +-----------------+----------------+
 | Release         | |releaseW|     |
 | 1.5.6.2         |                |
