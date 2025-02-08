@@ -23,7 +23,7 @@ jobs:
             mirror: http://azure.archive.ubuntu.com/ubuntu
             version: 1.5.6.3
             pyver: "3.4"
-            getpipurl: https://bootstrap.pypa.io/pip/2.7/get-pip.py
+            getpipurl: https://bootstrap.pypa.io/pip/3.4/get-pip.py
             pypkg: python3.4
             pyengine_tag: cp34-cp34m
             libc_tag: manylinux_2_17
