@@ -17,7 +17,7 @@ jobs:
           - name: Ubuntu 24+16 amd64 CPython 3.6
             runs-on: ubuntu-latest
             matrix: linux
-            arch: i386
+            arch: amd64
             tag_arch: x86_64
             release: xenial
             mirror: http://azure.archive.ubuntu.com/ubuntu
