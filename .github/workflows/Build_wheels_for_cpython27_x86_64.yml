@@ -14,7 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - name: Ubuntu 24+16 i386 CPython 2.7
+          - name: Ubuntu 24+16 amd64 CPython 2.7
             runs-on: ubuntu-latest
             matrix: linux
             arch: amd64
