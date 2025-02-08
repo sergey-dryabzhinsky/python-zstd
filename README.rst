@@ -14,16 +14,16 @@ python-zstd
 .. |cpython27x86| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython27_x86.yml/badge.svg
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython27_x86.yml
 
-+---------+------------+
-| wheels for |  status    |
-+=========+============+
++------------+---------------------+
+| wheels for |      status         |
++=================+================+
 | cpython 2.7 x86 | |cpython27x86| |
 | cpython 2.7 x64 | |cpython27x64| |
-| Release | |releaseW| |
-| 1.5.6.2 |            |
-+---------+------------+
-| Master  | |masterW|  |
-+---------+------------+
+| Release         | |releaseW|     |
+| 1.5.6.2         |                |
++-----------------+----------------+
+| Master          | |masterW|      |
++-----------------+----------------+
 
 Simple python bindings to Yann Collet ZSTD compression library.
 
