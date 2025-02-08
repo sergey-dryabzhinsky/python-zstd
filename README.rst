@@ -8,9 +8,17 @@ python-zstd
 .. |masterW| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml
 
+.. |cpython27x64| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython27_x86_64.yml/badge.svg
+  :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython27_x86_64.yml
+
+.. |cpython27x86| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython27_x86.yml/badge.svg
+  :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython27_x86.yml
+
 +---------+------------+
-| branch  |  status    |
+| wheels for |  status    |
 +=========+============+
+| cpython 2.7 x86 | |cpython27x86| |
+| cpython 2.7 x64 | |cpython27x64| |
 | Release | |releaseW| |
 | 1.5.6.2 |            |
 +---------+------------+
