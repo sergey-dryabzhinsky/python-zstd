@@ -361,6 +361,9 @@ jobs:
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c 'apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys A2CE4BCCC50209DD || true'
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt update
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt upgrade -y
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt -fy install
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt upgrade -y
+           
            
       - name: Pepare dev files
         if: matrix.os.matrix == 'linux'
