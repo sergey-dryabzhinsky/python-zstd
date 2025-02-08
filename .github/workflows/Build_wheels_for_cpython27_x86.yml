@@ -1,4 +1,4 @@
-name: Build wheels w/o cibw for CPython2.7 x86
+name: Build wheels for CPython2.7 x86
 
 on: [push, pull_request]
 
