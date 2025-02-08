@@ -25,6 +25,7 @@ jobs:
             pyver: "3.6"
             getpipurl: https://bootstrap.pypa.io/pip/3.6/get-pip.py
             pypkg: python3.6
+            pypkgadd: python3.6-distutils
             pyengine_tag: cp36-cp36m
             libc_tag: manylinux_2_17
     steps:
