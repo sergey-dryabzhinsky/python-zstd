@@ -327,6 +327,7 @@ jobs:
           sudo apt install -y zram-config;
           sudo apt list --upgradable;
           sudo apt upgrade -y;
+          sudo apt install -f
 
       - name: Build source distribution with Ubuntu
         if: matrix.os.matrix == 'linux'
