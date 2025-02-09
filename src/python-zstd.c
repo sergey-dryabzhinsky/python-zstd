@@ -303,6 +303,14 @@ static PyObject *py_zstd_library_version_int(PyObject* self, PyObject *args)
 }
 
 /**
+ * Returns ZSTD library legacy formats support 
+ */
+static PyObject *py_zstd_library_legacy_format_support(PyObject* self, PyObject *args)
+{
+    return Py_BuildValue("i", ZSTD_LEGACY_SUPPORT);
+}
+
+/**
  * Returns 0 or 1 if ZSTD library build as external
  */
 static PyObject *py_zstd_library_external(PyObject* self, PyObject *args)
@@ -386,6 +394,7 @@ static PyMethodDef ZstdMethods[] = {
     {"ZSTD_max_compression_level",  py_zstd_max_compression_level, METH_NOARGS, ZSTD_MAX_COMPRESSION_LEVEL_DOCSTRING},
 
     {"ZSTD_external",  py_zstd_library_external, METH_NOARGS, ZSTD_EXTERNAL_DOCSTRING},
+    {"ZSTD_legacy_support",  py_zstd_library_legacy_format_support, METH_NOARGS, ZSTD_LEGACY_DOCSTRING},
     {"ZSTD_with_threads",  py_zstd_with_threads, METH_NOARGS, ZSTD_WITH_THREADS_DOCSTRING},
     {"ZSTD_with_asm",  py_zstd_with_asm, METH_NOARGS, ZSTD_WITH_ASM_DOCSTRING},
     {NULL, NULL, 0, NULL}
