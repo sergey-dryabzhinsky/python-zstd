@@ -268,6 +268,7 @@ ZSTD_check (data): int
 
   Aliases:
      - *check(...)*,
+     - *verify(...)* since: 1.5.6.3
 
   Since: 1.5.6.2
 
