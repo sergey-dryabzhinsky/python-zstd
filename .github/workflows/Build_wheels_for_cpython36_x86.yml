@@ -143,7 +143,7 @@ jobs:
           SECRET_TEST: "${{ secrets.test_pypi_password }}"
 
       - name: Install twine
-        run: pip install twine
+        run: pip install 'twine<=6.0.1'
 
       - name: Publish distribution to PyPI
         if: >
