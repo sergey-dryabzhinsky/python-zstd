@@ -4,7 +4,7 @@ import os
 import sys
 
 #debug
-print("\ncmdline: %r" % (sys.argv,))
+# print("\ncmdline: %r" % (sys.argv,))
 
 import subprocess
 import platform 
@@ -93,7 +93,8 @@ if platform.system() == "Linux" and "build_ext" in sys.argv or "build" in sys.ar
     # And probably library paths by option: --library-dirs /usr/lib/i386-linux-gnu
     # We need pkg-config here!
     if os.path.exists(pkgconf):
-        print("pkg-config exists")
+        #debug 
+        #print("pkg-config exists")
         cmd = [pkgconf, "libzstd", "--modversion"]
         if sys.hexversion >= 0x03000000:
             VERSION_STR=b''
@@ -269,6 +270,7 @@ def my_test_suite():
     test_suite = unittest.TestSuite()
     test_suite.addTest(unittest.defaultTestLoader.loadTestsFromName("tests.test_compress"))
     test_suite.addTest(unittest.defaultTestLoader.loadTestsFromName("tests.test_version"))
+    test_suite.addTest(unittest.defaultTestLoader.loadTestsFromName("tests.test_speed"))
     return test_suite
 
 test_func_name = "setup.my_test_suite"
