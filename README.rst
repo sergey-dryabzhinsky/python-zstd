@@ -44,6 +44,12 @@ python-zstd
 .. |cpython38x64| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython38_x86_64.yml/badge.svg
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython38_x86_64.yml
 
+.. |cpython39x86| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython39_x86.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython39_x86.yml
+
+.. |cpython39x64| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython39_x86_64.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython39_x86_64.yml
+
 +-----------------+----------------+
 | wheels for:     |      status    |
 +=================+================+
@@ -70,6 +76,10 @@ python-zstd
 | cpython 3.8 x86 | |cpython38x86| |
 +-----------------+----------------+
 | cpython 3.8 x64 | |cpython38x64| |
++-----------------+----------------+
+| cpython 3.9 x86 | |cpython39x86| |
++-----------------+----------------+
+| cpython 3.9 x64 | |cpython39x64| |
 +-----------------+----------------+
 | Release         | |releaseW|     |
 | 1.5.6.2         |                |
