@@ -32,8 +32,8 @@ python-zstd
 .. |cpython36x64| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython36_x86_64.yml/badge.svg
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython36_x86_64.yml
 
-+------------+---------------------+
-| wheels for |      status         |
++-----------------+----------------+
+| wheels for:     |      status    |
 +=================+================+
 | cpython 2.7 x86 | |cpython27x86| |
 +-----------------+----------------+
