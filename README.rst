@@ -304,6 +304,11 @@ ZSTD_external (): int
 
   Since: 1.5.0.2
 
+ZSTD_legacy_support (): int
+  Returns 0 of 1 if ZSTD library built with legacy formats support.
+
+  Since: 1.5.6.3
+
 ZSTD_with_threads (): int
   Returns 0 of 1 if bundled ZSTD library build with threads support.
 
