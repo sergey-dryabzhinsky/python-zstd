@@ -260,11 +260,11 @@ jobs:
             getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
             pyengine_tag: cp311-cp311
             libc_tag: manylinux_2_19
-          - name: Ubuntu 24+16 armhf CPython 2.7
+          - name: Ubuntu 24+18 armhf CPython 2.7
             runs-on: ubuntu-latest
             matrix: linux
             arch: armhf
-            release: xenial
+            release: bionic
             mirror: http://ports.ubuntu.com/ubuntu-ports
             version: 1.5.6.3
             pypkg: python2.7
@@ -272,11 +272,11 @@ jobs:
             getpipurl: https://bootstrap.pypa.io/pip/2.7/get-pip.py
             pyengine_tag: cp27-cp27mu
             libc_tag: manylinux_2_17
-          - name: Ubuntu 24+16 arm64 CPython 2.7
+          - name: Ubuntu 24+18 arm64 CPython 2.7
             runs-on: ubuntu-latest
             matrix: linux
             arch: arm64
-            release: xenial 
+            release: bionic 
             mirror: http://ports.ubuntu.com/ubuntu-ports
             version: 1.5.6.3
             pypkg: python2.7
