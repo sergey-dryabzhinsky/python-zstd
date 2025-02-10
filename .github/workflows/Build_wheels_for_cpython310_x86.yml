@@ -14,8 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - name: Ubuntu 24+20 i386 CPython 3.10
-            runs-on: ubuntu-latest
+          - name: Ubuntu 20+20 i386 CPython 3.10
+            runs-on: ubuntu-20.04
             matrix: linux
             arch: i386
             tag_arch: i686
