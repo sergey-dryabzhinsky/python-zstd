@@ -1,4 +1,4 @@
-name: Build wheels for CPython3.10 x86_64
+name: Build wheels for CPython3.11 x86_64
 
 on: [push, pull_request]
 
@@ -14,19 +14,19 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - name: Ubuntu 24+16 amd64 CPython 3.10
+          - name: Ubuntu 24+20 amd64 CPython 3.11
             runs-on: ubuntu-latest
             matrix: linux
             arch: amd64
             tag_arch: x86_64
-            release: xenial
+            release: focal
             mirror: http://azure.archive.ubuntu.com/ubuntu
             version: 1.5.6.3
-            pyver: "3.10"
+            pyver: "3.11"
             getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
-            pypkg: python3.10
-            pypkgadd: python3.10-distutils
-            pyengine_tag: cp310-cp310
+            pypkg: python3.11
+            pypkgadd: python3.11-distutils
+            pyengine_tag: cp311-cp311
             libc_tag: manylinux_2_17
     steps:
       - name: Checkout code
@@ -105,6 +105,8 @@ jobs:
       - name: Test wheel for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
         run: |
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} find /build_wheel/
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}}/ ls -lh build/*/zstd.so; ldd build/*/zstd.so; wget https://gist.githubusercontent.com/fasterthanlime/17e002a8f5e0f189861c/raw/09e8866f1df83a51aa579e7dc425405ce93be7ab/glibc-check.sh; bash ./glibc-check.sh build/*/zstd.so"
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}} && python${{matrix.os.pyver}} setup.py test"
 
       - name: Pepare wheel for upload
