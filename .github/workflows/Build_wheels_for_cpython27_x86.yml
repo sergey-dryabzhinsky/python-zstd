@@ -106,7 +106,7 @@ jobs:
         if: matrix.os.matrix == 'linux'
         run: |
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} find /build_wheel/
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}}/ ls -lh build/*/zstd.so; ldd build/*/zstd.so; wget https://gist.githubusercontent.com/fasterthanlime/17e002a8f5e0f189861c/raw/09e8866f1df83a51aa579e7dc425405ce93be7ab/glibc-check.sh; chod +x glibc-check.sh;./glibc-check.sh build/*/zstd.so"
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}}/ ls -lh build/*/zstd.so; ldd build/*/zstd.so; wget https://gist.githubusercontent.com/fasterthanlime/17e002a8f5e0f189861c/raw/09e8866f1df83a51aa579e7dc425405ce93be7ab/glibc-check.sh; bash ./glibc-check.sh build/*/zstd.so"
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}} && python${{matrix.os.pyver}} setup.py test"
 
       - name: Pepare wheel for upload
