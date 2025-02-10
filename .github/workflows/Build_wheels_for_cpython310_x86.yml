@@ -14,7 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - name: Ubuntu 24+16 i386 CPython 3.10
+          - name: Ubuntu 24+20 i386 CPython 3.10
             runs-on: ubuntu-latest
             matrix: linux
             arch: i386
@@ -42,7 +42,7 @@ jobs:
           sudo apt purge -y firefox lxd snapd;
           sudo apt install -y zram-config;
           sudo apt list --upgradable;
-          sudo apt upgrade -y;
+          sudo apt dist-upgrade -y;
           sudo apt install -f
 
       - name: Build source distribution with Ubuntu
@@ -76,7 +76,7 @@ jobs:
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c 'cd /etc/apt/trusted.gpg.d && wget http://packages.rusoft.ru/apt/public-old.gpg -Orusoft-old.gpg'
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c 'apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys A2CE4BCCC50209DD || true'
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt update
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt upgrade -y
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt dist-upgrade -y
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt -fy install
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt upgrade -y
            
