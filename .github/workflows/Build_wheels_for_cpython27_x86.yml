@@ -26,7 +26,7 @@ jobs:
             getpipurl: https://bootstrap.pypa.io/pip/2.7/get-pip.py
             pypkg: python2.7
             pyengine_tag: cp27-cp27mu
-            libc_tag: manylinux_2_17
+            libc_tag: manylinux_2_4
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
