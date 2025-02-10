@@ -14,6 +14,9 @@ python-zstd
 .. |cpython27x86| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython27_x86.yml/badge.svg
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython27_x86.yml
 
+.. |cpython27armhf| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython27_armhf.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython27_armhf.yml
+
 .. |cpython34x86| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython34_x86.yml/badge.svg
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython34_x86.yml
 
@@ -56,6 +59,9 @@ python-zstd
 .. |cpython310x64| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython310_x86_64.yml/badge.svg
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython310_x86_64.yml
 
+.. |cpython311x64| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython311_x86_64.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython311_x86_64.yml
+
 +------------------+-----------------+
 | wheels for:      |      status     |
 +==================+=================+
@@ -90,6 +96,8 @@ python-zstd
 | cpython 3.10 x86 | |cpython310x86| |
 +------------------+-----------------+
 | cpython 3.10 x64 | |cpython310x64| |
++------------------+-----------------+
+| cpython 3.11 x64 | |cpython311x64| |
 +------------------+-----------------+
 | Release          | |releaseW|      |
 | 1.5.6.3          |                 |
