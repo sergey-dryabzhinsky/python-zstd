@@ -91,11 +91,11 @@ python-zstd
 +------------------+-----------------+
 | cpython 3.10 x64 | |cpython310x64| |
 +------------------+-----------------+
-| Release         | |releaseW|     |
-| 1.5.6.2         |                |
-+-----------------+----------------+
-| Master          | |masterW|      |
-+-----------------+----------------+
+| Release          | |releaseW|      |
+| 1.5.6.2          |                 |
++------------------+-----------------+
+| Master           | |masterW|       |
++------------------+-----------------+
 
 Simple python bindings to Yann Collet ZSTD compression library.
 
