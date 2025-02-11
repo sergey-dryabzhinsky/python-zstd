@@ -34,7 +34,7 @@ jobs:
         with:
           submodules: 'recursive'
 
-      - name: Update and upgrade Ubuntu 20
+      - name: Update and upgrade Ubuntu 24
         if: matrix.os.matrix == 'linux'
         run: |
           sudo which apt
