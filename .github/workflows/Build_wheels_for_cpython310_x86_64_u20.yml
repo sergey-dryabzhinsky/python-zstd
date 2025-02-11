@@ -91,7 +91,7 @@ jobs:
         run: |
            sudo /usr/bin/apt install -y ${{matrix.os.pypkg}}-dev gcc pkg-config ${{matrix.os.pypkgadd}}
            sudo /bin/bash -c "wget ${{matrix.os.getpipurl}} -O get-pip.py && ${{matrix.os.pypkg}} get-pip.py || true"
-           sudo /bin/bash -c "${{matrix.os.pypkg}} -m pip install -U 'setuptools<72.0'" 
+           sudo /bin/bash -c "${{matrix.os.pypkg}} -m pip install -U 'setuptools<=71.0.0'" 
                     
       - name: Pepare source and build wheel for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
