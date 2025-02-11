@@ -26,7 +26,7 @@ jobs:
             getpipurl: https://bootstrap.pypa.io/pip/3.4/get-pip.py
             pypkg: python3.4
             pyengine_tag: cp34-cp34m
-            libc_tag: manylinux_2_17
+            libc_tag: manylinux_2_4
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -105,7 +105,8 @@ jobs:
         if: matrix.os.matrix == 'linux'
         run: |
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} find /build_wheel/
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}}/ ls -lh build/*/zstd.so; ldd build/*/zstd.so; wget https://gist.githubusercontent.com/fasterthanlime/17e002a8f5e0f189861c/raw/09e8866f1df83a51aa579e7dc425405ce93be7ab/glibc-check.sh; bash ./glibc-check.sh build/*/zstd.so"
+          sudo cp -v glibc-check.sh ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/zstd-${{matrix.os.version}}/
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}}/ ls -lh build/*/zstd.*so; ldd build/*/zstd.*so ; file build/*/zstd.*.so; bash ./glibc-check.sh build/*/zstd.*so"
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}} && python${{matrix.os.pyver}} setup.py test"
 
       - name: Pepare wheel for upload
