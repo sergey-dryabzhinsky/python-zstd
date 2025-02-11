@@ -1,4 +1,4 @@
-name: Build wheels for CPython3.10 x86
+name: Build wheels for CPython3.10 x86 on Ububntu16
 
 on: [push, pull_request]
 
