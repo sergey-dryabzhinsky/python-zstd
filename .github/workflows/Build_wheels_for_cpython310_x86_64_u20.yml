@@ -76,8 +76,7 @@ jobs:
           sudo /bin/bash -c 'cd /etc/apt/trusted.gpg.d && wget http://packages.rusoft.ru/apt/public-old.gpg -Orusoft-old.gpg'
           sudo /bin/bash -c 'apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys A2CE4BCCC50209DD || true'
           sudo /usr/bin/apt update
-          sudo /usr/bin/apt upgrade -y
-          sudo /usr/bin/apt -fy install
+          sudo /usr/bin/apt upgrade -y || /usr/bin/apt -fy install
           sudo /usr/bin/apt upgrade -y
            
            
