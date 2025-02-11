@@ -53,59 +53,64 @@ python-zstd
 .. |cpython39x64| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython39_x86_64.yml/badge.svg
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython39_x86_64.yml
 
-.. |cpython310x86| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython310_x86.yml/badge.svg
-    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython310_x86.yml
+.. |cpython310x86u16| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython310_x86_u16.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython310_x86_u16.yml
 
-.. |cpython310x64| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython310_x86_64.yml/badge.svg
-    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython310_x86_64.yml
+.. |cpython310x64u20| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython310_x86_64_u20.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython310_x86_64_u20.yml
 
-.. |cpython311x64| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython311_x86_64.yml/badge.svg
-    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython311_x86_64.yml
+.. |cpython311x86u16| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython311_x86_u16.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython311_x86_u16.yml
 
-+-------------------+------------------+
-| wheels for:       |      status      |
-+===================+==================+
-| cpython 2.7 x86   | |cpython27x86|   |
-+-------------------+------------------+
-| cpython 2.7 x64   | |cpython27x64|   |
-+-------------------+------------------+
-| cpython 2.7 armhf | |cpython27armhf| |
-+-------------------+------------------+
-| cpython 3.4 x86   | |cpython34x86|   |
-+-------------------+------------------+
-| cpython 3.4 x64   | |cpython34x64|   |
-+-------------------+------------------+
-| cpython 3.5 x86   | |cpython35x86|   |
-+-------------------+------------------+
-| cpython 3.5 x64   | |cpython35x64|   |
-+-------------------+------------------+
-| cpython 3.6 x86   | |cpython36x86|   |
-+-------------------+------------------+
-| cpython 3.6 x64   | |cpython36x64|   |
-+-------------------+------------------+
-| cpython 3.7 x86   | |cpython37x86|   |
-+-------------------+------------------+
-| cpython 3.7 x64   | |cpython37x64|   |
-+-------------------+------------------+
-| cpython 3.8 x86   | |cpython38x86|   |
-+-------------------+------------------+
-| cpython 3.8 x64   | |cpython38x64|   |
-+-------------------+------------------+
-| cpython 3.9 x86   | |cpython39x86|   |
-+-------------------+------------------+
-| cpython 3.9 x64   | |cpython39x64|   |
-+-------------------+------------------+
-| cpython 3.10 x86  | |cpython310x86|  |
-+-------------------+------------------+
-| cpython 3.10 x64  | |cpython310x64|  |
-+-------------------+------------------+
-| cpython 3.11 x64  | |cpython311x64|  |
-+-------------------+------------------+
-| Release           | |releaseW|       |
-| 1.5.6.3           |                  |
-+-------------------+------------------+
-| Master            | |masterW|        |
-+-------------------+------------------+
+.. |cpython311x64u20| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython311_x86_64_u20.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython311_x86_64_u20.yml
+
++----------------------+---------------------+
+| wheels for:          |      status         |
++======================+=====================+
+| cpython 2.7 x86      | |cpython27x86|      |
++----------------------+---------------------+
+| cpython 2.7 x64      | |cpython27x64|      |
++----------------------+---------------------+
+| cpython 2.7 armhf    | |cpython27armhf|    |
++----------------------+---------------------+
+| cpython 3.4 x86      | |cpython34x86|      |
++----------------------+---------------------+
+| cpython 3.4 x64      | |cpython34x64|      |
++----------------------+---------------------+
+| cpython 3.5 x86      | |cpython35x86|      |
++----------------------+---------------------+
+| cpython 3.5 x64      | |cpython35x64|      |
++----------------------+---------------------+
+| cpython 3.6 x86      | |cpython36x86|      |
++----------------------+---------------------+
+| cpython 3.6 x64      | |cpython36x64|      |
++----------------------+---------------------+
+| cpython 3.7 x86      | |cpython37x86|      |
++----------------------+---------------------+
+| cpython 3.7 x64      | |cpython37x64|      |
++----------------------+---------------------+
+| cpython 3.8 x86      | |cpython38x86|      |
++----------------------+---------------------+
+| cpython 3.8 x64      | |cpython38x64|      |
++----------------------+---------------------+
+| cpython 3.9 x86      | |cpython39x86|      |
++----------------------+---------------------+
+| cpython 3.9 x64      | |cpython39x64|      |
++----------------------+---------------------+
+| cpython 3.10 x86 u16 | |cpython310x86u16|  |
++----------------------+---------------------+
+| cpython 3.10 x64 u20 | |cpython310x64u20|  |
++----------------------+---------------------+
+| cpython 3.11 x86 u16 | |cpython311x86u16|  |
++----------------------+---------------------+
+| cpython 3.11 x64 u20 | |cpython311x64u20|  |
++----------------------+---------------------+
+| Release              | |releaseW|          |
+| 1.5.6.3              |                     |
++----------------------+---------------------+
+| Master               | |masterW|           |
++----------------------+---------------------+
 
 Simple python bindings to Yann Collet ZSTD compression library.
 
