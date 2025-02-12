@@ -22,7 +22,7 @@ jobs:
             release: xenial
             mirror: http://azure.archive.ubuntu.com/ubuntu
             version: 1.5.6.3
-            pyver: "2.7"
+            #pyver: "2.7"
             getpipurl: https://bootstrap.pypa.io/pip/2.7/get-pip.py
             pypkg: python2.7
             pyengine_tag: cp27-cp27mu
@@ -100,15 +100,15 @@ jobs:
           false && sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} env
           
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} pkg-config libzstd --modversion 
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}} && ZSTD_ASM=1 ZSTD_SMALL=1 _ZSTD_ASM_BMI2=1 ZSTD_THREADS=1 _ZSTD_EXTERNAL=0 python${{matrix.os.pyver}} setup.py bdist_wheel "
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}} && ZSTD_ASM=1 _ZSTD_SMALL=1 _ZSTD_ASM_BMI2=1 ZSTD_THREADS=1 _ZSTD_EXTERNAL=0 ${{matrix.os.pyvpkg}} setup.py bdist_wheel "
 
       - name: Test wheel for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
         run: |
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} find /build_wheel/
+          false && sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} find /build_wheel/
           sudo cp -v glibc-check.sh ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/zstd-${{matrix.os.version}}/
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}}/ ls -lh build/*/zstd.so; echo LDD; ldd build/*/zstd.so;echo FILE; file build/*/zstd.so; echo LIBC; bash ./glibc-check.sh build/*/zstd.so"
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}} && python${{matrix.os.pyver}} setup.py test"
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}}/ ; echo LLH; ls -lh build/*/zstd.so; echo LDD; ldd build/*/zstd.so;echo FILE; file build/*/zstd.so; echo LIBC; bash ./glibc-check.sh build/*/zstd.so"
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}} && ${{matrix.os.pypkg}} setup.py test"
 
       - name: Pepare wheel for upload
         if: matrix.os.matrix == 'linux'
