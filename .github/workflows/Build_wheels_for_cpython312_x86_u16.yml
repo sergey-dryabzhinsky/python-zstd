@@ -26,7 +26,7 @@ jobs:
             getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
             pypkg: python3.12
             #pypkgadd: python3.12-distutils
-            pyengine_tag: cp312-cp3112
+            pyengine_tag: cp312-cp312
             libc_tag: manylinux_2_4
     steps:
       - name: Checkout code
@@ -106,7 +106,7 @@ jobs:
       - name: Test wheel for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
         run: |
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} find /build_wheel/
+          false && sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} find /build_wheel/
           sudo cp -v glibc-check.sh ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/zstd-${{matrix.os.version}}/
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}}/ ls -lh build/*/zstd.*.so; ldd build/*/zstd.*.so; file build/*/zstd.*.so; bash ./glibc-check.sh build/*/zstd.*.so"
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}} && ${{matrix.os.pypkg}} setup.py test"
