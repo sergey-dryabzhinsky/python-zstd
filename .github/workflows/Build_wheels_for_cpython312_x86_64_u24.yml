@@ -26,6 +26,7 @@ jobs:
             getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
             pypkg: python3.12
             #pypkgadd: python3.12-distutils
+            pypkgadd: python3-pip
             pyengine_tag: cp312-cp312
             libc_tag: manylinux_2_4
     steps:
@@ -90,7 +91,7 @@ jobs:
         if: matrix.os.matrix == 'linux'
         run: |
            sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt install -y ${{matrix.os.pypkg}}-dev gcc pkg-config ${{matrix.os.pypkgadd}}
-           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "wget ${{matrix.os.getpipurl}} -O get-pip.py && sudo ${{matrix.os.pypkg}} get-pip.py || true"
+           false && sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "wget ${{matrix.os.getpipurl}} -O get-pip.py && sudo ${{matrix.os.pypkg}} get-pip.py || true"
            sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "sudo ${{matrix.os.pypkg}} -m pip install -U 'setuptools<72.0'" 
                     
       - name: Pepare source and build wheel for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
