@@ -106,7 +106,7 @@ jobs:
         if: matrix.os.matrix == 'linux'
         run: |
           sudo find /build_wheel/
-          sudo cp -v glibc-check.sh ./build_wheel/zstd-${{matrix.os.version}}/glibc-check.sh
+          sudo cp -v glibc-check.sh /build_wheel/zstd-${{matrix.os.version}}/glibc-check.sh
           sudo /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}}/; ls -lh build/*/zstd.*.so; echo LDD; ldd build/*/zstd.*.so; echo FILE; file build/*/zstd.*.so; echo LIBC; bash ./glibc-check.sh build/*/zstd.*.so"
           sudo /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}} && ${{matrix.os.pypkg}} setup.py test"
 
