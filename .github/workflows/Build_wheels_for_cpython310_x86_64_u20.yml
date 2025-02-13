@@ -34,7 +34,7 @@ jobs:
         with:
           submodules: 'recursive'
 
-      - name: Update and upgrade Ubuntu 24
+      - name: Update and upgrade Ubuntu 20
         if: matrix.os.matrix == 'linux'
         run: |
           sudo which apt
@@ -48,7 +48,7 @@ jobs:
       - name: Build source distribution with Ubuntu
         if: matrix.os.matrix == 'linux'
         run: |
-          sudo apt install -y devscripts debootstrap qemu-user;
+          sudo apt install -y debootstrap qemu-user;
           pip install build;
           python -m build --sdist --outdir dist .
          
