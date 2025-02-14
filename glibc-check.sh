@@ -5,7 +5,7 @@
 #
 # You can set `MAX_VER` however low you want, although I (fasterthanlime)
 # feel like `2.13` is a good target (For reference, Ubuntu 12.04 has GLIBC 2.15)
-MAX_VER=2.19
+MAX_VER=2.34
 
 SCRIPTPATH=$( cd $(dirname $0) ; pwd -P )
 BINARY=$1
