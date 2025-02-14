@@ -38,14 +38,14 @@ python-zstd
 .. |cpython37x86| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython37_x86.yml/badge.svg
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython37_x86.yml
 
-.. |cpython37x64| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython37_x86_64.yml/badge.svg
-    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython37_x86_64.yml
+.. |cpython37x64| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython37_x86_64_u24.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython37_x86_64_u24.yml
 
 .. |cpython38x86| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython38_x86.yml/badge.svg
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython38_x86.yml
 
-.. |cpython38x64| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython38_x86_64.yml/badge.svg
-    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython38_x86_64.yml
+.. |cpython38x64| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython38_x86_64_u24.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython38_x86_64_u24.yml
 
 .. |cpython39x86| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython39_x86.yml/badge.svg
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython39_x86.yml
