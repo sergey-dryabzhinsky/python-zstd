@@ -27,7 +27,7 @@ jobs:
             pypkg: python3.7
             pypkgadd: python3.7-distutils
             pyengine_tag: cp37-cp37m
-            libc_tag: manylinux_2_4
+            libc_tag: manylinux_2_34
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
