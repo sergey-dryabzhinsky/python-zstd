@@ -168,8 +168,8 @@ jobs:
           CIBW_MANYLINUX_I686_IMAGE: manylinux_2_24
           CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_24
           CIBW_MANYLINUX_AARCH64_IMAGE: manylinux_2_24
-          CIBW_MUSLLINUX_I686_IMAGE: musllinux_1_1
-          CIBW_MUSLLINUX_X86_64_IMAGE: musllinux_1_1
+          CIBW_MUSLLINUX_I686_IMAGE: musllinux_1_2
+          CIBW_MUSLLINUX_X86_64_IMAGE: musllinux_1_2
           # Only build on x86 and arm64 for linux
           CIBW_ARCHS_LINUX: auto aarch64
           CIBW_BEFORE_ALL_LINUX: >
