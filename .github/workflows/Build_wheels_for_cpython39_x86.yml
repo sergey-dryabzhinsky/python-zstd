@@ -27,7 +27,7 @@ jobs:
             pypkg: python3.9
             pypkgadd: python3.9-distutils
             pyengine_tag: cp39-cp39
-            libc_tag: manylinux_2_17
+            libc_tag: manylinux_2_4
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
