@@ -14,9 +14,14 @@ class TestZstdDecompress(BaseTestZSTD):
 
     def test_check_compressed(self):
         cdata = zstd.compress(tDATA)
-        log.info("zstd compressed data check:%r" % zstd.check(cdata))
+        log.info("zstd compressed data check (1):%r" % zstd.check(cdata))
         self.assertEqual(1, zstd.check(cdata))
 
+    def test_check_not_compressed(self):
+        #cdata = zstd.compress(tDATA)
+        log.info("zstd not compressed data check (0):%r" % zstd.check(tDATA))
+        self.assertEqual(0, zstd.check(tDATA))
+        
     def test_check_uncompressed(self):
         cdata = b''
         log.info("zstd uncompressed data check:%r" % zstd.check(cdata))
