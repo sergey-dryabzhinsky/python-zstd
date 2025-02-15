@@ -2,13 +2,18 @@
 
 import os
 import sys
+
+#debug
+# print("\ncmdline: %r" % (sys.argv,))
+
 import subprocess
+import platform 
 
 import setuptools
 from setuptools import setup, find_packages, Extension
 from setuptools.command.build_ext import build_ext
 
-# ZSTD version
+# bundled ZSTD version
 VERSION = (1, 5, 6,)
 VERSION_STR = ".".join([str(x) for x in VERSION])
 
@@ -74,26 +79,55 @@ if "--external" in sys.argv:
     SUP_EXTERNAL=True
     sys.argv.remove("--external")
 
-if SUP_EXTERNAL:
+pkgconf = "/usr/bin/pkg-config"
+if "--libzstd-bundled" in sys.argv:
+    # Do you want use external Zstd library?
+    SUP_EXTERNAL=False
+    sys.argv.remove("--libzstd-bundled")
+    pkgconf = "/usr/bin/do-not-use-pkg-config"
+    
+#if SUP_EXTERNAL:
+if platform.system() == "Linux" and "build_ext" in sys.argv or "build" in sys.argv or "bdist_wheel" in sys.argv:
     # You should add external library by option: --libraries zstd
     # And probably include paths by option: --include-dirs /usr/include/zstd
     # And probably library paths by option: --library-dirs /usr/lib/i386-linux-gnu
     # We need pkg-config here!
-    pkgconf = "/usr/bin/pkg-config"
     if os.path.exists(pkgconf):
+        #debug 
+        #print("pkg-config exists")
         cmd = [pkgconf, "libzstd", "--modversion"]
+        if sys.hexversion >= 0x03000000:
+            VERSION_STR=b''
+        else:
+            VERSION_STR=""
         if sys.hexversion >= 0x02070000:
-            VERSION_STR = subprocess.check_output(cmd)
+            try:
+                VERSION_STR = subprocess.check_output(cmd).strip()
+            except Exception as e:
+                print("Error: %r" % e) 
+                pass
         else:
             # Pure Python 2.6
-            VERSION_STR = subprocess.Popen(cmd, stdout=subprocess.PIPE).communicate()[0]
+            VERSION_STR = subprocess.Popen(cmd, stdout=subprocess.PIPE).communicate()[0].strip()
         if sys.hexversion >= 0x03000000:
             # It's bytes in PY3
             VERSION_STR = VERSION_STR.decode()
-        VERSION = tuple(int(v) for v in VERSION_STR.split("."))
-    if "--libraries" not in sys.argv:
-        # Add something default
-        ext_libraries=["zstd"]
+        print("\nFound libzstd version %r" % VERSION_STR)
+        if VERSION_STR and SUP_EXTERNAL:
+            if VERSION_STR>="1.4.0":
+                SUP_EXTERNAL=True
+                if "--libraries" not in sys.argv:
+                    # Add something default
+                    ext_libraries=["zstd"]
+            else:
+                raise RuntimeError("Need zstd library verion >= 1.4.0")
+            VERSION = tuple(int(v) for v in VERSION_STR.split("."))
+    else:
+        if SUP_EXTERNAL:
+            # Require pkg config
+            raise RuntimeError("Need pkg-config to find system libzstd.")
+        print("\n Need pkg-config to find system libzstd. Or we try bundled one.")
+
 
 
 # Package version, even external 
@@ -236,6 +270,7 @@ def my_test_suite():
     test_suite = unittest.TestSuite()
     test_suite.addTest(unittest.defaultTestLoader.loadTestsFromName("tests.test_compress"))
     test_suite.addTest(unittest.defaultTestLoader.loadTestsFromName("tests.test_version"))
+    test_suite.addTest(unittest.defaultTestLoader.loadTestsFromName("tests.test_speed"))
     return test_suite
 
 test_func_name = "setup.my_test_suite"
@@ -277,5 +312,6 @@ setup(
         'Programming Language :: Python :: 3.11',
         'Programming Language :: Python :: 3.12',
         'Programming Language :: Python :: 3.13',
+        'Programming Language :: Python :: 3.14',
     ]
 )

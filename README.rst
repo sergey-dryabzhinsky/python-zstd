@@ -2,20 +2,135 @@
 python-zstd
 =============
 
-.. |releaseW| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg?tag=v1.5.6.2
+.. |releaseW| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg?tag=v1.5.6.3
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml
 
 .. |masterW| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml
 
-+---------+------------+
-| branch  |  status    |
-+=========+============+
-| Release | |releaseW| |
-| 1.5.6.2 |            |
-+---------+------------+
-| Master  | |masterW|  |
-+---------+------------+
+.. |cpython27x64| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython27_x86_64.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython27_x86_64.yml
+
+.. |cpython27x86| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython27_x86.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython27_x86.yml
+
+.. |cpython27armhf| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython27_armhf.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython27_armhf.yml
+
+.. |cpython34x86| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython34_x86.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython34_x86.yml
+
+.. |cpython34x64| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython34_x86_64.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython34_x86_64.yml
+
+.. |cpython35x86| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython35_x86.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython35_x86.yml
+
+.. |cpython35x64| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython35_x86_64.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython35_x86_64.yml
+
+.. |cpython36x86| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython36_x86.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython36_x86.yml
+
+.. |cpython36x64| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython36_x86_64.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython36_x86_64.yml
+
+.. |cpython37x86| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython37_x86.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython37_x86.yml
+
+.. |cpython37x64| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython37_x86_64_u24.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython37_x86_64_u24.yml
+
+.. |cpython38x86| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython38_x86.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython38_x86.yml
+
+.. |cpython38x64| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython38_x86_64_u24.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython38_x86_64_u24.yml
+
+.. |cpython39x86| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython39_x86.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython39_x86.yml
+
+.. |cpython39x64| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython39_x86_64_u24.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython39_x86_64_u24.yml
+
+.. |cpython310x86u16| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython310_x86_u16.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython310_x86_u16.yml
+
+.. |cpython310x64u20| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython310_x86_64_u24.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython310_x86_64_u24.yml
+
+.. |cpython311x86u16| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython311_x86_u16.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython311_x86_u16.yml
+
+.. |cpython311x64u20| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython311_x86_64_u24.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython311_x86_64_u24.yml
+
+.. |cpython312x86u16| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython312_x86_u16.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython312_x86_u16.yml
+
+.. |cpython312x64u20| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython312_x86_64_u20.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython312_x86_64_u20.yml
+
+.. |cpython313x64u20| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython313_x86_64_u24.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython313_x86_64_u24.yml
+
+.. |cpython314x64u20| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython314_x86_64_u24.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython314_x86_64_u24.yml
+
++----------------------+---------------------+
+| wheels for:          |      status         |
++======================+=====================+
+| cpython 2.7 x86      | |cpython27x86|      |
++----------------------+---------------------+
+| cpython 2.7 x64      | |cpython27x64|      |
++----------------------+---------------------+
+| cpython 2.7 armhf    | |cpython27armhf|    |
++----------------------+---------------------+
+| cpython 3.4 x86      | |cpython34x86|      |
++----------------------+---------------------+
+| cpython 3.4 x64      | |cpython34x64|      |
++----------------------+---------------------+
+| cpython 3.5 x86      | |cpython35x86|      |
++----------------------+---------------------+
+| cpython 3.5 x64      | |cpython35x64|      |
++----------------------+---------------------+
+| cpython 3.6 x86      | |cpython36x86|      |
++----------------------+---------------------+
+| cpython 3.6 x64      | |cpython36x64|      |
++----------------------+---------------------+
+| cpython 3.7 x86      | |cpython37x86|      |
++----------------------+---------------------+
+| cpython 3.7 x64 u24  | |cpython37x64|      |
++----------------------+---------------------+
+| cpython 3.8 x86      | |cpython38x86|      |
++----------------------+---------------------+
+| cpython 3.8 x64 u24  | |cpython38x64|      |
++----------------------+---------------------+
+| cpython 3.9 x86      | |cpython39x86|      |
++----------------------+---------------------+
+| cpython 3.9 x64 u24  | |cpython39x64|      |
++----------------------+---------------------+
+| cpython 3.10 x86 u16 | |cpython310x86u16|  |
++----------------------+---------------------+
+| cpython 3.10 x64 u24 | |cpython310x64u20|  |
++----------------------+---------------------+
+| cpython 3.11 x86 u16 | |cpython311x86u16|  |
++----------------------+---------------------+
+| cpython 3.11 x64 u24 | |cpython311x64u20|  |
++----------------------+---------------------+
+| cpython 3.12 x86 u16 | |cpython312x86u16|  |
++----------------------+---------------------+
+| cpython 3.12 x64 u24 | |cpython312x64u20|  |
++----------------------+---------------------+
+| cpython 3.13 x64 u24 | |cpython313x64u20|  |
++----------------------+---------------------+
+| cpython 3.14 x64 u24 | |cpython314x64u20|  |
++----------------------+---------------------+
+| Release              | |releaseW|          |
+| 1.5.6.3              |                     |
++----------------------+---------------------+
+| Master               | |masterW|           |
++----------------------+---------------------+
 
 Simple python bindings to Yann Collet ZSTD compression library.
 
@@ -74,6 +189,16 @@ Build from source
    >>> $ python setup.py build_ext clean
    >>> $ python3 setup.py build_ext clean
 
+And you need to install `libzstd` developer files at least version *1.4.0*:
+
+    >>> $ dnf install -y libzstd-devel
+    # or
+    >>> $ apt install -y libzstd-dev
+    # or
+    >>> $ apk add zstd-dev
+
+or do manual installation of zstd from source.
+
 Note: Zstd legacy format support disabled by default.
 To build with Zstd legacy versions support - pass ``--legacy`` option to setup.py script:
 
@@ -131,6 +256,14 @@ If paths to header file ``zstd.h`` and libraries is uncommon - use common ``buil
 
    >>> $ python setup.py build_ext --external --include-dirs /opt/zstd/usr/include --libraries zstd --library-dirs /opt/zstd/lib clean
 
+But If you want to build with bundled distribution of libzstd just add ``--
+libzstd-bundled`` option
+
+   >>> $ python setup.py build_ext --libzstd-bundled clean
+
+When using a PEP 517 builder you can use ``ZSTD_BUNDLED`` environment variable instead:
+
+   >>> $ ZSTD_BUNDLED=1 python -m build -w
 
 Install from pypi
 -----------------
@@ -200,6 +333,7 @@ ZSTD_check (data): int
 
   Aliases:
      - *check(...)*,
+     - *verify(...)* since: 1.5.6.3
 
   Since: 1.5.6.2
 
@@ -245,6 +379,11 @@ ZSTD_external (): int
   Returns 0 of 1 if ZSTD library linked as external.
 
   Since: 1.5.0.2
+
+ZSTD_legacy_support (): int
+  Returns 0 of 1 if ZSTD library built with legacy formats support.
+
+  Since: 1.5.6.3
 
 ZSTD_with_threads (): int
   Returns 0 of 1 if bundled ZSTD library build with threads support.

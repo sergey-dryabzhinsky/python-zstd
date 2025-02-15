@@ -23,9 +23,14 @@ log = logging.getLogger('ZSTD')
 log.info("Python version: %s" % sys.version)
 log.info("Machine:%s; processor:%s; system:%r; release:%r" % ( platform.machine(), platform.processor(), platform.system(), platform.release()))
 log.info("libzstd linked external:%r"% zstd.ZSTD_external())
+log.info("libzstd built with legacy formats support:%r"% zstd.ZSTD_legacy_support())
 log.info("zstd max number of threads:%r"% zstd.ZSTD_max_threads_count())
+log.info("zstd found CPU cores :%r"% zstd.ZSTD_threads_count())
 log.info("zstd max compression level:%r"% zstd.ZSTD_max_compression_level())
 log.info("zstd min compression level:%r"% zstd.ZSTD_min_compression_level())
+log.info("pyzstd module version: %r"% zstd.version())
+log.info("libzstd version: %r"% zstd.ZSTD_version())
+
 
 # Classic lorem ipsum
 # + За словесными горами
@@ -52,6 +57,8 @@ class BaseTestZSTD(unittest.TestCase):
     PKG_VERSION = "1.5.6.3"
 
     def helper_version(self):
+        if zstd.ZSTD_external():
+            return raise_skip("PyZstd was build with external version of ZSTD library, so module is like (%s). It can be any version. Almost." % zstd.version())
         self.assertEqual(self.PKG_VERSION, zstd.version())
 
     def helper_zstd_version(self):

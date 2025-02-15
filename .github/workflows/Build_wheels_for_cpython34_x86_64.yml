@@ -1,4 +1,4 @@
-name: Build wheels w/o cibw
+name: Build wheels for CPython3.4 x86_64
 
 on: [push, pull_request]
 
@@ -14,130 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - name: Ubuntu 24+16 i386 CPython 2.7
-            runs-on: ubuntu-latest
-            matrix: linux
-            arch: i386
-            tag_arch: i686
-            release: xenial
-            mirror: http://azure.archive.ubuntu.com/ubuntu
-            version: 1.5.6.3
-            pyver: "2.7"
-            getpipurl: https://bootstrap.pypa.io/pip/2.7/get-pip.py
-            pypkg: python2.7
-            pyengine_tag: cp27-cp27mu
-            libc_tag: manylinux_2_17
-          - name: Ubuntu 24+16 i386 CPython 3.4
-            runs-on: ubuntu-latest
-            matrix: linux
-            arch: i386
-            tag_arch: i686
-            release: xenial
-            mirror: http://azure.archive.ubuntu.com/ubuntu
-            version: 1.5.6.3
-            pyver: "3.4"
-            getpipurl: https://bootstrap.pypa.io/pip/3.4/get-pip.py 
-            pypkg: python3.4
-            pyengine_tag: cp34-cp34m
-            libc_tag: manylinux_2_17
-          - name: Ubuntu 24+16 i386 CPython 3.5
-            runs-on: ubuntu-latest
-            matrix: linux
-            arch: i386
-            tag_arch: i686
-            release: xenial
-            mirror: http://azure.archive.ubuntu.com/ubuntu
-            version: 1.5.6.3
-            pyver: "3.5"
-            getpipurl: https://bootstrap.pypa.io/pip/3.5/get-pip.py
-            pypkg: python3.5
-            pyengine_tag: cp35-cp35m
-            libc_tag: manylinux_2_17
-          - name: Ubuntu 24+16 i386 CPython 3.6
-            runs-on: ubuntu-latest
-            matrix: linux
-            arch: i386
-            tag_arch: i686
-            release: xenial
-            mirror: http://azure.archive.ubuntu.com/ubuntu
-            version: 1.5.6.3
-            pyver: "3.6"
-            getpipurl: https://bootstrap.pypa.io/pip/3.6/get-pip.py
-            pypkg: python3.6
-            pypkgadd: python3.6-distutils
-            pyengine_tag: cp36-cp36m
-            libc_tag: manylinux_2_17
-          - name: Ubuntu 24+16 i386 CPython 3.7
-            runs-on: ubuntu-latest
-            matrix: linux
-            arch: i386
-            tag_arch: i686
-            release: xenial
-            mirror: http://azure.archive.ubuntu.com/ubuntu
-            version: 1.5.6.3
-            pyver: "3.7"
-            getpipurl: https://bootstrap.pypa.io/pip/3.7/get-pip.py
-            pypkg: python3.7
-            pypkgadd: python3.7-distutils
-            pyengine_tag: cp37-cp37m
-            libc_tag: manylinux_2_17
-          - name: Ubuntu 24+16 i386 CPython 3.8
-            runs-on: ubuntu-latest
-            matrix: linux
-            arch: i386
-            tag_arch: i686
-            release: xenial
-            mirror: http://azure.archive.ubuntu.com/ubuntu
-            version: 1.5.6.3
-            pyver: "3.8"
-            getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
-            pypkg: python3.8
-            pypkgadd: python3.8-distutils
-            pyengine_tag: cp38-cp38
-            libc_tag: manylinux_2_17
-          - name: Ubuntu 24+16 i386 CPython 3.9
-            runs-on: ubuntu-latest
-            matrix: linux
-            arch: i386
-            tag_arch: i686
-            release: xenial
-            mirror: http://azure.archive.ubuntu.com/ubuntu
-            version: 1.5.6.3
-            pyver: "3.9"
-            getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
-            pypkg: python3.9
-            pypkgadd: python3.9-distutils
-            pyengine_tag: cp39-cp39
-            libc_tag: manylinux_2_17
-          - name: Ubuntu 24+20 i386 CPython 3.10
-            runs-on: ubuntu-latest
-            matrix: linux
-            arch: i386
-            tag_arch: i686
-            release: focal
-            mirror: http://azure.archive.ubuntu.com/ubuntu
-            version: 1.5.6.3
-            pyver: "3.10"
-            getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
-            pypkg: python3.10
-            pypkgadd: python3.10-distutils
-            pyengine_tag: cp310-cp310
-            libc_tag: manylinux_2_19
-          - name: Ubuntu 24+20 i386 CPython 3.11
-            runs-on: ubuntu-latest
-            matrix: linux
-            arch: i386
-            tag_arch: i686
-            release: focal
-            mirror: http://azure.archive.ubuntu.com/ubuntu
-            version: 1.5.6.3
-            pyver: "3.11"
-            getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
-            pypkg: python3.11
-            pypkgadd: python3.11-distutils
-            pyengine_tag: cp311-cp311
-            libc_tag: manylinux_2_19
-          - name: Ubuntu 24+16 amd64 CPython2.7
+          - name: Ubuntu 24+16 amd64 CPython 3.4
             runs-on: ubuntu-latest
             matrix: linux
             arch: amd64
@@ -145,158 +22,11 @@ jobs:
             release: xenial
             mirror: http://azure.archive.ubuntu.com/ubuntu
             version: 1.5.6.3
-            pypkg: python2.7
-            pyver: "2.7"
-            getpipurl: https://bootstrap.pypa.io/pip/2.7/get-pip.py
-            pyengine_tag: cp27-cp27mu
-            libc_tag: manylinux_2_17
-          - name: Ubuntu 24+16 amd64 CPython3.4
-            runs-on: ubuntu-latest
-            matrix: linux
-            arch: amd64
-            tag_arch: x86_64
-            release: xenial
-            mirror: http://azure.archive.ubuntu.com/ubuntu
-            version: 1.5.6.3
-            pypkg: python3.4
             pyver: "3.4"
             getpipurl: https://bootstrap.pypa.io/pip/3.4/get-pip.py
+            pypkg: python3.4
             pyengine_tag: cp34-cp34m
-            libc_tag: manylinux_2_17
-          - name: Ubuntu 24+16 amd64 CPython3.5
-            runs-on: ubuntu-latest
-            matrix: linux
-            arch: amd64
-            tag_arch: x86_64
-            release: xenial
-            mirror: http://azure.archive.ubuntu.com/ubuntu
-            version: 1.5.6.3
-            pypkg: python3.5
-            pyver: "3.5"
-            getpipurl: https://bootstrap.pypa.io/pip/3.5/get-pip.py
-            pyengine_tag: cp35-cp35m
-            libc_tag: manylinux_2_17
-          - name: Ubuntu 24+16 amd64 CPython3.6
-            runs-on: ubuntu-latest
-            matrix: linux
-            arch: amd64
-            tag_arch: x86_64
-            release: xenial
-            mirror: http://azure.archive.ubuntu.com/ubuntu
-            version: 1.5.6.3
-            pypkg: python3.6
-            pypkgadd: python3.6-distutils
-            pyver: "3.6"
-            getpipurl: https://bootstrap.pypa.io/pip/3.6/get-pip.py
-            pyengine_tag: cp36-cp36m
-            libc_tag: manylinux_2_17
-          - name: Ubuntu 24+16 amd64 CPython3.7
-            runs-on: ubuntu-latest
-            matrix: linux
-            arch: amd64
-            tag_arch: x86_64
-            release: xenial
-            mirror: http://azure.archive.ubuntu.com/ubuntu
-            version: 1.5.6.3
-            pypkg: python3.7
-            pypkgadd: python3.7-distutils
-            pyver: "3.7"
-            getpipurl: https://bootstrap.pypa.io/pip/3.7/get-pip.py
-            pyengine_tag: cp37-cp37m
-            libc_tag: manylinux_2_17
-          - name: Ubuntu 24+16 amd64 CPython3.8
-            runs-on: ubuntu-latest
-            matrix: linux
-            arch: amd64
-            tag_arch: x86_64
-            release: xenial
-            mirror: http://azure.archive.ubuntu.com/ubuntu
-            version: 1.5.6.3
-            pypkg: python3.8
-            pypkgadd: python3.8-distutils
-            pyver: "3.8"
-            getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
-            pyengine_tag: cp38-cp38
-            libc_tag: manylinux_2_17
-          - name: Ubuntu 24+16 amd64 CPython3.9
-            runs-on: ubuntu-latest
-            matrix: linux
-            arch: amd64
-            tag_arch: x86_64
-            release: xenial
-            mirror: http://azure.archive.ubuntu.com/ubuntu
-            version: 1.5.6.3
-            pypkg: python3.9
-            pypkgadd: python3.9-distutils
-            pyver: "3.9"
-            getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
-            pyengine_tag: cp39-cp39
-            libc_tag: manylinux_2_17
-          - name: Ubuntu 24+20 amd64 CPython3.10
-            runs-on: ubuntu-latest
-            matrix: linux
-            arch: amd64
-            tag_arch: x86_64
-            release: focal
-            mirror: http://azure.archive.ubuntu.com/ubuntu
-            version: 1.5.6.3
-            pypkg: python3.10
-            pypkgadd: python3.10-distutils
-            pyver: "3.10"
-            getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
-            pyengine_tag: cp310-cp310
-            libc_tag: manylinux_2_19
-          - name: Ubuntu 24+20 amd64 CPython3.11
-            runs-on: ubuntu-latest
-            matrix: linux
-            arch: amd64
-            tag_arch: x86_64
-            release: focal
-            mirror: http://azure.archive.ubuntu.com/ubuntu
-            version: 1.5.6.3
-            pypkg: python3.11
-            pypkgadd: python3.11-distutils
-            pyver: "3.11"
-            getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
-            pyengine_tag: cp311-cp311
-            libc_tag: manylinux_2_19
-          - name: Ubuntu 24+18 armhf CPython 2.7
-            runs-on: ubuntu-latest
-            matrix: linux
-            arch: armhf
-            release: bionic
-            mirror: http://ports.ubuntu.com/ubuntu-ports
-            version: 1.5.6.3
-            pypkg: python2.7
-            pyver: "2.7"
-            getpipurl: https://bootstrap.pypa.io/pip/2.7/get-pip.py
-            pyengine_tag: cp27-cp27mu
-            libc_tag: manylinux_2_17
-          - name: Ubuntu 24+18 arm64 CPython 2.7
-            runs-on: ubuntu-latest
-            matrix: linux
-            arch: arm64
-            release: bionic 
-            mirror: http://ports.ubuntu.com/ubuntu-ports
-            version: 1.5.6.3
-            pypkg: python2.7
-            pyver: "2.7"
-            getpipurl: https://bootstrap.pypa.io/pip/2.7/get-pip.py
-            pyengine_tag: cp27-cp27mu
-            libc_tag: manylinux_2_17
-          - name: Ubuntu 24+20 riscv64 CPython 2.7
-            runs-on: ubuntu-latest
-            matrix: linux
-            arch: riscv64
-            release: focal 
-            mirror: http://ports.ubuntu.com/ubuntu-ports
-            version: 1.5.6.3
-            pypkg: python2.7
-            pyver: "2.7"
-            getpipurl: https://bootstrap.pypa.io/pip/2.7/get-pip.py
-            pyengine_tag: cp27-cp27mu
-            libc_tag: manylinux_2_19
-     
+            libc_tag: manylinux_2_4
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -369,11 +99,14 @@ jobs:
           sudo tar -xvf dist/zstd-${{matrix.os.version}}.tar.gz -C ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/
           false && sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} env 
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} pkg-config libzstd --modversion 
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}} && ZSTD_ASM=1 _ZSTD_LEGACY=1 _ZSTD_ASM_BMI2=1 ZSTD_THREADS=1 _ZSTD_EXTERNAL=0 python${{matrix.os.pyver}} setup.py bdist_wheel clean"
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}} && ZSTD_ASM=1 _ZSTD_ASM_BMI2=1 ZSTD_THREADS=1 _ZSTD_EXTERNAL=0 python${{matrix.os.pyver}} setup.py bdist_wheel clean"
 
       - name: Test wheel for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
         run: |
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} find /build_wheel/
+          sudo cp -v glibc-check.sh ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/zstd-${{matrix.os.version}}/
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}}/ ls -lh build/*/zstd.*so; ldd build/*/zstd.*so ; file build/*/zstd.*.so; bash ./glibc-check.sh build/*/zstd.*so"
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}} && python${{matrix.os.pyver}} setup.py test"
 
       - name: Pepare wheel for upload
@@ -499,3 +232,4 @@ jobs:
           TWINE_NON_INTERACTIVE: 1
           TWINE_PASSWORD: "${{ secrets.test_pypi_password }}"
         run: twine upload --non-interactive --skip-existing --verbose 'dist/*'
+        

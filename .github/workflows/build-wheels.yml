@@ -20,8 +20,11 @@ jobs:
           - name: macOS Latest
             runs-on: macos-latest # arm
             matrix: macos
-          - name: Linux
+          - name: Ubuntu 24.04
             runs-on: ubuntu-latest
+            matrix: linux
+          - name: Ubuntu 20.04
+            runs-on: ubuntu-20
             matrix: linux
           - name: Windows
             runs-on: windows-latest
@@ -108,7 +111,16 @@ jobs:
       - name: Build source distribution with Ubuntu
         if: matrix.os.matrix == 'linux'
         run: |
-          pip install build
+          echo OS-RELEASE; cat /etc/os-release;
+          echo CPU-FLAGS; grep flags /proc/cpuinfo
+          sudo apt purge -y firefox snapd;
+          sudo apt update; apt list --upgradable; sudo apt upgrade -y;
+          sudo apt install -y libzstd-dev;
+          echo PKG-CONFIG;
+          which pkg-config;
+          pkg-config libzstd --modversion;
+          echo PIP-BUILD; 
+          pip install build;
           python -m build --sdist --outdir dist .
 
       - name: Build ${{ matrix.os.name }} wheels and test (old)
@@ -118,6 +130,7 @@ jobs:
           output-dir: dist
         env:
           CIBW_BUILD: ${{ matrix.cibw.build }}
+          CIBW_BUILD_VERBOSITY_LINUX: 1
           # Skip 32-bit builds // NO
           # CIBW_SKIP: '*-win32 *_i686'
           CIBW_MANYLINUX_I686_IMAGE: manylinux1
@@ -127,7 +140,7 @@ jobs:
           # Only build on x86 and arm64 for linux
           CIBW_ARCHS_LINUX: i686 x86_64
           CIBW_BEFORE_ALL_LINUX: >
-            python -m pip install --upgrade pip
+            python -m pip install --upgrade pip;
           # CIBW_ARCHS_MACOS: x86_64 arm64 universal2
           # Building two wheels for MacOS and skipping Universal
           CIBW_ARCHS_MACOS: x86_64
@@ -149,13 +162,14 @@ jobs:
           output-dir: dist
         env:
           CIBW_BUILD: ${{ matrix.cibw.build }}
+          CIBW_BUILD_VERBOSITY_LINUX: 1
           # Skip 32-bit builds // NO
           # CIBW_SKIP: '*-win32 *_i686'
-          CIBW_MANYLINUX_I686_IMAGE: manylinux2014
-          CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
-          CIBW_MANYLINUX_AARCH64_IMAGE: manylinux2014
-          CIBW_MUSLLINUX_I686_IMAGE: musllinux_1_1
-          CIBW_MUSLLINUX_X86_64_IMAGE: musllinux_1_1
+          CIBW_MANYLINUX_I686_IMAGE: manylinux_2_24
+          CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_24
+          CIBW_MANYLINUX_AARCH64_IMAGE: manylinux_2_24
+          CIBW_MUSLLINUX_I686_IMAGE: musllinux_1_2
+          CIBW_MUSLLINUX_X86_64_IMAGE: musllinux_1_2
           # Only build on x86 and arm64 for linux
           CIBW_ARCHS_LINUX: auto aarch64
           CIBW_BEFORE_ALL_LINUX: >
@@ -175,7 +189,7 @@ jobs:
             python -m unittest discover -v -s {package}
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4.6.0
         with:
           name: wheels
           path: ./dist

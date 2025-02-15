@@ -1,4 +1,4 @@
-name: Build wheels for CPython3.9 x86
+name: Build wheels for CPython3.14 x86_64 on Ubuntu24
 
 on: [push, pull_request]
 
@@ -14,20 +14,20 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - name: Ubuntu 24+16 i386 CPython 3.9
+          - name: Ubuntu 24 amd64 CPython 3.14
             runs-on: ubuntu-latest
             matrix: linux
-            arch: i386
-            tag_arch: i686
-            release: xenial
+            arch: amd64
+            tag_arch: x86_64
+            release: noble
             mirror: http://azure.archive.ubuntu.com/ubuntu
             version: 1.5.6.3
-            pyver: "3.9"
+            # pyver: "3.7"
             getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
-            pypkg: python3.9
-            pypkgadd: python3.9-distutils
-            pyengine_tag: cp39-cp39
-            libc_tag: manylinux_2_17
+            pypkg: python3.14
+            #pypkgadd: python3.13-distutils
+            pyengine_tag: cp314-cp314
+            libc_tag: manylinux_2_34
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -48,7 +48,7 @@ jobs:
       - name: Build source distribution with Ubuntu
         if: matrix.os.matrix == 'linux'
         run: |
-          sudo apt install -y devscripts debootstrap qemu-user;
+          sudo apt install -y debootstrap qemu-user;
           pip install build;
           python -m build --sdist --outdir dist .
          
@@ -64,11 +64,11 @@ jobs:
           sudo mount none ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/proc -t proc
           sudo mount none ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/dev/pts -t devpts
           sudo mount none ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/sys -t sysfs
-          echo " deb [trusted=yes] http://packages.rusoft.ru/ppa/rusoft/python ubuntu-${{matrix.os.release}} main" > rusoft-python.list
-          echo " deb [trusted=yes] http://packages.rusoft.ru/ppa/rusoft/backports ubuntu-${{matrix.os.release}} main" > rusoft-backports.list
-          echo " deb [trusted=yes] http://packages.rusoft.ru/ppa/rusoft/packages ubuntu-${{matrix.os.release}} main" > rusoft-packages.list
+          echo "# deb [trusted=yes] http://packages.rusoft.ru/ppa/rusoft/python ubuntu-${{matrix.os.release}} main" > rusoft-python.list
+          echo "# deb [trusted=yes] http://packages.rusoft.ru/ppa/rusoft/backports ubuntu-${{matrix.os.release}} main" > rusoft-backports.list
+          echo "# deb [trusted=yes] http://packages.rusoft.ru/ppa/rusoft/packages ubuntu-${{matrix.os.release}} main" > rusoft-packages.list
           echo " deb [trusted=yes] http://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu ${{matrix.os.release}} main" > deadsnakes.list
-          sudo find ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} -iname apt
+          false && sudo find ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} -iname apt
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt update
           sudo cp -v ./*.list ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/etc/apt/sources.list.d
           false && sudo rm -fv ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/etc/apt/trusted.gpg.d/* && sudo rm -fv ./ubuntu-xenial-x86/etc/apt/trusted.gpg
@@ -84,7 +84,7 @@ jobs:
       - name: Pepare dev files
         if: matrix.os.matrix == 'linux'
         run: |
-           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt install -y libzstd-dev
+           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt install -y libzstd-dev file
 
       - name: Pepare for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
@@ -92,9 +92,7 @@ jobs:
            sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt install -y ${{matrix.os.pypkg}}-dev gcc pkg-config ${{matrix.os.pypkgadd}}
            sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "wget ${{matrix.os.getpipurl}} -O get-pip.py && ${{matrix.os.pypkg}} get-pip.py || true"
            sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "${{matrix.os.pypkg}} -m pip install -U 'setuptools<72.0'" 
-           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "${{matrix.os.pypkg}} -m pip install -U pkginfo" 
-                      
-           
+                    
       - name: Pepare source and build wheel for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
         run: |
@@ -102,12 +100,16 @@ jobs:
           sudo tar -xvf dist/zstd-${{matrix.os.version}}.tar.gz -C ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/
           false && sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} env 
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} pkg-config libzstd --modversion 
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}} && ZSTD_ASM=1 _ZSTD_ASM_BMI2=1 ZSTD_THREADS=1 _ZSTD_EXTERNAL=0 python${{matrix.os.pyver}} setup.py bdist_wheel clean"
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}} && ZSTD_ASM=1 _ZSTD_ASM_BMI2=1 ZSTD_THREADS=1 _ZSTD_EXTERNAL=0 ${{matrix.os.pypkg}} setup.py bdist_wheel"
 
       - name: Test wheel for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
         run: |
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}} && python${{matrix.os.pyver}} setup.py test"
+          false && sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} find /build_wheel/
+          sudo cp -v glibc-check.sh ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/zstd-${{matrix.os.version}}/
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}}/; echo LLH; ls -lh build/*/zstd.*.so; ldd build/*/zstd.*.so ; file build/*/zstd.*.so; bash ./glibc-check.sh build/*/zstd.*.so"
+          
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}} && ${{matrix.os.pypkg}} setup.py test"
 
       - name: Pepare wheel for upload
         if: matrix.os.matrix == 'linux'
@@ -116,8 +118,8 @@ jobs:
            sudo ls -lh ./dist/* 
            sudo mv -v ./dist/"zstd-${{matrix.os.version}}-${{matrix.os.pyengine_tag}}-linux_${{matrix.os.tag_arch}}.whl" ./dist/"zstd-${{matrix.os.version}}-${{matrix.os.pyengine_tag}}-${{matrix.os.libc_tag}}_${{matrix.os.tag_arch}}.whl"
            sudo rm -vf ./dist/*.tar.gz
-      
-            
+
+
 #      - name: Upload artifacts
 #        uses: actions/upload-artifact@v4
 #        with:
