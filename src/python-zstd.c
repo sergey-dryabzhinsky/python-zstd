@@ -266,7 +266,7 @@ static PyObject *py_zstd_check(PyObject* self, PyObject *args)
 		dest_size += frame_size;
 	}
     if (dest_size>=source_size)
-        Py_BuildValue("i", 0);
+        return Py_BuildValue("i", 0);
     return Py_BuildValue("i", 1);
 }
 
