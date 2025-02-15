@@ -1,4 +1,4 @@
-name: Build wheels for CPython3.12 x86 on Ububntu16
+name: Build wheels for CPython3.12 x86 on Ubuntu16
 
 on: [push, pull_request]
 
