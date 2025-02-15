@@ -27,7 +27,7 @@ jobs:
             pypkg: python3.8
             pypkgadd: python3.8-distutils
             pyengine_tag: cp38-cp38
-            libc_tag: manylinux_2_17
+            libc_tag: manylinux_2_4
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
