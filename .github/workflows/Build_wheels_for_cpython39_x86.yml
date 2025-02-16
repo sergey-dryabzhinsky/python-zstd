@@ -21,7 +21,7 @@ jobs:
             tag_arch: i686
             release: xenial
             mirror: http://azure.archive.ubuntu.com/ubuntu
-            version: 1.5.6.3
+            version: 1.5.6.4
             pyver: "3.9"
             getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
             pypkg: python3.9
