@@ -233,7 +233,7 @@ static PyObject *py_zstd_check(PyObject* self, PyObject *args)
     //PyObject    *result;
     const char  *source, *src;
     Py_ssize_t  source_size, ss, seek_frame;
-    uint64_t    dest_size, frame_size;
+    int64_t    dest_size, frame_size;
     //char        error = 0;
     //size_t      cSize;
 
@@ -245,7 +245,7 @@ static PyObject *py_zstd_check(PyObject* self, PyObject *args)
         return NULL;
 #endif
 
-    dest_size = (uint64_t) ZSTD_getFrameContentSize(source, source_size);
+    dest_size = (int64_t) ZSTD_getFrameContentSize(source, source_size);
     if (dest_size == ZSTD_CONTENTSIZE_UNKNOWN || dest_size == ZSTD_CONTENTSIZE_ERROR) {
         //PyErr_Format(ZstdError, "Input data invalid or missing content size in frame header.");
         return Py_BuildValue("i", 0);
@@ -261,7 +261,7 @@ static PyObject *py_zstd_check(PyObject* self, PyObject *args)
 		src += seek_frame;
 		ss -= seek_frame;
 		if (ss <=0) break;
-		frame_size = (uint64_t) ZSTD_getFrameContentSize(src, ss);
+		frame_size = (int64_t) ZSTD_getFrameContentSize(src, ss);
 		if (ZSTD_isError(frame_size)) break;
 		dest_size += frame_size;
 	}
