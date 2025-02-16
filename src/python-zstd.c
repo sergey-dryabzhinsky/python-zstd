@@ -1,6 +1,6 @@
 /*
  * ZSTD Library Python bindings
- * Copyright (c) 2015-2020, Sergey Dryabzhinsky
+ * Copyright (c) 2015-2025, Sergey Dryabzhinsky
  * All rights reserved.
  *
  * BSD License
@@ -195,7 +195,7 @@ static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args)
         Py_END_ALLOW_THREADS
 
         if (ZSTD_isError(cSize)) {
-			const char *errStr = ZSTD_getErrorName(cSize);
+	        const char *errStr = ZSTD_getErrorName(cSize);
 /*			if (strstr(errStr, "buffer is too small") != NULL) {
 				// reroll decompression with bigger buffer
 				error = 2;
@@ -248,7 +248,7 @@ static PyObject *py_zstd_check(PyObject* self, PyObject *args)
     dest_size = (uint64_t) ZSTD_getFrameContentSize(source, source_size);
     if (dest_size == ZSTD_CONTENTSIZE_UNKNOWN || dest_size == ZSTD_CONTENTSIZE_ERROR) {
         //PyErr_Format(ZstdError, "Input data invalid or missing content size in frame header.");
-        return Py_BuildValue("i", 0);
+        return Py_BuildValue("i", -2);
     }
 
 	// Find real dest_size across multiple frames
