@@ -267,8 +267,8 @@ static PyObject *py_zstd_check(PyObject* self, PyObject *args)
 	}
     }
     if (error) return Py_BuildValue("i", -1);
-    if (ss<=0)
-        return Py_BuildValue("i", 0);
+    /*if (ss<=0)
+        return Py_BuildValue("i", 0);*/
     return Py_BuildValue("i", 1);
 }
 
