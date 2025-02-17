@@ -22,7 +22,7 @@ jobs:
             release: xenial
             mirror: http://azure.archive.ubuntu.com/ubuntu
             version: 1.5.6.4
-            pyver: "3.6"
+            #pyver: "3.6"
             getpipurl: https://bootstrap.pypa.io/pip/3.6/get-pip.py
             pypkg: python3.6
             pypkgadd: python3.6-distutils
@@ -48,7 +48,7 @@ jobs:
       - name: Build source distribution with Ubuntu
         if: matrix.os.matrix == 'linux'
         run: |
-          sudo apt install -y devscripts debootstrap qemu-user;
+          sudo apt install -y debootstrap qemu-user;
           pip install build;
           python -m build --sdist --outdir dist .
          
@@ -100,12 +100,12 @@ jobs:
           sudo tar -xvf dist/zstd-${{matrix.os.version}}.tar.gz -C ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/
           false && sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} env 
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} pkg-config libzstd --modversion 
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}} && ZSTD_ASM=1 _ZSTD_ASM_BMI2=1 ZSTD_THREADS=1 _ZSTD_EXTERNAL=0 python${{matrix.os.pyver}} setup.py bdist_wheel clean"
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}} && ZSTD_ASM=1 _ZSTD_ASM_BMI2=1 ZSTD_THREADS=1 _ZSTD_EXTERNAL=0 ${{matrix.os.pypkg}} setup.py bdist_wheel"
 
       - name: Test wheel for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
         run: |
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}} && python${{matrix.os.pyver}} setup.py test"
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}} && ${{matrix.os.pypkg}} setup.py test"
 
       - name: Pepare wheel for upload
         if: matrix.os.matrix == 'linux'
@@ -113,16 +113,7 @@ jobs:
            sudo cp -v ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/zstd-${{matrix.os.version}}/dist/* ./dist
            sudo ls -lh ./dist/* 
            sudo mv -v ./dist/"zstd-${{matrix.os.version}}-${{matrix.os.pyengine_tag}}-linux_${{matrix.os.tag_arch}}.whl" ./dist/"zstd-${{matrix.os.version}}-${{matrix.os.pyengine_tag}}-${{matrix.os.libc_tag}}_${{matrix.os.tag_arch}}.whl"
-           false && sudo rm -vf ./dist/*.tar.gz
-
-
-#      - name: Upload artifacts
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: wheels
-#.         path: ./dist
-#          compression-level: 0
-          
+ 
       - name: Test for secrets access
         id: check_secrets
         # If a third party makes a pull request
