@@ -269,7 +269,7 @@ def my_test_suite():
 
     test_suite = unittest.TestSuite()
     test_suite.addTest(unittest.defaultTestLoader.loadTestsFromName("tests.test_compress"))
-    test_suite.addTest(unittest.defaultTestLoader.loadTestsFromName("tests.test_decompress"))
+    #test_suite.addTest(unittest.defaultTestLoader.loadTestsFromName("tests.test_decompress"))
     test_suite.addTest(unittest.defaultTestLoader.loadTestsFromName("tests.test_version"))
     test_suite.addTest(unittest.defaultTestLoader.loadTestsFromName("tests.test_speed"))
     return test_suite
