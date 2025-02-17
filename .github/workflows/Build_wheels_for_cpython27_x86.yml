@@ -117,6 +117,7 @@ jobs:
            sudo ls -lh ./dist/* 
            sudo mv -v ./dist/"zstd-${{matrix.os.version}}-${{matrix.os.pyengine_tag}}-linux_${{matrix.os.tag_arch}}.whl" ./dist/"zstd-${{matrix.os.version}}-${{matrix.os.pyengine_tag}}-${{matrix.os.libc_tag}}_${{matrix.os.tag_arch}}.whl"
            false && sudo rm -vf ./dist/*.tar.gz
+           true
 
 #      - name: Upload artifacts
 #        uses: actions/upload-artifact@v4
