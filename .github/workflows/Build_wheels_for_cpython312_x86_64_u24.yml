@@ -21,11 +21,11 @@ jobs:
             tag_arch: x86_64
             release: noble
             mirror: http://azure.archive.ubuntu.com/ubuntu
-            version: 1.5.6.3
+            version: 1.5.6.4
             # pyver: "3.7"
             getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
             pypkg: python3.12
-            pypkgadd: python3.12-distutils
+            #pypkgadd: python3.12-distutils
             pyengine_tag: cp312-cp312
             libc_tag: manylinux_2_34
     steps:
@@ -90,8 +90,9 @@ jobs:
         if: matrix.os.matrix == 'linux'
         run: |
            sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt install -y ${{matrix.os.pypkg}}-dev gcc pkg-config ${{matrix.os.pypkgadd}}
-           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "wget ${{matrix.os.getpipurl}} -O get-pip.py && ${{matrix.os.pypkg}} get-pip.py || true"
+           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "wget ${{matrix.os.getpipurl}} -O get-pip.py && ${{matrix.os.pypkg}} get-pip.py --break-system-packages || true 
            sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "${{matrix.os.pypkg}} -m pip install -U 'setuptools<72.0'" 
+           
                     
       - name: Pepare source and build wheel for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
@@ -117,7 +118,7 @@ jobs:
            sudo cp -v ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/zstd-${{matrix.os.version}}/dist/* ./dist
            sudo ls -lh ./dist/* 
            sudo mv -v ./dist/"zstd-${{matrix.os.version}}-${{matrix.os.pyengine_tag}}-linux_${{matrix.os.tag_arch}}.whl" ./dist/"zstd-${{matrix.os.version}}-${{matrix.os.pyengine_tag}}-${{matrix.os.libc_tag}}_${{matrix.os.tag_arch}}.whl"
-           sudo rm -vf ./dist/*.tar.gz
+           false && sudo rm -vf ./dist/*.tar.gz
 
 
 #      - name: Upload artifacts

@@ -21,7 +21,7 @@ jobs:
             tag_arch: x86_64
             release: xenial
             mirror: http://azure.archive.ubuntu.com/ubuntu
-            version: 1.5.6.3
+            version: 1.5.6.4
             pyver: "3.6"
             getpipurl: https://bootstrap.pypa.io/pip/3.6/get-pip.py
             pypkg: python3.6
@@ -113,7 +113,7 @@ jobs:
            sudo cp -v ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/zstd-${{matrix.os.version}}/dist/* ./dist
            sudo ls -lh ./dist/* 
            sudo mv -v ./dist/"zstd-${{matrix.os.version}}-${{matrix.os.pyengine_tag}}-linux_${{matrix.os.tag_arch}}.whl" ./dist/"zstd-${{matrix.os.version}}-${{matrix.os.pyengine_tag}}-${{matrix.os.libc_tag}}_${{matrix.os.tag_arch}}.whl"
-           sudo rm -vf ./dist/*.tar.gz
+           false && sudo rm -vf ./dist/*.tar.gz
 
 
 #      - name: Upload artifacts

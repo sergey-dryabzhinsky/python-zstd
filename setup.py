@@ -133,7 +133,7 @@ if platform.system() == "Linux" and "build_ext" in sys.argv or "build" in sys.ar
 # Package version, even external 
 PKG_VERSION = VERSION
 # Minor revision 
-PKG_VERSION += ("3",)
+PKG_VERSION += ("4",)
 PKG_VERSION_STR = ".".join([str(x) for x in PKG_VERSION])
 
 

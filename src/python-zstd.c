@@ -1,6 +1,6 @@
 /*
  * ZSTD Library Python bindings
- * Copyright (c) 2015-2020, Sergey Dryabzhinsky
+ * Copyright (c) 2015-2025, Sergey Dryabzhinsky
  * All rights reserved.
  *
  * BSD License
@@ -195,7 +195,7 @@ static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args)
         Py_END_ALLOW_THREADS
 
         if (ZSTD_isError(cSize)) {
-			const char *errStr = ZSTD_getErrorName(cSize);
+	        const char *errStr = ZSTD_getErrorName(cSize);
 /*			if (strstr(errStr, "buffer is too small") != NULL) {
 				// reroll decompression with bigger buffer
 				error = 2;
@@ -233,7 +233,7 @@ static PyObject *py_zstd_check(PyObject* self, PyObject *args)
     //PyObject    *result;
     const char  *source, *src;
     Py_ssize_t  source_size, ss, seek_frame;
-    uint64_t    dest_size, frame_size;
+    int64_t    dest_size, frame_size, error=0;
     //char        error = 0;
     //size_t      cSize;
 
@@ -249,7 +249,7 @@ static PyObject *py_zstd_check(PyObject* self, PyObject *args)
     if (dest_size == ZSTD_CONTENTSIZE_UNKNOWN || dest_size == ZSTD_CONTENTSIZE_ERROR) {
         //PyErr_Format(ZstdError, "Input data invalid or missing content size in frame header.");
         return Py_BuildValue("i", 0);
-    }
+    } else {
 
 	// Find real dest_size across multiple frames
 	ss = source_size;
@@ -257,16 +257,18 @@ static PyObject *py_zstd_check(PyObject* self, PyObject *args)
 	src = source;
 	while (seek_frame < ss) {
 		seek_frame = ZSTD_findFrameCompressedSize(src, ss);
-		if (ZSTD_isError(seek_frame)) break;
+		if (ZSTD_isError(seek_frame)) { error=1; break;}
 		src += seek_frame;
 		ss -= seek_frame;
 		if (ss <=0) break;
 		frame_size = (uint64_t) ZSTD_getFrameContentSize(src, ss);
-		if (ZSTD_isError(frame_size)) break;
+		if (ZSTD_isError(frame_size)) { error=1; break;}
 		dest_size += frame_size;
 	}
-    if (dest_size>=source_size)
-        return Py_BuildValue("i", 0);
+    }
+    if (error) return Py_BuildValue("i", -1);
+    /*if (ss<=0)
+        return Py_BuildValue("i", 0);*/
     return Py_BuildValue("i", 1);
 }
 
