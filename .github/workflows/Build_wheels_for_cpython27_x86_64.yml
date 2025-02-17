@@ -47,7 +47,7 @@ jobs:
       - name: Build source distribution with Ubuntu
         if: matrix.os.matrix == 'linux'
         run: |
-          sudo apt install -y devscripts debootstrap qemu-user;
+          sudo apt install -y  debootstrap qemu-user;
           pip install build;
           python -m build --sdist --outdir dist .
          
