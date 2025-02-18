@@ -323,7 +323,7 @@ ZSTD_uncompress (data): string|bytes
   Since: 0.1
 
 ZSTD_check (data): int
-  Function, checks if input is zstd compressed data block, returns 1 if yes, 0 if no, or raises Error.
+  Function, checks if input is zstd compressed data block, returns 1 if yes, 0 if no.
 
   Support compressed data with multiple/concatenated frames (blocks) .
 
@@ -341,7 +341,7 @@ version (): string|bytes
   Returns this module doted version string.
 
   The first three digits are folow libzstd version.
-  Fourth digit - module release number for that version.
+  Fourth digit - module revision number for that version.
 
   Since: 1.3.4.3
 
