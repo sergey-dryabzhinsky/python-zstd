@@ -27,6 +27,12 @@ if "--legacy" in sys.argv:
     SUP_LEGACY=True
     sys.argv.remove("--legacy")
 
+SUP_WARNINGS="ZSTD_WARNINGS" in os.environ
+if "--all--warnings" in sys.argv:
+    # Support legacy output format functions
+    SUP_WARNINGS=True
+    sys.argv.remove("--all-warnings")
+
 SUP_ASM="ZSTD_ASM" in os.environ
 if "ZSTD_ASM" not in os.environ:
     SUP_ASM = True 
@@ -192,6 +198,13 @@ if SUP_LEGACY:
         else:
             COPT[comp].extend(['-Izstd/lib/legacy', '-DZSTD_LEGACY_SUPPORT=1'])
 
+if SUP_WARNINGS:
+    for comp in COPT:
+        if comp == 'msvc':
+            COPT[comp].extend(['/Wall', '/WX'])
+        else:
+            COPT[comp].extend(['-Wall', '-Wextra', '-Werror'])
+            
 # Force traceing support or disable
 if SUP_TRACE:
     for comp in COPT:
