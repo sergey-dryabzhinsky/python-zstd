@@ -281,6 +281,7 @@ static PyObject *py_zstd_check(PyObject* self, PyObject *args)
 static PyObject *py_zstd_module_version(PyObject* self, PyObject *args)
 {
     UNUSED(self);
+    UNUSED(args);
 
 #if PY_MAJOR_VERSION >= 3
     return PyUnicode_FromFormat("%s", xstr(VERSION));
@@ -295,6 +296,7 @@ static PyObject *py_zstd_module_version(PyObject* self, PyObject *args)
 static PyObject *py_zstd_library_version(PyObject* self, PyObject *args)
 {
      UNUSED(self);
+     UNUSED(args);
 	
 #if PY_MAJOR_VERSION >= 3
     return PyUnicode_FromFormat("%s", ZSTD_versionString());
@@ -309,6 +311,7 @@ static PyObject *py_zstd_library_version(PyObject* self, PyObject *args)
 static PyObject *py_zstd_library_version_int(PyObject* self, PyObject *args)
 {
     UNUSED(self);
+    UNUSED(args);
 
     return Py_BuildValue("i", ZSTD_VERSION_NUMBER);
 }
@@ -319,6 +322,7 @@ static PyObject *py_zstd_library_version_int(PyObject* self, PyObject *args)
 static PyObject *py_zstd_library_legacy_format_support(PyObject* self, PyObject *args)
 {
     UNUSED(self);
+    UNUSED(args);
 
     return Py_BuildValue("i", ZSTD_LEGACY_SUPPORT);
 }
@@ -329,6 +333,7 @@ static PyObject *py_zstd_library_legacy_format_support(PyObject* self, PyObject 
 static PyObject *py_zstd_library_external(PyObject* self, PyObject *args)
 {
     UNUSED(self);
+    UNUSED(args);
 
     return Py_BuildValue("i", LIBZSTD_EXTERNAL);
 }
@@ -340,6 +345,7 @@ static PyObject *py_zstd_library_external(PyObject* self, PyObject *args)
 static PyObject *py_zstd_with_threads(PyObject* self, PyObject *args)
 {
     UNUSED(self);
+    UNUSED(args);
 
     return Py_BuildValue("i", ZSTD_MULTITHREAD);
 }
@@ -351,6 +357,7 @@ static PyObject *py_zstd_with_threads(PyObject* self, PyObject *args)
 static PyObject *py_zstd_with_asm(PyObject* self, PyObject *args)
 {
     UNUSED(self);
+    UNUSED(args);
 
     return Py_BuildValue("i", ! ZSTD_DISABLE_ASM);
 }
@@ -363,6 +370,7 @@ static PyObject *py_zstd_with_asm(PyObject* self, PyObject *args)
 static PyObject *py_zstd_threads_count(PyObject* self, PyObject *args)
 {
     UNUSED(self);
+    UNUSED(args);
 
     int32_t threads = UTIL_countPhysicalCores();
 
@@ -375,6 +383,7 @@ static PyObject *py_zstd_threads_count(PyObject* self, PyObject *args)
 static PyObject *py_zstd_max_threads_count(PyObject* self, PyObject *args)
 {
     UNUSED(self);
+    UNUSED(args);
 
     return Py_BuildValue("i", ZSTDMT_NBWORKERS_MAX);
 }
@@ -385,6 +394,7 @@ static PyObject *py_zstd_max_threads_count(PyObject* self, PyObject *args)
 static PyObject *py_zstd_min_compression_level(PyObject* self, PyObject *args)
 {
     UNUSED(self);
+    UNUSED(args);
 
     return Py_BuildValue("i", ZSTD_MIN_CLEVEL);
 }
@@ -395,6 +405,7 @@ static PyObject *py_zstd_min_compression_level(PyObject* self, PyObject *args)
 static PyObject *py_zstd_max_compression_level(PyObject* self, PyObject *args)
 {
     UNUSED(self);
+    UNUSED(args);
 
     return Py_BuildValue("i", ZSTD_MAX_CLEVEL);
 }
