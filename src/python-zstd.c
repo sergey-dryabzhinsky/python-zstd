@@ -54,6 +54,7 @@
 static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args)
 {
     UNUSED(self);
+    
     PyObject *result;
     const char *source;
     Py_ssize_t source_size;
