@@ -32,6 +32,7 @@
 #ifndef _PYTHON_ZSTD_H_
 #define _PYTHON_ZSTD_H_
 
+#define UNUSED(x)  (void)(x)
 
 #include "Python.h"
 
