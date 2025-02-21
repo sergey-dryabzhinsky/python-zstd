@@ -236,7 +236,7 @@ static PyObject *py_zstd_check(PyObject* self, PyObject *args)
     //PyObject    *result;
     const char  *source, *src;
     Py_ssize_t  source_size, ss, seek_frame;
-    int64_t    dest_size, frame_size, error=0;
+    uint64_t    dest_size, frame_size, error=0;
     //char        error = 0;
     //size_t      cSize;
 
