@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os
+import shutil
 import sys
 
 #debug
@@ -85,12 +86,18 @@ if "--external" in sys.argv:
     SUP_EXTERNAL=True
     sys.argv.remove("--external")
 
-pkgconf = "/usr/bin/pkg-config"
+try:
+    # shutil.which available >=cpython3.3
+    pkgconf = shutil.which("pkg-config")
+except AttributeError:
+    # Try hardcoded path in older python as a backup
+    pkgconf = "/usr/bin/pkg-config" if os.path.exists("/usr/bin/pkg-config") else None
+
 if "--libzstd-bundled" in sys.argv:
     # Do you want use external Zstd library?
     SUP_EXTERNAL=False
     sys.argv.remove("--libzstd-bundled")
-    pkgconf = "/usr/bin/do-not-use-pkg-config"
+    pkgconf = None
     
 #if SUP_EXTERNAL:
 if platform.system() == "Linux" and "build_ext" in sys.argv or "build" in sys.argv or "bdist_wheel" in sys.argv:
@@ -98,7 +105,7 @@ if platform.system() == "Linux" and "build_ext" in sys.argv or "build" in sys.ar
     # And probably include paths by option: --include-dirs /usr/include/zstd
     # And probably library paths by option: --library-dirs /usr/lib/i386-linux-gnu
     # We need pkg-config here!
-    if os.path.exists(pkgconf):
+    if pkgconf is not None:
         #debug 
         #print("pkg-config exists")
         cmd = [pkgconf, "libzstd", "--modversion"]
