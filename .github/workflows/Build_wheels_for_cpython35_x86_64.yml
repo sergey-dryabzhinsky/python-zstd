@@ -1,4 +1,4 @@
-name: Build wheels for CPython3.5 x86_64
+name: Build wheels for CPython3.5 x86_64 on Ubuntu20
 
 on: [push, pull_request]
 
@@ -14,12 +14,12 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - name: Ubuntu 24+16 amd64 CPython 3.5
+          - name: Ubuntu 24+20 amd64 CPython 3.5
             runs-on: ubuntu-latest
             matrix: linux
             arch: amd64
             tag_arch: x86_64
-            release: xenial
+            release: focal
             mirror: http://azure.archive.ubuntu.com/ubuntu
             version: 1.5.6.4
             #pyver: "3.5"
@@ -54,7 +54,7 @@ jobs:
       - name: Debootstrap Ubuntu ${{matrix.os.release}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
         run: |
-          sudo debootstrap --no-merged-usr --verbose --include=sudo,wget,curl,ca-certificates --arch=${{matrix.os.arch}} ${{matrix.os.release}} ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} ${{matrix.os.mirror}} || tail ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/debootstrap/debootstrap.log
+          sudo debootstrap --no-merged-usr --verbose --include=sudo,wget,curl,gnupg,ca-certificates --arch=${{matrix.os.arch}} ${{matrix.os.release}} ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} ${{matrix.os.mirror}} || tail ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/debootstrap/debootstrap.log
      
       - name: Update and Upgrade Ubuntu ${{matrix.os.release}}
         if: matrix.os.matrix == 'linux'
