@@ -17,6 +17,23 @@ from setuptools.command.build_ext import build_ext
 VERSION = (1, 5, 6,)
 VERSION_STR = ".".join([str(x) for x in VERSION])
 
+
+def which(bin_exe):
+    """
+    Search executable in common paths
+
+    @return: False or full path to executable 
+    @rtype: str|bool
+    """
+    # support Linux / POSIX here? Or maybe windows?
+    paths = ["/usr/local/bin", "/usr/local/sbin", "/bin", "/sbin", "/usr/bin", "/usr/sbin"]
+    if "PATH" in os.environ:
+        paths = os.environ["PATH"].split(":")
+    for p in paths:
+        full_path = os.path.join(p, bin_exe)
+        if os.path.isfile(full_path) and os.access(full_path, os.X_OK):
+            return full_path
+    return False
 ###
 # Ugly hacks, I know
 #
@@ -85,12 +102,12 @@ if "--external" in sys.argv:
     SUP_EXTERNAL=True
     sys.argv.remove("--external")
 
-pkgconf = "/usr/bin/pkg-config"
+pkgconf = which("pkg-config")
 if "--libzstd-bundled" in sys.argv:
     # Do you want use external Zstd library?
     SUP_EXTERNAL=False
     sys.argv.remove("--libzstd-bundled")
-    pkgconf = "/usr/bin/do-not-use-pkg-config"
+    pkgconf = False
     
 #if SUP_EXTERNAL:
 if platform.system() == "Linux" and "build_ext" in sys.argv or "build" in sys.argv or "bdist_wheel" in sys.argv:
@@ -98,7 +115,7 @@ if platform.system() == "Linux" and "build_ext" in sys.argv or "build" in sys.ar
     # And probably include paths by option: --include-dirs /usr/include/zstd
     # And probably library paths by option: --library-dirs /usr/lib/i386-linux-gnu
     # We need pkg-config here!
-    if os.path.exists(pkgconf):
+    if pkgconf is not False:
         #debug 
         #print("pkg-config exists")
         cmd = [pkgconf, "libzstd", "--modversion"]
