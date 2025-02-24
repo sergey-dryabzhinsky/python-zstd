@@ -20,7 +20,9 @@ VERSION_STR = ".".join([str(x) for x in VERSION])
 
 def which(bin_exe):
     """
-    Search executable in common paths
+    Simulate shutil.which for python 2.7,
+    which available only since python 3.3.
+    Search executable in common paths.
 
     @return: False or full path to executable 
     @rtype: str|bool
