@@ -1,4 +1,4 @@
-name: Build wheels for CPython3.14 x86_64 on Ubuntu24
+name: Build wheels for CPython3.14 x86_64 on Ubuntu24 with warnings
 
 on: [push, pull_request]
 
