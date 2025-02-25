@@ -114,7 +114,7 @@ jobs:
           echo OS-RELEASE; cat /etc/os-release;
           echo CPU-FLAGS; grep flags /proc/cpuinfo
           sudo apt purge -y firefox snapd;
-          sudo apt update; apt list --upgradable; sudo apt upgrade -y;
+          false && sudo apt update; apt list --upgradable; false && sudo apt upgrade -y;
           sudo apt install -y libzstd-dev;
           echo PKG-CONFIG;
           which pkg-config;
@@ -138,7 +138,7 @@ jobs:
           CIBW_MUSLLINUX_I686_IMAGE: musllinux_1_2
           CIBW_MUSLLINUX_X86_64_IMAGE: musllinux_1_2
           # Only build on x86 and arm64 for linux
-          CIBW_ARCHS_LINUX: i686 x86_64
+          CIBW_ARCHS_LINUX: i686 x86_64 aarch64 armv7l
           CIBW_BEFORE_ALL_LINUX: >
             python -m pip install --upgrade pip;
           # CIBW_ARCHS_MACOS: x86_64 arm64 universal2
@@ -176,7 +176,7 @@ jobs:
             python -m pip install --upgrade pip
           # CIBW_ARCHS_MACOS: x86_64 arm64 universal2
           # Building two wheels for MacOS and skipping Universal
-          CIBW_ARCHS_MACOS: x86_64 arm64
+          CIBW_ARCHS_MACOS: x86_64 arm64 aarch64 armv7l
           # Skip testing Apple Silicon until there are GH runners
           CIBW_TEST_SKIP: '*_arm64 *_universal2:arm64'
           CIBW_BEFORE_ALL_MACOS: >
