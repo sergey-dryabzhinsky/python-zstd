@@ -260,42 +260,6 @@ jobs:
             getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
             pyengine_tag: cp311-cp311
             libc_tag: manylinux_2_19
-          - name: Ubuntu 24+18 armhf CPython 2.7
-            runs-on: ubuntu-latest
-            matrix: linux
-            arch: armhf
-            release: bionic
-            mirror: http://ports.ubuntu.com/ubuntu-ports
-            version: 1.5.6.3
-            pypkg: python2.7
-            pyver: "2.7"
-            getpipurl: https://bootstrap.pypa.io/pip/2.7/get-pip.py
-            pyengine_tag: cp27-cp27mu
-            libc_tag: manylinux_2_17
-          - name: Ubuntu 24+18 arm64 CPython 2.7
-            runs-on: ubuntu-latest
-            matrix: linux
-            arch: arm64
-            release: bionic 
-            mirror: http://ports.ubuntu.com/ubuntu-ports
-            version: 1.5.6.3
-            pypkg: python2.7
-            pyver: "2.7"
-            getpipurl: https://bootstrap.pypa.io/pip/2.7/get-pip.py
-            pyengine_tag: cp27-cp27mu
-            libc_tag: manylinux_2_17
-          - name: Ubuntu 24+20 riscv64 CPython 2.7
-            runs-on: ubuntu-latest
-            matrix: linux
-            arch: riscv64
-            release: focal 
-            mirror: http://ports.ubuntu.com/ubuntu-ports
-            version: 1.5.6.3
-            pypkg: python2.7
-            pyver: "2.7"
-            getpipurl: https://bootstrap.pypa.io/pip/2.7/get-pip.py
-            pyengine_tag: cp27-cp27mu
-            libc_tag: manylinux_2_19
      
     steps:
       - name: Checkout code
