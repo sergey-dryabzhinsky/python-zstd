@@ -228,7 +228,7 @@ if SUP_WARNINGS:
         if comp == 'msvc':
             COPT[comp].extend(['/Wall',])
         else:
-            COPT[comp].extend(['-Wall', '-Wextra', ])
+            COPT[comp].extend(['-Wall', '-Wextra', '-Wpedantic'])
 
 if SUP_WERROR:
     for comp in COPT:
