@@ -88,7 +88,7 @@ jobs:
       - name: Pepare for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
         run: |
-           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt install -y ${{matrix.os.pypkg}}-dev gcc clang-8 pkg-config ${{matrix.os.pypkgadd}}
+           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt install -y ${{matrix.os.pypkg}}-dev gcc clang-5.0 pkg-config ${{matrix.os.pypkgadd}}
            sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "wget ${{matrix.os.getpipurl}} -O get-pip.py && ${{matrix.os.pypkg}} get-pip.py"
            sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "${{matrix.os.pypkg}} -m pip install -U 'setuptools<72.0'" 
                     
@@ -104,7 +104,7 @@ jobs:
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} gcc -v
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} echo Clang
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} clang -v
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}} && ZSTD_ASM=1 CC=clang-8 _ZSTD_WARNINGS=1 _ZSTD_WERRORS=1 _ZSTD_SMALL=1 _ZSTD_ASM_BMI2=1 ZSTD_THREADS=1 _ZSTD_EXTERNAL=0 ${{matrix.os.pypkg}} setup.py bdist_wheel "
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}} && ZSTD_ASM=1 CC=clang-5.0 _ZSTD_WARNINGS=1 _ZSTD_WERRORS=1 _ZSTD_SMALL=1 _ZSTD_ASM_BMI2=1 ZSTD_THREADS=1 _ZSTD_EXTERNAL=0 ${{matrix.os.pypkg}} setup.py bdist_wheel "
 
       - name: Test wheel for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
