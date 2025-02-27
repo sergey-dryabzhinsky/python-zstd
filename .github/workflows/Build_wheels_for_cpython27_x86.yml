@@ -54,7 +54,7 @@ jobs:
       - name: Debootstrap Ubuntu ${{matrix.os.release}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
         run: |
-          sudo debootstrap --no-merged-usr --verbose --include=sudo,wget,curl,ca-certificates --arch=${{matrix.os.arch}} ${{matrix.os.release}} ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} ${{matrix.os.mirror}} || tail ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/debootstrap/debootstrap.log
+          sudo debootstrap --no-merged-usr --verbose --include=sudo,wget,curl,gnupg,apt-transport-https,ca-certificates --arch=${{matrix.os.arch}} ${{matrix.os.release}} ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} ${{matrix.os.mirror}} || tail ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/debootstrap/debootstrap.log
      
       - name: Update and Upgrade Ubuntu ${{matrix.os.release}}
         if: matrix.os.matrix == 'linux'
