@@ -274,6 +274,15 @@ When using a PEP 517 builder you can use ``ZSTD_WARNINGS`` environment variable 
 
    >>> $ ZSTD_WARNINGS=1 python -m build -w
 
+If you want to treat all warnings as errors just add ``--
+all-warnings-errors`` option
+
+   >>> $ python setup.py build_ext --all-warnings-errors clean
+
+When using a PEP 517 builder you can use ``ZSTD_WERRORS`` environment variable instead:
+
+   >>> $ ZSTD_WERRORS=1 python -m build -w
+
 Install from pypi
 -----------------
 
