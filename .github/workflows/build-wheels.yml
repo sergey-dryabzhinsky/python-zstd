@@ -189,9 +189,9 @@ jobs:
             python -m unittest discover -v -s {package}
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: wheels
+          name: wheels-v4
           path: ./dist
 
       - name: Test for secrets access
