@@ -52,7 +52,7 @@ if "--all-warnings" in sys.argv:
     SUP_WARNINGS=True
     sys.argv.remove("--all-warnings")
 
-SUP_WERROR="ZSTD_WERROR" in os.environ
+SUP_WERROR="ZSTD_WERRORS" in os.environ
 if "--all-warnings-errors" in sys.argv:
     # Support legacy output format functions
     SUP_WERROR=True
