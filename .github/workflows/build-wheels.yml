@@ -176,7 +176,7 @@ jobs:
             python -m pip install --upgrade pip
           # CIBW_ARCHS_MACOS: x86_64 arm64 universal2
           # Building two wheels for MacOS and skipping Universal
-          CIBW_ARCHS_MACOS: x86_64 arm64 aarch64 armv7l
+          CIBW_ARCHS_MACOS: x86_64 arm64
           # Skip testing Apple Silicon until there are GH runners
           CIBW_TEST_SKIP: '*_arm64 *_universal2:arm64'
           CIBW_BEFORE_ALL_MACOS: >
@@ -191,7 +191,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: wheels-v4-${{matrix.os.name}}
+          name: wheels-v4-${{matrix.os.name}}-${{matrix.cibw.build}}
           path: ./dist
 
       - name: Test for secrets access
