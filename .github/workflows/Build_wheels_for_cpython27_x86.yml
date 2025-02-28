@@ -1,4 +1,4 @@
-name: Build wheels for CPython2.7 x86 with Clang not All warnings errors
+name: Build wheels for CPython2.7 x86 with Clang-5 not All warnings errors
 
 on: [push, pull_request]
 
