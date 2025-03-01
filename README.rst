@@ -26,14 +26,14 @@ python-zstd
 .. |cpython35x86| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython35_x86.yml/badge.svg
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython35_x86.yml
 
-.. |cpython35x64| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython35_x86_64.yml/badge.svg
-    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython35_x86_64.yml
+.. |cpython35x64| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython35_x86_64_u20.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython35_x86_64_u20.yml
 
 .. |cpython36x86| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython36_x86.yml/badge.svg
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython36_x86.yml
 
-.. |cpython36x64| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython36_x86_64.yml/badge.svg
-    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython36_x86_64.yml
+.. |cpython36x64| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython36_x86_64_u20.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython36_x86_64_u20.yml
 
 .. |cpython37x86| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython37_x86.yml/badge.svg
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython37_x86.yml
@@ -273,6 +273,15 @@ all-warnings`` option
 When using a PEP 517 builder you can use ``ZSTD_WARNINGS`` environment variable instead:
 
    >>> $ ZSTD_WARNINGS=1 python -m build -w
+
+If you want to treat all warnings as errors just add ``--
+all-warnings-errors`` option
+
+   >>> $ python setup.py build_ext --all-warnings-errors clean
+
+When using a PEP 517 builder you can use ``ZSTD_WERRORS`` environment variable instead:
+
+   >>> $ ZSTD_WERRORS=1 python -m build -w
 
 Install from pypi
 -----------------

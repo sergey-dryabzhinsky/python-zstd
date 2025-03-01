@@ -47,11 +47,17 @@ if "--legacy" in sys.argv:
     sys.argv.remove("--legacy")
 
 SUP_WARNINGS="ZSTD_WARNINGS" in os.environ
-if "--all--warnings" in sys.argv:
+if "--all-warnings" in sys.argv:
     # Support legacy output format functions
     SUP_WARNINGS=True
     sys.argv.remove("--all-warnings")
 
+SUP_WERROR="ZSTD_WERRORS" in os.environ
+if "--all-warnings-errors" in sys.argv:
+    # Support legacy output format functions
+    SUP_WERROR=True
+    sys.argv.remove("--all-warnings-errors")
+    
 SUP_ASM="ZSTD_ASM" in os.environ
 if "ZSTD_ASM" not in os.environ:
     SUP_ASM = True 
@@ -220,9 +226,16 @@ if SUP_LEGACY:
 if SUP_WARNINGS:
     for comp in COPT:
         if comp == 'msvc':
-            COPT[comp].extend(['/Wall', '/WX'])
+            COPT[comp].extend(['/Wall',])
         else:
-            COPT[comp].extend(['-Wall', '-Wextra', '-Werror'])
+            COPT[comp].extend(['-Wall', '-Wextra', '-Wpedantic'])
+
+if SUP_WERROR:
+    for comp in COPT:
+        if comp == 'msvc':
+            COPT[comp].extend(['//WX'])
+        else:
+            COPT[comp].extend(['-Werror'])
             
 # Force traceing support or disable
 if SUP_TRACE:
