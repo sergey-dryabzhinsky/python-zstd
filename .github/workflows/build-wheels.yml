@@ -208,7 +208,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: wheels-v4-${{matrix.os.matric}}-${{matrix.cibw.code}}-${{matrix.cibw.group}}
+          name: wheels-v4-${{matrix.os.matrix}}-${{matrix.cibw.code}}-${{matrix.cibw.group}}
           path: ./dist
 
       - name: Test for secrets access
