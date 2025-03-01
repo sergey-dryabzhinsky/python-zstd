@@ -33,38 +33,55 @@ jobs:
           # build just supported python versions at May 2023
           - build: cp27-*
             group: old
+            code: CPython2.7
           - build: cp35-*
             group: old
+            code: CPython3.5
           - build: cp36-*
             group: old
+            code: CPython3.6
           - build: pp27-*
             group: old
+            code: PyPy2.7
           - build: pp36-*
             group: old
+            code: PyPy3.6
           - build: cp37-*
             group: new
+            code: CPython3.7
           - build: cp38-*
             group: new
+            code: CPython3.8
           - build: cp39-*
             group: new
+            code: CPython3.9
           - build: cp310-*
             group: new
+            code: CPython3.10
           - build: cp311-*
             group: new
+            code: CPython3.11
           - build: cp312-*
             group: new
+            code: CPython3.12
           - build: cp313-*
             group: new
+            code: CPython3.13
           - build: pp27-*
             group: old
+            code: PyPy2.7
           - build: pp37-*
             group: new
+            code: PyPy3.7
           - build: pp38-*
             group: new
+            code: PyPy3.8
           - build: pp39-*
             group: new
+            code: PyPy3.9
           - build: pp310-*
             group: new
+            code: PyPy3.10
         exclude:
           - os:
               matrix: windows
@@ -191,7 +208,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: wheels-v4-${{matrix.os.name}}-${{matrix.cibw.build}}
+          name: wheels-v4-${{matrix.os.matric}}-${{matrix.cibw.code}}-${{matrix.cibw.group}}
           path: ./dist
 
       - name: Test for secrets access
@@ -212,7 +229,7 @@ jobs:
           SECRET_TEST: "${{ secrets.test_pypi_password }}"
 
       - name: Install twine
-        run: pip install twine
+        run: pip install twine==6.0.1
 
       - name: Publish distribution to PyPI
         if: >
