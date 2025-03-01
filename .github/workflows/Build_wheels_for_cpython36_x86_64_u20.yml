@@ -27,7 +27,7 @@ jobs:
             pypkg: python3.6
             pypkgadd: python3.6-distutils
             pyengine_tag: cp36-cp36m
-            libc_tag: manylinux_2_4
+            libc_tag: manylinux_2_14
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
