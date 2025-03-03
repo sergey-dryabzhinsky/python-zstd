@@ -2,7 +2,7 @@
 python-zstd
 =============
 
-.. |releaseW| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg?tag=v1.5.6.5
+.. |releaseW| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg?tag=v1.5.6.6
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml
 
 .. |masterW| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg
@@ -127,7 +127,7 @@ python-zstd
 | cpython 3.14 x64 u24 | |cpython314x64u20|  |
 +----------------------+---------------------+
 | Release              | |releaseW|          |
-| 1.5.6.5              |                     |
+| 1.5.6.6              |                     |
 +----------------------+---------------------+
 | Master               | |masterW|           |
 +----------------------+---------------------+
