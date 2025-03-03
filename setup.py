@@ -18,6 +18,13 @@ VERSION = (1, 5, 6,)
 VERSION_STR = ".".join([str(x) for x in VERSION])
 
 
+# Package version, even external 
+PKG_VERSION = VERSION
+# Minor revision 
+PKG_VERSION += ("6",)
+PKG_VERSION_STR = ".".join([str(x) for x in PKG_VERSION])
+
+
 def which(bin_exe):
     """
     Simulate shutil.which for python 2.7,
@@ -159,13 +166,6 @@ if platform.system() == "Linux" and "build_ext" in sys.argv or "build" in sys.ar
             raise RuntimeError("Need pkg-config to find system libzstd.")
         print("\n Need pkg-config to find system libzstd. Or we try bundled one.")
 
-
-
-# Package version, even external 
-PKG_VERSION = VERSION
-# Minor revision 
-PKG_VERSION += ("5",)
-PKG_VERSION_STR = ".".join([str(x) for x in PKG_VERSION])
 
 
 if BUILD_SMALL:
