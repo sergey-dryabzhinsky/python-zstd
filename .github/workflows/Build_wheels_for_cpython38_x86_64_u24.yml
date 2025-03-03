@@ -1,4 +1,4 @@
-name: Build wheels for CPython3.8 x86_64 on Ubuntu24
+name: Build wheels for CPython3.8 x86_64 on Ubuntu20
 
 on: [push, pull_request]
 
@@ -14,7 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - name: Ubuntu 24 amd64 CPython 3.8
+          - name: Ubuntu 20 amd64 CPython 3.8
             runs-on: ubuntu-latest
             matrix: linux
             arch: amd64
@@ -27,7 +27,7 @@ jobs:
             pypkg: python3.8
             pypkgadd: python3.8-distutils
             pyengine_tag: cp38-cp38
-            libc_tag: manylinux_2_34
+            libc_tag: manylinux_2_14
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

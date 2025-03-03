@@ -1,4 +1,4 @@
-name: Build wheels for CPython3.12 x86_64 on Ubuntu24 with GCC All warnings
+name: Build wheels for CPython3.12 x86_64 on Ubuntu20 with GCC All warnings
 
 on: [push, pull_request]
 
@@ -25,9 +25,9 @@ jobs:
             # pyver: "3.7"
             getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
             pypkg: python3.12
-            pypkgadd: python3.12-full
+           # pypkgadd: python3.12-full
             pyengine_tag: cp312-cp312
-            libc_tag: manylinux_2_34
+            libc_tag: manylinux_2_14
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

@@ -206,11 +206,13 @@ static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args)
             	error = 1;
 //			}
         } else if (cSize != dest_size) {
-		if (sizeof(uint64_t)==sizeof(unsigned long)) {
-			PyErr_Format(ZstdError, "Decompression error: length mismatch -> decomp %lu != %lu [header]", (uint64_t)cSize,  (uint64_t)dest_size);
-		} else {
-                        PyErr_Format(ZstdError, "Decompression error: length mismatch -> decomp %llu != %llu [header]", (uint64_t)cSize,  (uint64_t)dest_size);
-		}
+		//if (sizeof(uint64_t)==sizeof(unsigned long)) {
+			PyErr_Format(ZstdError, "Decompression error: length mismatch -> decomp %lu != %lu [header]", (unsigned long)cSize,  (unsigned long)dest_size);
+		//} 
+		//else if (sizeof(uint64_t)==sizeof(unsigned long long))
+		//{ //unsigned long long?! x86?!
+                //        PyErr_Format(ZstdError, "Decompression error: length mismatch -> decomp %llu != %llu [header]", (uint64_t)cSize,  (uint64_t)dest_size);
+		//}
             error = 1;
         }
     } else {
