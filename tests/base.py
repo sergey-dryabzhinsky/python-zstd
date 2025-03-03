@@ -54,11 +54,11 @@ class BaseTestZSTD(unittest.TestCase):
     VERSION = "1.5.6"
     VERSION_INT = 10506
     VERSION_INT_MIN = 1 * 100*100 + 0 * 1*100 + 0
-    PKG_VERSION = "1.5.6.5"
+    PKG_VERSION = "1.5.6.6"
 
     def helper_version(self):
-        if zstd.ZSTD_external():
-            return raise_skip("PyZstd was build with external version of ZSTD library, so module is like (%s). It can be any version. Almost." % zstd.version())
+        #if zstd.ZSTD_external():
+        #    return raise_skip("PyZstd was build with external version of ZSTD library, so module is like (%s). It can be any version. Almost." % zstd.version())
         self.assertEqual(self.PKG_VERSION, zstd.version())
 
     def helper_zstd_version(self):
