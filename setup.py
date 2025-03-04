@@ -18,6 +18,13 @@ VERSION = (1, 5, 6,)
 VERSION_STR = ".".join([str(x) for x in VERSION])
 
 
+# Package version, even external 
+PKG_VERSION = VERSION
+# Minor revision 
+PKG_VERSION += ("6",)
+PKG_VERSION_STR = ".".join([str(x) for x in PKG_VERSION])
+
+
 def which(bin_exe):
     """
     Simulate shutil.which for python 2.7,
@@ -143,6 +150,7 @@ if platform.system() == "Linux" and "build_ext" in sys.argv or "build" in sys.ar
         if sys.hexversion >= 0x03000000:
             # It's bytes in PY3
             VERSION_STR = VERSION_STR.decode()
+        #debug
         print("\nFound libzstd version %r" % VERSION_STR)
         if VERSION_STR and SUP_EXTERNAL:
             if VERSION_STR>="1.4.0":
@@ -152,20 +160,13 @@ if platform.system() == "Linux" and "build_ext" in sys.argv or "build" in sys.ar
                     ext_libraries=["zstd"]
             else:
                 raise RuntimeError("Need zstd library verion >= 1.4.0")
-            VERSION = tuple(int(v) for v in VERSION_STR.split("."))
+            #VERSION = tuple(int(v) for v in VERSION_STR.split("."))
     else:
         if SUP_EXTERNAL:
             # Require pkg config
             raise RuntimeError("Need pkg-config to find system libzstd.")
         print("\n Need pkg-config to find system libzstd. Or we try bundled one.")
 
-
-
-# Package version, even external 
-PKG_VERSION = VERSION
-# Minor revision 
-PKG_VERSION += ("5",)
-PKG_VERSION_STR = ".".join([str(x) for x in PKG_VERSION])
 
 
 if BUILD_SMALL:
