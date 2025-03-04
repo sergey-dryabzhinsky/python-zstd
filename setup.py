@@ -150,6 +150,7 @@ if platform.system() == "Linux" and "build_ext" in sys.argv or "build" in sys.ar
         if sys.hexversion >= 0x03000000:
             # It's bytes in PY3
             VERSION_STR = VERSION_STR.decode()
+        #debug
         print("\nFound libzstd version %r" % VERSION_STR)
         if VERSION_STR and SUP_EXTERNAL:
             if VERSION_STR>="1.4.0":
@@ -159,7 +160,7 @@ if platform.system() == "Linux" and "build_ext" in sys.argv or "build" in sys.ar
                     ext_libraries=["zstd"]
             else:
                 raise RuntimeError("Need zstd library verion >= 1.4.0")
-            VERSION = tuple(int(v) for v in VERSION_STR.split("."))
+            #VERSION = tuple(int(v) for v in VERSION_STR.split("."))
     else:
         if SUP_EXTERNAL:
             # Require pkg config
