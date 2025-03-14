@@ -445,10 +445,25 @@ static PyMethodDef ZstdMethods[] = {
     {NULL, NULL, 0, NULL}
 };
 
-
 struct module_state {
     PyObject *error;
 };
+
+static int init_py_zstd(PyObject *module) {
+    if (module == NULL) {
+        return -1;
+    }
+
+    ZstdError = PyErr_NewException("zstd.Error", NULL, NULL);
+    if (ZstdError == NULL) {
+        Py_DECREF(module);
+        return -1;
+    }
+    Py_INCREF(ZstdError);
+    PyModule_AddObject(module, "Error", ZstdError);
+
+    return 0;
+}
 
 #if PY_MAJOR_VERSION >= 3
 #define GETSTATE(m) ((struct module_state*)PyModule_GetState(m))
@@ -469,45 +484,38 @@ static int myextension_clear(PyObject *m) {
 }
 
 
+static PyModuleDef_Slot ZstdModuleDefSlots[] = {
+    {Py_mod_exec, init_py_zstd},
+    {Py_mod_multiple_interpreters, Py_MOD_PER_INTERPRETER_GIL_SUPPORTED},
+    {0, NULL}
+};
+
 static struct PyModuleDef moduledef = {
         PyModuleDef_HEAD_INIT,
         "zstd",
         NULL,
         sizeof(struct module_state),
         ZstdMethods,
-        NULL,
+        ZstdModuleDefSlots,
         myextension_traverse,
         myextension_clear,
         NULL
 };
 
-#define INITERROR return NULL
+
+
 PyObject *PyInit_zstd(void)
 
 #else
-#define INITERROR return
+
 void initzstd(void)
 
 #endif
 {
 #if PY_MAJOR_VERSION >= 3
-    PyObject *module = PyModule_Create(&moduledef);
+    return PyModuleDef_Init(&moduledef);
 #else
     PyObject *module = Py_InitModule("zstd", ZstdMethods);
-#endif
-    if (module == NULL) {
-        INITERROR;
-    }
-
-    ZstdError = PyErr_NewException("zstd.Error", NULL, NULL);
-    if (ZstdError == NULL) {
-        Py_DECREF(module);
-        INITERROR;
-    }
-    Py_INCREF(ZstdError);
-    PyModule_AddObject(module, "Error", ZstdError);
-
-#if PY_MAJOR_VERSION >= 3
-    return module;
+    init_py_zstd(module);
 #endif
 }
