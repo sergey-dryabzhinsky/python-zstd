@@ -486,7 +486,9 @@ static int myextension_clear(PyObject *m) {
 
 static PyModuleDef_Slot ZstdModuleDefSlots[] = {
     {Py_mod_exec, init_py_zstd},
+    #if PY_MINOR_VERSION >= 12
     {Py_mod_multiple_interpreters, Py_MOD_PER_INTERPRETER_GIL_SUPPORTED},
+    #endif
     {0, NULL}
 };
 
