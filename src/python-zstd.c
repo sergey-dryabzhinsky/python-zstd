@@ -483,14 +483,16 @@ static int myextension_clear(PyObject *m) {
     return 0;
 }
 
-
+//Slots not supported in Python 3.4
+#if PY_MINOR_VERSION >= 5
 static PyModuleDef_Slot ZstdModuleDefSlots[] = {
-    {Py_mod_exec, init_py_zstd},
+    {Py_mod_exec, (void *)init_py_zstd},
     #if PY_MINOR_VERSION >= 12
-    {Py_mod_multiple_interpreters, Py_MOD_PER_INTERPRETER_GIL_SUPPORTED},
+    {Py_mod_multiple_interpreters, (void *)Py_MOD_PER_INTERPRETER_GIL_SUPPORTED},
     #endif
     {0, NULL}
 };
+#endif
 
 static struct PyModuleDef moduledef = {
         PyModuleDef_HEAD_INIT,
@@ -498,7 +500,12 @@ static struct PyModuleDef moduledef = {
         NULL,
         sizeof(struct module_state),
         ZstdMethods,
+        //Slots not supported in Python 3.4
+        #if PY_MINOR_VERSION >= 5
         ZstdModuleDefSlots,
+        #else
+        NULL,
+        #endif
         myextension_traverse,
         myextension_clear,
         NULL
@@ -515,7 +522,16 @@ void initzstd(void)
 #endif
 {
 #if PY_MAJOR_VERSION >= 3
+    //Slots not supported in Python 3.4
+    #if PY_MINOR_VERSION >= 5
     return PyModuleDef_Init(&moduledef);
+    #else
+    PyObject *module = PyModule_Create(&moduledef);
+    if (init_py_zstd(module) != 0) {
+        return NULL;
+    }
+    return module;
+    #endif
 #else
     PyObject *module = Py_InitModule("zstd", ZstdMethods);
     init_py_zstd(module);
