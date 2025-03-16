@@ -486,9 +486,9 @@ static int myextension_clear(PyObject *m) {
 //Slots not supported in Python 3.4
 #if PY_MINOR_VERSION >= 5
 static PyModuleDef_Slot ZstdModuleDefSlots[] = {
-    {Py_mod_exec, (void *)init_py_zstd},
+    {Py_mod_exec, (void *)(uintptr_t)init_py_zstd},
     #if PY_MINOR_VERSION >= 12
-    {Py_mod_multiple_interpreters, (void *)Py_MOD_PER_INTERPRETER_GIL_SUPPORTED},
+    {Py_mod_multiple_interpreters, (void *)(uintptr_t)Py_MOD_PER_INTERPRETER_GIL_SUPPORTED},
     #endif
     {0, NULL}
 };
