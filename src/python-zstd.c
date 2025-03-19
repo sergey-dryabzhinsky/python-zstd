@@ -445,10 +445,25 @@ static PyMethodDef ZstdMethods[] = {
     {NULL, NULL, 0, NULL}
 };
 
-
 struct module_state {
     PyObject *error;
 };
+
+static int init_py_zstd(PyObject *module) {
+    if (module == NULL) {
+        return -1;
+    }
+
+    ZstdError = PyErr_NewException("zstd.Error", NULL, NULL);
+    if (ZstdError == NULL) {
+        Py_DECREF(module);
+        return -1;
+    }
+    Py_INCREF(ZstdError);
+    PyModule_AddObject(module, "Error", ZstdError);
+
+    return 0;
+}
 
 #if PY_MAJOR_VERSION >= 3
 #define GETSTATE(m) ((struct module_state*)PyModule_GetState(m))
@@ -468,6 +483,16 @@ static int myextension_clear(PyObject *m) {
     return 0;
 }
 
+//Slots not supported in Python 3.4
+#if PY_MINOR_VERSION >= 5
+static PyModuleDef_Slot ZstdModuleDefSlots[] = {
+    {Py_mod_exec, (void *)(uintptr_t)init_py_zstd},
+    #if PY_MINOR_VERSION >= 12
+    {Py_mod_multiple_interpreters, (void *)(uintptr_t)Py_MOD_PER_INTERPRETER_GIL_SUPPORTED},
+    #endif
+    {0, NULL}
+};
+#endif
 
 static struct PyModuleDef moduledef = {
         PyModuleDef_HEAD_INIT,
@@ -475,39 +500,40 @@ static struct PyModuleDef moduledef = {
         NULL,
         sizeof(struct module_state),
         ZstdMethods,
+        //Slots not supported in Python 3.4
+        #if PY_MINOR_VERSION >= 5
+        ZstdModuleDefSlots,
+        #else
         NULL,
+        #endif
         myextension_traverse,
         myextension_clear,
         NULL
 };
 
-#define INITERROR return NULL
+
+
 PyObject *PyInit_zstd(void)
 
 #else
-#define INITERROR return
+
 void initzstd(void)
 
 #endif
 {
 #if PY_MAJOR_VERSION >= 3
+    //Slots not supported in Python 3.4
+    #if PY_MINOR_VERSION >= 5
+    return PyModuleDef_Init(&moduledef);
+    #else
     PyObject *module = PyModule_Create(&moduledef);
+    if (init_py_zstd(module) != 0) {
+        return NULL;
+    }
+    return module;
+    #endif
 #else
     PyObject *module = Py_InitModule("zstd", ZstdMethods);
-#endif
-    if (module == NULL) {
-        INITERROR;
-    }
-
-    ZstdError = PyErr_NewException("zstd.Error", NULL, NULL);
-    if (ZstdError == NULL) {
-        Py_DECREF(module);
-        INITERROR;
-    }
-    Py_INCREF(ZstdError);
-    PyModule_AddObject(module, "Error", ZstdError);
-
-#if PY_MAJOR_VERSION >= 3
-    return module;
+    init_py_zstd(module);
 #endif
 }
