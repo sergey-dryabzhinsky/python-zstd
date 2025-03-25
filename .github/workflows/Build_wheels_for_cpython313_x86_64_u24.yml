@@ -21,7 +21,7 @@ jobs:
             tag_arch: x86_64
             release: focal
             mirror: http://azure.archive.ubuntu.com/ubuntu
-            version: 1.5.6.6
+            version: 1.5.6.7
             # pyver: "3.7"
             getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
             pypkg: python3.13
