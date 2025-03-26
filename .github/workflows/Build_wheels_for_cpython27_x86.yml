@@ -1,4 +1,4 @@
-name: Build wheels for CPython2.7 x86 with Clang-16 with All warnings
+name: Build wheels for CPython2.7 x86 with Clang-18 with All warnings
 
 on: [push, pull_request]
 
@@ -67,7 +67,7 @@ jobs:
           echo " deb [trusted=yes] http://packages.rusoft.ru/ppa/rusoft/backports ubuntu-${{matrix.os.release}} main" > rusoft-backports.list
           echo " deb [trusted=yes] http://packages.rusoft.ru/ppa/rusoft/packages ubuntu-${{matrix.os.release}} main" > rusoft-packages.list
           echo " deb [trusted=yes] http://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu ${{matrix.os.release}} main" > deadsnakes.list
-          echo " deb [trusted=yes] http://apt.llvm.org/${{matrix.os.release}}/ llvm-toolchain-${{matrix.os.release}}-16 main " > clang.list
+          echo " deb [trusted=yes] http://apt.llvm.org/${{matrix.os.release}}/ llvm-toolchain-${{matrix.os.release}}-18 main " > clang.list
           
           false && sudo find ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} -iname apt
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt update
@@ -90,7 +90,7 @@ jobs:
       - name: Pepare for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
         run: |
-           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt install -y ${{matrix.os.pypkg}}-dev gcc clang-16 pkg-config ${{matrix.os.pypkgadd}}
+           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt install -y ${{matrix.os.pypkg}}-dev gcc clang-18 pkg-config ${{matrix.os.pypkgadd}}
            sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "wget ${{matrix.os.getpipurl}} -O get-pip.py && ${{matrix.os.pypkg}} get-pip.py"
            sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "${{matrix.os.pypkg}} -m pip install -U 'setuptools<72.0'" 
                     
@@ -104,9 +104,9 @@ jobs:
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} pkg-config libzstd --modversion 
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} echo GCC
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} gcc -v
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} echo Clang
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} clang-16 -v
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}} && ZSTD_ASM=1 CC=clang-16 ZSTD_WARNINGS=1 _ZSTD_WERRORS=1 _ZSTD_SMALL=1 _ZSTD_ASM_BMI2=1 ZSTD_THREADS=1 _ZSTD_EXTERNAL=1 ${{matrix.os.pypkg}} setup.py bdist_wheel "
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} echo Clang-18
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} clang-18 -v
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}} && ZSTD_ASM=1 CC=clang-18 ZSTD_WARNINGS=1 _ZSTD_WERRORS=1 _ZSTD_SMALL=1 _ZSTD_ASM_BMI2=1 ZSTD_THREADS=1 _ZSTD_EXTERNAL=1 ${{matrix.os.pypkg}} setup.py bdist_wheel "
 
       - name: Test wheel for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
