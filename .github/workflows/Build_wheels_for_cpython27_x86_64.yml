@@ -14,12 +14,12 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - name: Ubuntu 24+20 amd64 CPython 2.7
+          - name: Ubuntu 24+24 amd64 CPython 2.7
             runs-on: ubuntu-latest
             matrix: linux
             arch: amd64
             tag_arch: x86_64
-            release: focal
+            release: noble
             mirror: http://azure.archive.ubuntu.com/ubuntu
             version: 1.5.6.7
             #pyver: "2.7"
