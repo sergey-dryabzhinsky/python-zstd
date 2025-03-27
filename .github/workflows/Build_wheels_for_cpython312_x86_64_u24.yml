@@ -25,7 +25,7 @@ jobs:
             # pyver: "3.7"
             getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
             pypkg: python3.12
-            pypkgadd: python3.12-full
+            pypkgadd: 
             pyengine_tag: cp312-cp312
             libc_tag: manylinux_2_14
     steps:
