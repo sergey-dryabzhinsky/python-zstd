@@ -21,8 +21,8 @@ jobs:
             tag_arch: x86_64
             release: xenial
             mirror: http://azure.archive.ubuntu.com/ubuntu
-            version: 1.5.6.7
-            # pyver: "3.7"
+            #version: 1.5.6.7
+            
             getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
             pypkg: python3.11
             pypkgadd: python3.11-distutils
