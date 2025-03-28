@@ -21,7 +21,7 @@ jobs:
             tag_arch: i686
             release:  bionic
             mirror: http://azure.archive.ubuntu.com/ubuntu
-            version: 1.5.6.7
+            #version: 1.5.6.7
             #pyver: "2.7"
             getpipurl: https://bootstrap.pypa.io/pip/2.7/get-pip.py
             pypkg: python2.7
