@@ -115,16 +115,20 @@ jobs:
         if: matrix.os.matrix == 'linux'
         run: |
           false && sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} find /build_wheel/
-          sudo cp -v glibc-check.sh ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/zstd-${{matrix.os.version}}/
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}}/ ; echo LLH; ls -lh build/*/zstd.so; echo LDD; ldd build/*/zstd.so;echo FILE; file build/*/zstd.so; echo LIBC; bash ./glibc-check.sh build/*/zstd.so"
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}} && ${{matrix.os.pypkg}} setup.py test"
+          version=`cat version`
+          echo version=$version
+          sudo cp -v glibc-check.sh ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/zstd-$version/
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version/ ; echo LLH; ls -lh build/*/zstd.so; echo LDD; ldd build/*/zstd.so;echo FILE; file build/*/zstd.so; echo LIBC; bash ./glibc-check.sh build/*/zstd.so"
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version && ${{matrix.os.pypkg}} setup.py test"
 
       - name: Pepare wheel for upload
         if: matrix.os.matrix == 'linux'
         run: |
-           sudo cp -v ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/zstd-${{matrix.os.version}}/dist/* ./dist
+           version=`cat version`
+           echo version=$version
+           sudo cp -v ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/zstd-$version/dist/* ./dist
            sudo ls -lh ./dist/* 
-           sudo mv -v ./dist/"zstd-${{matrix.os.version}}-${{matrix.os.pyengine_tag}}-linux_${{matrix.os.tag_arch}}.whl" ./dist/"zstd-${{matrix.os.version}}-${{matrix.os.pyengine_tag}}-${{matrix.os.libc_tag}}_${{matrix.os.tag_arch}}.whl"
+           sudo mv -v ./dist/"zstd-$version-${{matrix.os.pyengine_tag}}-linux_${{matrix.os.tag_arch}}.whl" ./dist/"zstd-$version-${{matrix.os.pyengine_tag}}-${{matrix.os.libc_tag}}_${{matrix.os.tag_arch}}.whl"
 
           
       - name: Test for secrets access
