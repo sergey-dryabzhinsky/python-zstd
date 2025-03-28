@@ -1,4 +1,4 @@
-name: Build wheels for CPython3.7 x86 on Ubuntu16
+name: Build wheels for CPython3.7 x86 on Ubuntu18
 
 on: [push, pull_request]
 
@@ -14,12 +14,12 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - name: Ubuntu 24+16 i386 CPython 3.7
+          - name: Ubuntu 24+18 i386 CPython 3.7
             runs-on: ubuntu-latest
             matrix: linux
             arch: i386
             tag_arch: i686
-            release: xenial
+            release: bionic
             mirror: http://azure.archive.ubuntu.com/ubuntu
             version: 1.5.6.7
             #pyver: "3.11"
