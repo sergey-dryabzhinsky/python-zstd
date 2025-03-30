@@ -342,8 +342,8 @@ setup(
     cmdclass = {'build_ext': ZstdBuildExt },
     test_suite=test_func_name,
     classifiers=[
-       # 'License :: OSI Approved :: BSD License',
-        'BSD',
+        'License :: OSI Approved :: BSD License',
+        
         'Intended Audience :: Developers',
         'Development Status :: 5 - Production/Stable',
         'Operating System :: POSIX',
