@@ -343,7 +343,7 @@ setup(
     test_suite=test_func_name,
     classifiers=[
        # 'License :: OSI Approved :: BSD License',
-        'BSD'
+        'BSD',
         'Intended Audience :: Developers',
         'Development Status :: 5 - Production/Stable',
         'Operating System :: POSIX',
