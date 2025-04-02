@@ -1,4 +1,4 @@
-name: Build wheels for CPython2.7 x86 with Clang-7 with All warnings
+name: Build wheels for CPython2.7 x86 on Ubuntu18 with GCC-7 with All warnings
 
 on: [push, pull_request]
 
@@ -14,19 +14,19 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - name: Ubuntu 24+16 i386 CPython 2.7
+          - name: Ubuntu 24+18 i386 CPython 2.7
             runs-on: ubuntu-latest
             matrix: linux
             arch: i386
             tag_arch: i686
-            release: xenial
+            release:  bionic
             mirror: http://azure.archive.ubuntu.com/ubuntu
-            version: 1.5.6.6
+            #version: 1.5.6.7
             #pyver: "2.7"
             getpipurl: https://bootstrap.pypa.io/pip/2.7/get-pip.py
             pypkg: python2.7
             pyengine_tag: cp27-cp27mu
-            libc_tag: manylinux_2_3
+            libc_tag: manylinux_2_4
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -54,7 +54,7 @@ jobs:
       - name: Debootstrap Ubuntu ${{matrix.os.release}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
         run: |
-          sudo debootstrap --no-merged-usr --verbose --include=sudo,wget,curl,gnupg,apt-transport-https,ca-certificates --arch=${{matrix.os.arch}} ${{matrix.os.release}} ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} ${{matrix.os.mirror}} || tail ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/debootstrap/debootstrap.log
+          sudo debootstrap --no-merged-usr --verbose --include=sudo,wget,curl,gnupg,ca-certificates --arch=${{matrix.os.arch}} ${{matrix.os.release}} ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} ${{matrix.os.mirror}} || tail ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/debootstrap/debootstrap.log
      
       - name: Update and Upgrade Ubuntu ${{matrix.os.release}}
         if: matrix.os.matrix == 'linux'
@@ -67,7 +67,7 @@ jobs:
           echo " deb [trusted=yes] http://packages.rusoft.ru/ppa/rusoft/backports ubuntu-${{matrix.os.release}} main" > rusoft-backports.list
           echo " deb [trusted=yes] http://packages.rusoft.ru/ppa/rusoft/packages ubuntu-${{matrix.os.release}} main" > rusoft-packages.list
           echo " deb [trusted=yes] http://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu ${{matrix.os.release}} main" > deadsnakes.list
-          echo " deb [trusted=yes] http://apt.llvm.org/${{matrix.os.release}}/ llvm-toolchain-${{matrix.os.release}}-7 main " > clang.list
+          echo "# deb [trusted=yes] http://apt.llvm.org/${{matrix.os.release}}/ llvm-toolchain-${{matrix.os.release}}-18 main " > clang.list
           
           false && sudo find ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} -iname apt
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt update
@@ -77,7 +77,7 @@ jobs:
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c 'cd /etc/apt/trusted.gpg.d && wget http://packages.rusoft.ru/apt/public-old.gpg -Orusoft-old.gpg'
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c 'apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys A2CE4BCCC50209DD || true'
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt update
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt upgrade -y
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt dist-upgrade -y
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt -fy install
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt upgrade -y
            
@@ -90,7 +90,8 @@ jobs:
       - name: Pepare for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
         run: |
-           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt install -y ${{matrix.os.pypkg}}-dev gcc clang-7 pkg-config ${{matrix.os.pypkgadd}}
+           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt-cache madison clang-18
+           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt install -y ${{matrix.os.pypkg}}-dev gcc pkg-config ${{matrix.os.pypkgadd}}
            sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "wget ${{matrix.os.getpipurl}} -O get-pip.py && ${{matrix.os.pypkg}} get-pip.py"
            sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "${{matrix.os.pypkg}} -m pip install -U 'setuptools<72.0'" 
                     
@@ -98,30 +99,36 @@ jobs:
         if: matrix.os.matrix == 'linux'
         run: |
           sudo mkdir -p ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/
-          sudo tar -xvf dist/zstd-${{matrix.os.version}}.tar.gz -C ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/
+          version=`cat version`
+          echo "$version"
+          sudo tar -xvf dist/zstd-$version.tar.gz -C ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/
           false && sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} env
           
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} pkg-config libzstd --modversion 
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} echo GCC
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} gcc -v
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} echo Clang
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} clang-7 -v
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}} && ZSTD_ASM=1 CC=clang-7 ZSTD_WARNINGS=1 _ZSTD_WERRORS=1 _ZSTD_SMALL=1 _ZSTD_ASM_BMI2=1 ZSTD_THREADS=1 _ZSTD_EXTERNAL=1 ${{matrix.os.pypkg}} setup.py bdist_wheel "
+          false && sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} echo CLANG
+          false && dead sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} clang-18 -v
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version && ZSTD_ASM=1 ZSTD_WARNINGS=1 _ZSTD_WERRORS=1 _ZSTD_SMALL=1 _ZSTD_ASM_BMI2=1 ZSTD_THREADS=1 _ZSTD_EXTERNAL=1 ${{matrix.os.pypkg}} setup.py bdist_wheel "
 
       - name: Test wheel for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
         run: |
           false && sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} find /build_wheel/
-          sudo cp -v glibc-check.sh ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/zstd-${{matrix.os.version}}/
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}}/ ; echo LLH; ls -lh build/*/zstd.so; echo LDD; ldd build/*/zstd.so;echo FILE; file build/*/zstd.so; echo LIBC; bash ./glibc-check.sh build/*/zstd.so"
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}} && ${{matrix.os.pypkg}} setup.py test"
+          version=`cat version`
+          echo version=$version
+          sudo cp -v glibc-check.sh ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/zstd-$version/
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version/ ; echo LLH; ls -lh build/*/zstd.so; echo LDD; ldd build/*/zstd.so;echo FILE; file build/*/zstd.so; echo LIBC; bash ./glibc-check.sh build/*/zstd.so"
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version && ${{matrix.os.pypkg}} setup.py test"
 
       - name: Pepare wheel for upload
         if: matrix.os.matrix == 'linux'
         run: |
-           sudo cp -v ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/zstd-${{matrix.os.version}}/dist/* ./dist
+           version=`cat version`
+           echo version=$version
+           sudo cp -v ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/zstd-$version/dist/* ./dist
            sudo ls -lh ./dist/* 
-           sudo mv -v ./dist/"zstd-${{matrix.os.version}}-${{matrix.os.pyengine_tag}}-linux_${{matrix.os.tag_arch}}.whl" ./dist/"zstd-${{matrix.os.version}}-${{matrix.os.pyengine_tag}}-${{matrix.os.libc_tag}}_${{matrix.os.tag_arch}}.whl"
+           sudo mv -v ./dist/"zstd-$version-${{matrix.os.pyengine_tag}}-linux_${{matrix.os.tag_arch}}.whl" ./dist/"zstd-$version-${{matrix.os.pyengine_tag}}-${{matrix.os.libc_tag}}_${{matrix.os.tag_arch}}.whl"
 
           
       - name: Test for secrets access

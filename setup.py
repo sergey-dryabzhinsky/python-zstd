@@ -21,7 +21,7 @@ VERSION_STR = ".".join([str(x) for x in VERSION])
 # Package version, even external 
 PKG_VERSION = VERSION
 # Minor revision 
-PKG_VERSION += ("6",)
+PKG_VERSION += ("7",)
 PKG_VERSION_STR = ".".join([str(x) for x in PKG_VERSION])
 
 
@@ -342,7 +342,8 @@ setup(
     cmdclass = {'build_ext': ZstdBuildExt },
     test_suite=test_func_name,
     classifiers=[
-        'License :: OSI Approved :: BSD License',
+#        'License :: OSI Approved :: BSD License',
+        
         'Intended Audience :: Developers',
         'Development Status :: 5 - Production/Stable',
         'Operating System :: POSIX',
