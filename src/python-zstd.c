@@ -260,7 +260,7 @@ static PyObject *py_zstd_check(PyObject* self, PyObject *args)
         return Py_BuildValue("i", 0);
     } else if (dest_size == ZSTD_CONTENTSIZE_UNKNOWN) {
         // content valid, just streamed
-	dest_size = ZSTD_DSteamOutSize();
+	dest_size = ZSTD_BLOCKSIZE_MAX; //ZSTD_DSteamOutSize();
     }
     if (error) return Py_BuildValue("i", -1);
     return Py_BuildValue("i", 1);
