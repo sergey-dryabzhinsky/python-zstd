@@ -255,29 +255,14 @@ static PyObject *py_zstd_check(PyObject* self, PyObject *args)
 #endif
 
     dest_size = (uint64_t) ZSTD_getFrameContentSize(source, source_size);
-    if (dest_size == ZSTD_CONTENTSIZE_UNKNOWN || dest_size == ZSTD_CONTENTSIZE_ERROR) {
+    if (dest_size == ZSTD_CONTENTSIZE_ERROR) {
         //PyErr_Format(ZstdError, "Input data invalid or missing content size in frame header.");
         return Py_BuildValue("i", 0);
-    } else {
-
-	// Find real dest_size across multiple frames
-	ss = source_size;
-	seek_frame = ss - 1;
-	src = source;
-	while (seek_frame < ss) {
-		seek_frame = ZSTD_findFrameCompressedSize(src, ss);
-		if (ZSTD_isError(seek_frame)) { error=1; break;}
-		src += seek_frame;
-		ss -= seek_frame;
-		if (ss <=0) break;
-		frame_size = (uint64_t) ZSTD_getFrameContentSize(src, ss);
-		if (ZSTD_isError(frame_size)) { error=1; break;}
-		dest_size += frame_size;
-	}
+    } else if (dest_size == ZSTD_CONTENTSIZE_UNKNOWN) {
+        // content valid, just streamed
+	dest_size = ZSTD_DSteamOutSize();
     }
     if (error) return Py_BuildValue("i", -1);
-    /*if (ss<=0)
-        return Py_BuildValue("i", 0);*/
     return Py_BuildValue("i", 1);
 }
 
