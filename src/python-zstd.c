@@ -240,9 +240,9 @@ static PyObject *py_zstd_check(PyObject* self, PyObject *args)
 {
     UNUSED(self);
     //PyObject    *result;
-    const char  *source, *src;
-    Py_ssize_t  source_size, ss, seek_frame;
-    uint64_t    dest_size, frame_size, error=0;
+    const char  *source;
+    Py_ssize_t  source_size;
+    uint64_t    dest_size, error=0;
     //char        error = 0;
     //size_t      cSize;
 
