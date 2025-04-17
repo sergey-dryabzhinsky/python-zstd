@@ -154,7 +154,7 @@ static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args)
     const char  *source, *src;
     Py_ssize_t  source_size, ss, seek_frame;
     uint64_t    dest_size, frame_size;
-    char        error = 0;
+    char        error = 0, streamed = 0;
     size_t      cSize;
 
 #if PY_MAJOR_VERSION >= 3
@@ -166,10 +166,15 @@ static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args)
 #endif
 
     dest_size = (uint64_t) ZSTD_getFrameContentSize(source, source_size);
-    if (dest_size == ZSTD_CONTENTSIZE_UNKNOWN || dest_size == ZSTD_CONTENTSIZE_ERROR) {
+    if (dest_size == ZSTD_CONTENTSIZE_ERROR) {
         PyErr_Format(ZstdError, "Input data invalid or missing content size in frame header.");
         return NULL;
-    }
+    } elseif (dest_size == ZSTD_CONTENTSIZE_UNKNOWN) {
+	    // probably streamed data 
+	    streamed = 1;
+	    dest_size = ZSTD_DStreamOutSize();
+    } else {
+	    // known block 
 
 	// Find real dest_size across multiple frames
 	ss = source_size;
@@ -185,7 +190,7 @@ static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args)
 		if (ZSTD_isError(frame_size)) break;
 		dest_size += frame_size;
 	}
-
+    }
     result = PyBytes_FromStringAndSize(NULL, dest_size);
 
     if (result != NULL) {
