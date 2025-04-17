@@ -201,6 +201,16 @@ static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args)
 		ZSTD_DStream* zds;
 		zds = ZSTD_createDStream();
 		// buffers create and decompress 
+		ZSTD_initDStream(zds);
+		ZSTD_outBuffer out;
+		ZSTD_inBuffer in;
+		in.src = source;
+		in.pos = 0;
+		in.size = source_size;
+		out.dst = dest;
+		out.pos = 0;
+		out.size = dest_size;
+		ZSTD_decompressStream(zds,out,in);
 		ZSTD_freeDStream(zds);
 	}
 	else {
