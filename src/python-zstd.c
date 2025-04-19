@@ -210,7 +210,7 @@ static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args)
 		out.dst = dest;
 		out.pos = 0;
 		out.size = dest_size;
-		ZSTD_decompressStream(zds, &out, &in);
+		cSize = ZSTD_decompressStream(zds, &out, &in);
 		ZSTD_freeDStream(zds);
 	}
 	else {
@@ -265,7 +265,7 @@ static PyObject *py_zstd_check(PyObject* self, PyObject *args)
     //PyObject    *result;
     const char  *source;
     Py_ssize_t  source_size;
-    uint64_t    dest_size,/* error=0*/;
+    uint64_t    dest_size/* ,error=0*/;
     //char        error = 0;
     //size_t      cSize;
 
