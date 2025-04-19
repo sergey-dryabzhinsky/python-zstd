@@ -265,7 +265,7 @@ static PyObject *py_zstd_check(PyObject* self, PyObject *args)
     //PyObject    *result;
     const char  *source;
     Py_ssize_t  source_size;
-    uint64_t    dest_size, error=0;
+    uint64_t    dest_size,/* error=0*/;
     //char        error = 0;
     //size_t      cSize;
 
@@ -283,9 +283,10 @@ static PyObject *py_zstd_check(PyObject* self, PyObject *args)
         return Py_BuildValue("i", 0);
     } else if (dest_size == ZSTD_CONTENTSIZE_UNKNOWN) {
         // content valid, just streamed
-	dest_size =/* ZSTD_BLOCKSIZE_MAX;*/ ZSTD_DStreamOutSize();
+	//dest_size =/* ZSTD_BLOCKSIZE_MAX;*/ ZSTD_DStreamOutSize();
+        return Py_BuildValue("i", 2);
     }
-    if (error) return Py_BuildValue("i", -1);
+    //if (error) return Py_BuildValue("i", -1);
     return Py_BuildValue("i", 1);
 }
 
