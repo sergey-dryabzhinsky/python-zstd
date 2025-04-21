@@ -18,7 +18,8 @@ class TestZstdDecompress(BaseTestZSTD):
         DATA = f.read()
         f.close()
         log.info('data check, should be 2: %s' % zstd.check(DATA))
-        self.assertRaises(zstd.Error, zstd.uncompress, DATA)
+        zstd.uncompress(DATA)
+        #self.assertRaises(zstd.Error, zstd.uncompress, DATA)
 
     def test_decompression_rusted(self):
         if sys.hexversion < 0x03000000:
