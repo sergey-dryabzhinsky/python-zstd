@@ -13,9 +13,10 @@ class TestZstdDecompress(BaseTestZSTD):
         self.assertRaises(zstd.Error, zstd.uncompress, zstd.compress(DATA)+b' ')
         
     def test_decompression_streamed(self):
-        log.info('cwd:',os.getcwd())
+        log.info('cwd: %s' % os.getcwd())
         f = open("tests/test_data/facebook.ico.zst","rb")
         DATA = f.read()
+        log.info('data check: %s' % zstd.check(DATA))
         self.assertRaises(zstd.Error, zstd.uncompress, DATA)
 
     def test_check_compressed(self):
