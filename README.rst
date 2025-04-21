@@ -2,7 +2,7 @@
 python-zstd
 =============
 
-.. |releaseW| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg?tag=v1.5.6.7
+.. |releaseW| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg?tag=v1.5.6.8
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml
 
 .. |masterW| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg
@@ -127,7 +127,7 @@ python-zstd
 | cpython 3.14 x64 u24 | |cpython314x64u20|  |
 +----------------------+---------------------+
 | Release              | |releaseW|          |
-| 1.5.6.7              |                     |
+| 1.5.6.8              |                     |
 +----------------------+---------------------+
 | Master               | |masterW|           |
 +----------------------+---------------------+
@@ -341,7 +341,8 @@ ZSTD_uncompress (data): string|bytes
   Since: 0.1
 
 ZSTD_check (data): int
-  Function, checks if input is zstd compressed data block, returns 1 if yes, 0 if no.
+  Function, checks if input is zstd compressed data block,
+returns 1 if yes, 0 if no, 2 - if stream data.
 
   Support compressed data with multiple/concatenated frames (blocks) .
 
