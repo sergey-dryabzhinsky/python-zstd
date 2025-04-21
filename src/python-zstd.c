@@ -211,7 +211,10 @@ static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args)
 		out.pos = 0;
 		out.size = dest_size;
 		processed = ZSTD_decompressStream(zds, &out, &in);
-		if (processed==0) cSize=out.pos;
+		if (processed==0) {
+			cSize=out.pos;
+			if (cSize) dest_size=cSize;
+		}
 		ZSTD_freeDStream(zds);
 	}
 	else {
