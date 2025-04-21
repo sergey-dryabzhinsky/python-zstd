@@ -1,6 +1,6 @@
 # Tests
 
-import sys
+import sys, os
 from tests.base import BaseTestZSTD, zstd, tDATA, log
 
 class TestZstdDecompress(BaseTestZSTD):
@@ -11,6 +11,12 @@ class TestZstdDecompress(BaseTestZSTD):
         else:
             DATA = b''
         self.assertRaises(zstd.Error, zstd.uncompress, zstd.compress(DATA)+b' ')
+        
+    def test_decompression_streamed(self):
+        print('cwd:',os.getcwd())
+        f = open("test_data/facebook.ico.zst","rb")
+        DATA = f.read()
+        self.assertRaises(zstd.Error, zstd.uncompress, DATA)
 
     def test_check_compressed(self):
         cdata = zstd.compress(tDATA)
