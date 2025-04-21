@@ -16,6 +16,7 @@ class TestZstdDecompress(BaseTestZSTD):
         log.info('cwd: %s' % os.getcwd())
         f = open("tests/test_data/facebook.ico.zst","rb")
         DATA = f.read()
+        f.close()
         log.info('data check, should be 2: %s' % zstd.check(DATA))
         self.assertRaises(zstd.Error, zstd.uncompress, DATA)
 
