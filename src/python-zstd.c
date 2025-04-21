@@ -155,7 +155,7 @@ static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args)
     Py_ssize_t  source_size, ss, seek_frame;
     uint64_t    dest_size, frame_size;
     char        error = 0, streamed = 0;
-    size_t      cSize;
+    size_t      cSize, processed;
 
 #if PY_MAJOR_VERSION >= 3
     if (!PyArg_ParseTuple(args, "y#", &source, &source_size))
@@ -210,7 +210,8 @@ static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args)
 		out.dst = dest;
 		out.pos = 0;
 		out.size = dest_size;
-		cSize = ZSTD_decompressStream(zds, &out, &in);
+		processed = ZSTD_decompressStream(zds, &out, &in);
+		if (processed==0) cSize=out.pos;
 		ZSTD_freeDStream(zds);
 	}
 	else {
