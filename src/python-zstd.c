@@ -155,7 +155,7 @@ static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args)
     Py_ssize_t  source_size, ss, seek_frame;
     uint64_t    dest_size, frame_size;
     char        error = 0, streamed = 0;
-    size_t      cSize, processed;
+    size_t      cSize = 0, processed = 0;
 
 #if PY_MAJOR_VERSION >= 3
     if (!PyArg_ParseTuple(args, "y#", &source, &source_size))
