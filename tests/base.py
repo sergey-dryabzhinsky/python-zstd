@@ -54,7 +54,7 @@ class BaseTestZSTD(unittest.TestCase):
     VERSION = "1.5.6"
     VERSION_INT = 10506
     VERSION_INT_MIN = 1 * 100*100 + 0 * 1*100 + 0
-    PKG_VERSION = "1.5.6.7"
+    PKG_VERSION = "1.5.6.8"
 
     def helper_version(self):
         #if zstd.ZSTD_external():
