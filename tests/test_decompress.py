@@ -1,7 +1,7 @@
 # Tests
 
-import sys
-from tests.base import BaseTestZSTD, zstd, tDATA, log
+import sys, os
+from tests.base import BaseTestZSTD, zstd, tDATA, log, raise_skip
 
 class TestZstdDecompress(BaseTestZSTD):
 
@@ -11,16 +11,34 @@ class TestZstdDecompress(BaseTestZSTD):
         else:
             DATA = b''
         self.assertRaises(zstd.Error, zstd.uncompress, zstd.compress(DATA)+b' ')
+        
+    def test_decompression_streamed(self):
+        #log.info('cwd: %s' % os.getcwd())
+        f = open("tests/test_data/facebook.ico.zst","rb")
+        DATA = f.read()
+        f.close()
+        log.info('data check, should be 2: %s' % zstd.check(DATA))
+        zstd.uncompress(DATA)
+        #self.assertRaises(zstd.Error, zstd.uncompress, DATA)
 
+    def test_decompression_rusted(self):
+        if sys.hexversion < 0x03000000:
+            raise_skip("need python version >= 3")
+        data = b'{}'
+        cdata = b'\x28\xb5\x2f\xfd\x00\x58\x11\x00\x00\x7b\x7d'
+        log.info('data check, should be 2: %s' % zstd.check(cdata))
+        log.info("data must be '{}': %r" % zstd.uncompress(cdata))
+        self.assertEqual(data, zstd.uncompress(cdata))
+        
     def test_check_compressed(self):
         cdata = zstd.compress(tDATA)
         check = zstd.check(cdata)
-        log.info("zstd compressed data check (1):%r" % check)
+        log.info("zstd compressed data check, must be (1):%r" % check)
         self.assertEqual(1, check)
 
     def test_check_not_compressed(self):
         check = zstd.check(tDATA)
-        log.info("zstd not compressed data check (0):%r" % check)
+        log.info("zstd not compressed data check, must be (0):%r" % check)
         self.assertEqual(0, check)
         
     def test_check_uncompressed(self):

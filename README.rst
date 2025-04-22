@@ -2,7 +2,7 @@
 python-zstd
 =============
 
-.. |releaseW| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg?tag=v1.5.6.7
+.. |releaseW| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg?tag=v1.5.6.8
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml
 
 .. |masterW| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg
@@ -127,7 +127,7 @@ python-zstd
 | cpython 3.14 x64 u24 | |cpython314x64u20|  |
 +----------------------+---------------------+
 | Release              | |releaseW|          |
-| 1.5.6.7              |                     |
+| 1.5.6.8              |                     |
 +----------------------+---------------------+
 | Master               | |masterW|           |
 +----------------------+---------------------+
@@ -328,6 +328,8 @@ ZSTD_uncompress (data): string|bytes
 
   Support compressed data with multiple/concatenated frames (blocks) (since 1.5.5.1).
 
+  Support streamed data, since 1.5.6.8.
+
   Params:
 
   * **data**: string|bytes - input compressed data block, length limited by 2Gb by Python API
@@ -341,19 +343,19 @@ ZSTD_uncompress (data): string|bytes
   Since: 0.1
 
 ZSTD_check (data): int
-  Function, checks if input is zstd compressed data block, returns 1 if yes, 0 if no.
+  Function, checks if input is zstd compressed data block, and returns: 1 if yes, 0 if no or 2 if it is a stream data.
 
-  Support compressed data with multiple/concatenated frames (blocks) .
+Support compressed data with multiple/concatenated frames (blocks) .
 
-  Params:
+Params:
 
-  * **data**: string|bytes - input compressed data block, length limited by 2Gb by Python API
+* **data**: string|bytes - input compressed data block, length limited by 2Gb by Python API
 
-  Aliases:
+Aliases:
      - *check(...)*,
      - *verify(...)* since: 1.5.6.3
 
-  Since: 1.5.6.2
+Since: 1.5.6.2
 
 version (): string|bytes
   Returns this module doted version string.
