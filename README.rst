@@ -328,6 +328,8 @@ ZSTD_uncompress (data): string|bytes
 
   Support compressed data with multiple/concatenated frames (blocks) (since 1.5.5.1).
 
+  Support streamed data, since 1.5.6.8.
+
   Params:
 
   * **data**: string|bytes - input compressed data block, length limited by 2Gb by Python API
@@ -341,8 +343,7 @@ ZSTD_uncompress (data): string|bytes
   Since: 0.1
 
 ZSTD_check (data): int
-  Function, checks if input is zstd compressed data block, 
-returns: 1 if yes, 0 if no or 2 if it is a stream data.
+  Function, checks if input is zstd compressed data block, and returns: 1 if yes, 0 if no or 2 if it is a stream data.
 
 Support compressed data with multiple/concatenated frames (blocks) .
 
