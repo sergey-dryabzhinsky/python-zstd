@@ -341,8 +341,8 @@ ZSTD_uncompress (data): string|bytes
   Since: 0.1
 
 ZSTD_check (data): int
-  Function, checks if input is zstd compressed data block,
-returns 1 if yes, 0 if no, 2 - if stream data.
+  Function, checks if input is zstd compressed data block, 
+returns: 1 if yes, 0 if no or 2 if it is a stream data.
 
 Support compressed data with multiple/concatenated frames (blocks) .
 
