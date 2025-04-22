@@ -344,17 +344,17 @@ ZSTD_check (data): int
   Function, checks if input is zstd compressed data block,
 returns 1 if yes, 0 if no, 2 - if stream data.
 
-  Support compressed data with multiple/concatenated frames (blocks) .
+Support compressed data with multiple/concatenated frames (blocks) .
 
-  Params:
+Params:
 
-  * **data**: string|bytes - input compressed data block, length limited by 2Gb by Python API
+* **data**: string|bytes - input compressed data block, length limited by 2Gb by Python API
 
-  Aliases:
+Aliases:
      - *check(...)*,
      - *verify(...)* since: 1.5.6.3
 
-  Since: 1.5.6.2
+Since: 1.5.6.2
 
 version (): string|bytes
   Returns this module doted version string.
