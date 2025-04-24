@@ -109,7 +109,7 @@ jobs:
           version=`cat version`
           false && sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} find /build_wheel/
           sudo cp -v glibc-check.sh ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/zstd-$version/
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version/ echo LLH; ls -lh build/*/zstd.*.so; ldd build/*/zstd.*.so ; file build/*/zstd.*.so; bash ./glibc-check.sh build/*/zstd.*.so"
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version/ && echo LLH; ls -lh build/lib*/zstd.*.so; ldd build/lib*/zstd.*.so ; file build/lib*/zstd.*.so; bash ./glibc-check.sh build/lib*/zstd.*.so"
           
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version/ && ${{matrix.os.pypkg}} setup.py test"
 
