@@ -1,4 +1,4 @@
-name: Build wheels for CPython3.12 x64 on Ubuntu20 with GCC-8 All warnings
+name: Build wheels for CPython3.12 x64 on Ubuntu20 with GCC-9 All warnings
 
 on: [push, pull_request]
 
