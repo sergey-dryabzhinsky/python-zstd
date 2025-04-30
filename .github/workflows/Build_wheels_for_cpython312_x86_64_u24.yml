@@ -1,4 +1,4 @@
-name: Build wheels for CPython3.12 x64 on Ubuntu18 with GCC-7 All warnings
+name: Build wheels for CPython3.12 x64 on Ubuntu20 with GCC-9 All warnings
 
 on: [push, pull_request]
 
@@ -14,12 +14,12 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - name: Ubuntu 24+18 amd64 CPython 3.12
+          - name: Ubuntu 24+20 amd64 CPython 3.12
             runs-on: ubuntu-latest
             matrix: linux
             arch: amd64
             tag_arch: x86_64
-            release: bionic
+            release: focal
             mirror: http://azure.archive.ubuntu.com/ubuntu
             #version: 1.5.6.7
             # pyver: "3.7"
