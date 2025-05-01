@@ -1,4 +1,4 @@
-name: Build wheels for CPython3.5 x86_64 on Ubuntu18 with GCC All warnings errors 
+name: Build wheels for CPython3.5 x86_64 on Ubuntu18 with GCC-7 All warnings errors 
 
 on: [push, pull_request]
 
@@ -21,7 +21,7 @@ jobs:
             tag_arch: x86_64
             release: bionic
             mirror: http://azure.archive.ubuntu.com/ubuntu
-            version: 1.5.6.7
+            #version: 1.5.6.7
             #pyver: "3.5"
             getpipurl: https://bootstrap.pypa.io/pip/3.5/get-pip.py
             pypkg: python3.5
@@ -95,28 +95,31 @@ jobs:
       - name: Pepare source and build wheel for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
         run: |
+          version=`cat version`
           sudo mkdir -p ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/
-          sudo tar -xvf dist/zstd-${{matrix.os.version}}.tar.gz -C ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/
+          sudo tar -xvf dist/zstd-$version.tar.gz -C ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/
           false && sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} env 
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} pkg-config libzstd --modversion 
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} echo GCC
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} echo GCC-7
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} gcc -v
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}} && ZSTD_ASM=1 ZSTD_WARNINGS=1 ZSTD_WERRORS=1 _ZSTD_ASM_BMI2=1 ZSTD_THREADS=1 _ZSTD_EXTERNAL=0 ${{matrix.os.pypkg}} setup.py bdist_wheel "
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version/ && ZSTD_ASM=1 ZSTD_WARNINGS=1 ZSTD_WERRORS=1 _ZSTD_ASM_BMI2=1 ZSTD_THREADS=1 _ZSTD_EXTERNAL=0 ${{matrix.os.pypkg}} setup.py bdist_wheel "
 
       - name: Test wheel for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
         run: |
-          sudo cp -v glibc-check.sh ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/zstd-${{matrix.os.version}}/
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}}/; echo LLH; ls -lh build/*/zstd.*.so; ldd build/*/zstd.*.so ; file build/*/zstd.*.so; bash ./glibc-check.sh build/*/zstd.*.so"
+          version=`cat version`
+          sudo cp -v glibc-check.sh ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/zstd-$version/
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version/; echo LLH; ls -lh build/lib*/zstd.*.so; echo LDD; ldd build/lib*/zstd.*.so ; file build/lib*/zstd.*.so; bash ./glibc-check.sh build/lib*/zstd.*.so"
           
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-${{matrix.os.version}} && ${{matrix.os.pypkg}} setup.py test"
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version/ && ${{matrix.os.pypkg}} setup.py test"
 
       - name: Pepare wheel for upload
         if: matrix.os.matrix == 'linux'
         run: |
-           sudo cp -v ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/zstd-${{matrix.os.version}}/dist/* ./dist
+           version=`cat version`
+           sudo cp -v ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/zstd-$version/dist/* ./dist
            sudo ls -lh ./dist/* 
-           sudo mv -v ./dist/"zstd-${{matrix.os.version}}-${{matrix.os.pyengine_tag}}-linux_${{matrix.os.tag_arch}}.whl" ./dist/"zstd-${{matrix.os.version}}-${{matrix.os.pyengine_tag}}-${{matrix.os.libc_tag}}_${{matrix.os.tag_arch}}.whl"
+           sudo mv -v ./dist/"zstd-$version-${{matrix.os.pyengine_tag}}-linux_${{matrix.os.tag_arch}}.whl" ./dist/"zstd-$version-${{matrix.os.pyengine_tag}}-${{matrix.os.libc_tag}}_${{matrix.os.tag_arch}}.whl"
 
       
       - name: Build ${{ matrix.os.name }} wheels and test (old)
