@@ -62,7 +62,7 @@ class TestZstdSpeed(BaseTestZSTD):
             data = zstd.check(cdata)
             sum+=l
 
-        log.info("Check speed average =%6f Mb/sec" % (1.0*sum/1024/1024/wait,))
+        log.info("Check speed average = %6f Mb/sec" % (1.0*sum/1024/1024/wait,))
     
 if __name__ == '__main__':
     unittest.main()
