@@ -14,14 +14,14 @@ from setuptools import setup, find_packages, Extension
 from setuptools.command.build_ext import build_ext
 
 # bundled ZSTD version
-VERSION = (1, 5, 6,)
+VERSION = (1, 5, 7,)
 VERSION_STR = ".".join([str(x) for x in VERSION])
 
 
 # Package version, even external 
 PKG_VERSION = VERSION
 # Minor revision 
-PKG_VERSION += ("8",)
+PKG_VERSION += ("0",)
 PKG_VERSION_STR = ".".join([str(x) for x in PKG_VERSION])
 
 
@@ -271,6 +271,7 @@ if not SUP_EXTERNAL:
             'compress/zstd_compress_literals.c',
             'compress/zstd_compress_sequences.c',
             'compress/zstd_compress_superblock.c',
+            'compress/zstd_preSplit.c',
             'compress/zstdmt_compress.c',
             'compress/zstd_fast.c',
             'compress/zstd_double_fast.c',

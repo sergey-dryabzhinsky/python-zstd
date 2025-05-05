@@ -51,10 +51,11 @@ if sys.hexversion >= 0x03000000:
 
 class BaseTestZSTD(unittest.TestCase):
 
-    VERSION = "1.5.6"
-    VERSION_INT = 10506
-    VERSION_INT_MIN = 1 * 100*100 + 0 * 1*100 + 0
-    PKG_VERSION = "1.5.6.8"
+    VERSION = "1.5.7"
+    VERSION_INT = 10507
+    # minimal external version, must be >=1.4.0
+    VERSION_INT_MIN = 1 * 100*100 + 4* 1*100 + 0
+    PKG_VERSION = "1.5.7.0"
 
     def helper_version(self):
         #if zstd.ZSTD_external():
