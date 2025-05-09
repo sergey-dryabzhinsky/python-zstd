@@ -103,7 +103,7 @@ jobs:
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} pkg-config libzstd --modversion 
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} echo GCC
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} gcc -v
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version/ && ZSTD_ASM=1 ZSTD_WARNINGS=1 _ZSTD_SMALL=1 LDFLLAGS="-Wl,--as-needed -Wl,-s" _ZSTD_SPEED=0 _ZSTD_SPEEDMAX=0 _ZSTD_ASM_BMI2=1 ZSTD_THREADS=1 _ZSTD_EXTERNAL=0 ${{matrix.os.pypkg}} setup.py bdist_wheel"
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version/ && ZSTD_ASM=1 ZSTD_WARNINGS=1 _ZSTD_SMALL=1 LDFLAGS='-Wl,--as-needed -Wl,-s' _ZSTD_SPEED=0 _ZSTD_SPEEDMAX=0 _ZSTD_ASM_BMI2=1 ZSTD_THREADS=1 _ZSTD_EXTERNAL=0 ${{matrix.os.pypkg}} setup.py bdist_wheel"
 
       - name: Test wheel for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
