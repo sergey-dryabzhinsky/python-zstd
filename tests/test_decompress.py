@@ -23,8 +23,8 @@ class TestZstdDecompress(BaseTestZSTD):
         #self.assertRaises(zstd.Error, zstd.uncompress, DATA)
 
     def test_decompression_rusted(self):
-        if sys.hexversion < 0x03000000:
-            #raise_skip("need python version >= 3")
+        #if sys.hexversion < 0x03000000:
+        #raise_skip("need python version >= 3")
         if sys.hexversion < 0x03000000:
             data = '{}'
         else:
