@@ -18,15 +18,20 @@ class TestZstdDecompress(BaseTestZSTD):
         DATA = f.read()
         f.close()
         log.info('data check, should be 2: %s' % zstd.check(DATA))
+        self.assertEqual(2, zstd.check(DATA))
         zstd.uncompress(DATA)
         #self.assertRaises(zstd.Error, zstd.uncompress, DATA)
 
     def test_decompression_rusted(self):
+        #if sys.hexversion < 0x03000000:
+        #raise_skip("need python version >= 3")
         if sys.hexversion < 0x03000000:
-            raise_skip("need python version >= 3")
-        data = b'{}'
+            data = '{}'
+        else:
+            data = b'{}'
         cdata = b'\x28\xb5\x2f\xfd\x00\x58\x11\x00\x00\x7b\x7d'
         log.info('data check, should be 2: %s' % zstd.check(cdata))
+        self.assertEqual(2, zstd.check(cdata))
         log.info("data must be '{}': %r" % zstd.uncompress(cdata))
         self.assertEqual(data, zstd.uncompress(cdata))
         
