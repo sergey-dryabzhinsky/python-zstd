@@ -49,7 +49,7 @@ class TestZstdSpeed(BaseTestZSTD):
             data = zstd.decompress(cdata)
             sum+=l
 
-        log.info("Decompression of streamed datspeed average = %6f Mb/sec" % (1.0*sum/1024/1024/wait,))
+        log.info("Decompression of streamed data speed average = %6f Mb/sec" % (1.0*sum/1024/1024/wait,))
 
     def test_check_speed(self):
         wait = 30
