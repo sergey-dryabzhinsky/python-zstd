@@ -17,12 +17,13 @@ mainly results from internal `pythonX.Y setup.py test`
 - `--speed`: compilation with `-O3`
 - `--speed-max`: compilation with `-march=native`
 - `--libzstd-no-threads`: compilation without threads support
+- `--libzstd-no-use-asm`: compilation without use assembler (if any...)
 
 ### results
 
-asm:yes
-threads:yes
-**optimization: -O2**
+- asm:yes
+- threads:yes
+- **optimization: -O2**
 ```
 python version	size,kb	check Mb/Sec	compress Mb/Sec	decompress blk Mb/Sec
 .2.7.18.	588	611,37	31,27	44,56
@@ -41,9 +42,9 @@ python version	size,kb	check Mb/Sec	compress Mb/Sec	decompress blk Mb/Sec
 .3.14.0-nogil		581,69	30,91	43,71
 ```
 
-asm: yes
-threads:yes
-**optimization: -Os**
+- asm: yes
+- threads:yes
+- **optimization: -Os**
 ```
 python version	size,kb	check Mb/Sec	compress Mb/Sec	decompress blk Mb/Sec
 .2.7.18.	412	620,03	25,56	38,46
@@ -61,9 +62,9 @@ python version	size,kb	check Mb/Sec	compress Mb/Sec	decompress blk Mb/Sec
 .3.14.0-gil	412	562,64	24,29	36,98
 ```
 
-asm:yes
-threads:yes
-**optimization: -O3 -march=native**
+- asm:yes
+- threads:yes
+- **optimization: -O3 -march=native**
 ```
 python version	size,kb	check Mb/Sec	compress Mb/Sec	decompress blk Mb/Sec
 .2.7.18.	688	617,92	33,53	49,05
@@ -81,9 +82,9 @@ python version	size,kb	check Mb/Sec	compress Mb/Sec	decompress blk Mb/Sec
 .3.14.0b1-nogil	684	573,43	33,56	47,71
 ```
 
-**asm:no**
-threads:yes
-optimization: -O2
+- **asm:no**
+- threads:yes
+- optimization: -O2
 ```
 python version	size,kb	check Mb/Sec	compress Mb/Sec	decompress blk Mb/Sec	decompress strm Mb/Sec
 .2.7.18.	588	623,34	31,24	43,98	40,26
