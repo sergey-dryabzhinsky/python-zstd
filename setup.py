@@ -67,15 +67,15 @@ if "--all-warnings-errors" in sys.argv:
     
 SUP_ASM="ZSTD_ASM" in os.environ
 if "ZSTD_ASM" not in os.environ:
-    SUP_ASM = True 
-#a asm on by default
-if "--libzstd-no-use-asm" in sys.argv:
+    SUP_ASM = False
+#a asm off by default
+if "--libzstd0-use-asm" in sys.argv:
     # Support assembler builtin optimization in lizstd
-    SUP_ASM=False
-    sys.argv.remove("--libzstd-no-use-asm")
-DISABLE_ASM=1
-if SUP_ASM:
-     DISABLE_ASM=0
+    SUP_ASM=True
+    sys.argv.remove("--libzstdo-use-asm")
+DISABLE_ASM=0
+if not SUP_ASM:
+     DISABLE_ASM=1
 
 SUP_THREADS="ZSTD_THREADS" in os.environ 
 if "ZSTD_THREADS" not in os.environ:
