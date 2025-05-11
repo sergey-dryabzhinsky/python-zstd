@@ -1,4 +1,4 @@
-name: Build wheels for CPython3.13 x86_64 on Ubuntu20 with GCC All warnings
+name: Build wheels for CPython3.13 x86_64 on Ubuntu16 with GCC All warnings
 
 on: [push, pull_request]
 
@@ -19,7 +19,7 @@ jobs:
             matrix: linux
             arch: amd64
             tag_arch: x86_64
-            release: focal
+            release: xenial
             mirror: http://azure.archive.ubuntu.com/ubuntu
             #version: 1.5.6.7
             # pyver: "3.7"
@@ -64,9 +64,9 @@ jobs:
           sudo mount none ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/proc -t proc
           sudo mount none ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/dev/pts -t devpts
           sudo mount none ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/sys -t sysfs
-          echo "# deb [trusted=yes] http://packages.rusoft.ru/ppa/rusoft/python ubuntu-${{matrix.os.release}} main" > rusoft-python.list
-          echo "# deb [trusted=yes] http://packages.rusoft.ru/ppa/rusoft/backports ubuntu-${{matrix.os.release}} main" > rusoft-backports.list
-          echo "# deb [trusted=yes] http://packages.rusoft.ru/ppa/rusoft/packages ubuntu-${{matrix.os.release}} main" > rusoft-packages.list
+          echo " deb [trusted=yes] http://packages.rusoft.ru/ppa/rusoft/python ubuntu-${{matrix.os.release}} main" > rusoft-python.list
+          echo " deb [trusted=yes] http://packages.rusoft.ru/ppa/rusoft/backports ubuntu-${{matrix.os.release}} main" > rusoft-backports.list
+          echo " deb [trusted=yes] http://packages.rusoft.ru/ppa/rusoft/packages ubuntu-${{matrix.os.release}} main" > rusoft-packages.list
           echo " deb [trusted=yes] http://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu ${{matrix.os.release}} main" > deadsnakes.list
           false && sudo find ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} -iname apt
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt update
@@ -103,7 +103,7 @@ jobs:
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} pkg-config libzstd --modversion 
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} echo GCC
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} gcc -v
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version/ && ZSTD_ASM=1 ZSTD_WARNINGS=1 _ZSTD_SMALL=1 _ZSTD_ASM_BMI2=1 ZSTD_THREADS=1 _ZSTD_EXTERNAL=0 ${{matrix.os.pypkg}} setup.py bdist_wheel"
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version/ && ZSTD_ASM=1 ZSTD_WARNINGS=1 _ZSTD_SMALL=1 LDFLAGS='-Wl,--as-needed -Wl,-s' _ZSTD_SPEED=0 _ZSTD_SPEEDMAX=0 _ZSTD_ASM_BMI2=1 ZSTD_THREADS=1 _ZSTD_EXTERNAL=0 ${{matrix.os.pypkg}} setup.py bdist_wheel"
 
       - name: Test wheel for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
