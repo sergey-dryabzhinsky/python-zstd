@@ -19,7 +19,7 @@ class TestZstdSpeed(BaseTestZSTD):
             cdata = zstd.compress(tDATA)
             sum+=l
 
-        log.info("Compression speed average = %6f Mb/sec" % (1.0*sum/1024/1024/wait,))
+        log.info("Compression speed average = %6.2f Mb/sec" % (1.0*sum/1024/1024/wait,))
 
     def test_decompression_block_speed(self):
         wait = 30
@@ -32,7 +32,7 @@ class TestZstdSpeed(BaseTestZSTD):
             data = zstd.decompress(cdata)
             sum+=l
 
-        log.info("Decompression of block data speed average = %6f Mb/sec" % (1.0*sum/1024/1024/wait,))
+        log.info("Decompression of block data speed average = %6.2f Mb/sec" % (1.0*sum/1024/1024/wait,))
 
     def test_decompression_stream_speed(self):
         wait = 30
@@ -49,7 +49,7 @@ class TestZstdSpeed(BaseTestZSTD):
             data = zstd.decompress(cdata)
             sum+=l
 
-        log.info("Decompression of streamed datspeed average = %6f Mb/sec" % (1.0*sum/1024/1024/wait,))
+        log.info("Decompression of streamed datspeed average = %6.2f Mb/sec" % (1.0*sum/1024/1024/wait,))
 
     def test_check_speed(self):
         wait = 30
@@ -62,7 +62,7 @@ class TestZstdSpeed(BaseTestZSTD):
             data = zstd.check(cdata)
             sum+=l
 
-        log.info("Check speed average = %6f Mb/sec" % (1.0*sum/1024/1024/wait,))
+        log.info("Check speed average = %6.2f Mb/sec" % (1.0*sum/1024/1024/wait,))
     
 if __name__ == '__main__':
     unittest.main()

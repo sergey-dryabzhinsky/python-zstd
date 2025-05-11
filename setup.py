@@ -110,6 +110,23 @@ if "--small" in sys.argv:
     BUILD_SMALL=True 
     sys.argv.remove("--small")
     
+BUILD_SPEED="ZSTD_SPEED" in os.environ
+if "--speed" in sys.argv:
+    # Support tracing for debug
+    # speed or size choose only one
+    BUILD_SPEED=True 
+    BUILD_SMALL=False
+    sys.argv.remove("--speed")
+    
+BUILD_SPEEDMAX="ZSTD_SPEEDMAX" in os.environ
+if "--speed-max" in sys.argv:
+    # Support tracing for debug
+    # speed or size choose only one
+    BUILD_SPEED=True 
+    BUILD_SPEEDMAX=True 
+    BUILD_SMALL=False
+    sys.argv.remove("--speed-max")
+    
 SUP_EXTERNAL="ZSTD_EXTERNAL" in os.environ
 ext_libraries=[]
 if "--external" in sys.argv:
@@ -178,6 +195,7 @@ if BUILD_SMALL:
        'gcc': ['-Os',],
    }
 else:
+    """
     COPT = {
        'msvc': ['/Ox', ],
        'mingw32': ['-O2',],
@@ -185,6 +203,24 @@ else:
        'clang': ['-O2',],
        'gcc': ['-O2',],
     }
+    """
+# not small, but speed?
+    if BUILD_SPEED:
+       COPT = {
+           'msvc': ['/O2', ],
+           'mingw32': ['-O3',],
+           'unix': ['-O3',],
+           'clang': ['-O3',],
+           'gcc': ['-O3',],
+       }
+    else:
+        COPT = {
+            'msvc': ['/Ox', ],
+            'mingw32': ['-O2',],
+            'unix': ['-O2',],
+            'clang': ['-O2',],
+            'gcc': ['-O2',],
+       }
 ###
 # DVERSION - pass module version string
 # DDYNAMIC_BMI2 - disable BMI2 amd64 asembler code - can't build it, use CFLAGS with -march= bdver4, znver1/2/3, native
@@ -196,8 +232,8 @@ for comp in COPT:
         COPT[comp].extend([ '/DVERSION=%s' % PKG_VERSION_STR, '/DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '/DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ]),
     else:
         COPT[comp].extend([ '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '-DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ]),
-   
-        
+
+
 if not SUP_EXTERNAL:
     for comp in COPT:
         if comp == 'msvc':
@@ -215,6 +251,15 @@ else:
             ])
         else:
             COPT[comp].extend([ '-DLIBZSTD_EXTERNAL=1',
+            ])
+
+if BUILD_SPEEDMAX:
+    for comp in COPT:
+        if comp == 'msvc':
+            COPT[comp].extend([ ''
+            ])
+        else:
+            COPT[comp].extend([ '-march=native',
             ])
 
 if SUP_LEGACY:
@@ -252,6 +297,13 @@ else:
         else:
             COPT[comp].extend(['-DZSTD_TRACE=0'])
 
+# protect from python packaged flags that prevent from exporting symbols
+for comp in COPT:
+    if comp == 'msvc':
+        pass
+    else:
+        COPT[comp].extend(['-fvisibility=default'])
+            
 
 class ZstdBuildExt( build_ext ):
 
