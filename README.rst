@@ -267,6 +267,14 @@ When using a PEP 517 builder you can use ``ZSTD_EXTERNAL`` environment variable 
 
    >>> $ ZSTD_EXTERNAL=1 python -m build -w
 
+If you want to build with a lot of debug output just add ``--debug`` option
+
+   >>> $ python setup.py build_ext --debug clean
+
+When using a PEP 517 builder you can use ``ZSTD_DEBUG`` environment variable instead:
+
+   >>> $ ZSTD_DEBUG=1 python -m build -w
+
 If paths to header file ``zstd.h`` and libraries is uncommon - use common ``build`` params:
 --libraries --include-dirs --library-dirs.
 

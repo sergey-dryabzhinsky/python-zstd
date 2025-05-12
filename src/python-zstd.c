@@ -37,6 +37,7 @@
 #define str(x) #x
 #define xstr(x) str(x)
 
+#include <stdio.h>
 #include <Python.h>
 #include "pythoncapi_compat.h"    // Py_SET_SIZE() for Python 3.8 and older
 
@@ -73,6 +74,7 @@ static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args)
         return NULL;
 #endif
 
+    if (ZSTD_DEBUG) printf("\ngot Compression level:%d\n",level);
     if (0 == level) level=ZSTD_CLEVEL_DEFAULT;
     /* Fast levels (zstd >= 1.3.4) - [-1..-100] */
     /* Usual levels                - [ 1..22] */
@@ -94,14 +96,17 @@ static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args)
 	    level = ZSTD_MAX_CLEVEL;
 	}
     }
+    if (ZSTD_DEBUG) printf("\nCompression level will be:%d\n",level);
 
+    if (ZSTD_DEBUG) printf("\ngot Compression threads:%d\n",threads);
     if (threads < 0) {
 	if (strict) {
         PyErr_Format(ZstdError, "Bad threads count - less than %d: %d", 0, threads);
         return NULL;
-	} else threads = 0; 
+	} else threads = 0;
     }
     if (0 == threads) threads = UTIL_countPhysicalCores();
+    if (ZSTD_DEBUG) printf("\ngot CPU cores:%d\n",threads);
     /* If threads more than 200 - raise Error. */
     if (threads > ZSTDMT_NBWORKERS_MAX) {
         threads = ZSTDMT_NBWORKERS_MAX;
@@ -109,6 +114,7 @@ static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args)
         //PyErr_Format(ZstdError, "Bad threads count - more than %d: %d", ZSTDMT_NBWORKERS_MAX, threads);
         //return NULL;
     }
+    if (ZSTD_DEBUG) printf("\nCompression will use:%d threads\n",threads);
 
     dest_size = (Py_ssize_t)ZSTD_compressBound(source_size);
     result = PyBytes_FromStringAndSize(NULL, dest_size);

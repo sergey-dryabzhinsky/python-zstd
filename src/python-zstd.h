@@ -59,6 +59,10 @@
 #define ZSTD_LEGACY_SUPPORT 0
 #endif
 
+#ifndef ZSTD_DEBUG
+#define ZSTD_DEBUG 0
+#endif
+
 /*-=====  Pre-defined compression levels  =====-*/
 #ifndef ZSTD_CLEVEL_DEFAULT
 #define ZSTD_CLEVEL_DEFAULT 3

@@ -157,6 +157,7 @@ int UTIL_countPhysicalCores(void)
 
         int siblings = 0;
         int cpu_cores = 0;
+        int cores = 0;
         int ratio = 1;
 
         if (cpuinfo == NULL) {
@@ -186,6 +187,16 @@ int UTIL_countPhysicalCores(void)
 
                     cpu_cores = atoi(sep + 1);
                 }
+
+                if (strncmp(buff, "processor", 9) == 0) {
+                    const char* const sep = strchr(buff, ':');
+                    if (sep == NULL || *sep == '\0') {
+                        /* formatting was broken? */
+                        goto failed;
+                    }
+
+                    cores ++;
+                }
             } else if (ferror(cpuinfo)) {
                 /* fall back on the sysconf value */
                 goto failed;
@@ -194,6 +205,7 @@ int UTIL_countPhysicalCores(void)
         if (siblings && cpu_cores) {
             ratio = siblings / cpu_cores;
         }
+        if (cores) return cores;
 failed:
         fclose(cpuinfo);
         return numPhysicalCores = numPhysicalCores / ratio;

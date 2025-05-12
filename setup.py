@@ -134,6 +134,13 @@ if "--external" in sys.argv:
     SUP_EXTERNAL=True
     sys.argv.remove("--external")
 
+SUP_DEBUG="ZSTD_DEBUG" in os.environ
+ext_libraries=[]
+if "--debug" in sys.argv:
+    # You want use external Zstd library?
+    SUP_DEBUG=True
+    sys.argv.remove("--debug")
+
 pkgconf = which("pkg-config")
 if "--libzstd-bundled" in sys.argv:
     # Do you want use external Zstd library?
@@ -243,6 +250,7 @@ if not SUP_EXTERNAL:
         else:
             COPT[comp].extend([ '-DZSTD_MULTITHREAD=%d' % ENABLE_THREADS,
                 '-Izstd/lib', '-Izstd/lib/common', '-Izstd/lib/compress', '-Izstd/lib/decompress',
+                ENABLE_THREADS and '-lpthread' or ''
             ])
 else:
     for comp in COPT:
@@ -251,6 +259,15 @@ else:
             ])
         else:
             COPT[comp].extend([ '-DLIBZSTD_EXTERNAL=1',
+            ])
+
+if SUP_DEBUG:
+    for comp in COPT:
+        if comp == 'msvc':
+            COPT[comp].extend([ '/DZSTD_DEBUG=1'
+            ])
+        else:
+            COPT[comp].extend([ '-DZSTD_DEBUG=1',
             ])
 
 if BUILD_SPEEDMAX:
