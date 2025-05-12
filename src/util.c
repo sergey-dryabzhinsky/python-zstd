@@ -166,7 +166,7 @@ int UTIL_countPhysicalCores(void)
         }
 
         /* assume the cpu cores/siblings values will be constant across all
-         * present processors */
+         * present processors, thou in vm/containers it may be different */
         while (!feof(cpuinfo)) {
             if (fgets(buff, BUF_SIZE, cpuinfo) != NULL) {
                 if (strncmp(buff, "siblings", 8) == 0) {
