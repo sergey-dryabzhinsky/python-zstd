@@ -16,7 +16,19 @@ class TestZstdSpeed(BaseTestZSTD):
         l=len(tDATA)
         tbegin = time()
         while time()-tbegin<wait:
-            cdata = zstd.compress(tDATA)
+            cdata = zstd.compress(tDATA,3,0)
+            sum+=l
+
+        log.info("Compression speed average = %6.2f Mb/sec" % (1.0*sum/1024/1024/wait,))
+
+    def test_compression_one_thread_speed(self):
+        wait = 30
+        log.info("\nWait %d seconds..." % wait)
+        sum = 0
+        l=len(tDATA)
+        tbegin = time()
+        while time()-tbegin<wait:
+            cdata = zstd.compress(tDATA,3,1)
             sum+=l
 
         log.info("Compression speed average = %6.2f Mb/sec" % (1.0*sum/1024/1024/wait,))

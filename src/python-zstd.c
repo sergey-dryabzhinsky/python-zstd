@@ -41,7 +41,6 @@
 #include "pythoncapi_compat.h"    // Py_SET_SIZE() for Python 3.8 and older
 
 #include "bytesobject.h"
-#include "zstd.h"
 #include "util.h"
 #include "python-zstd.h"
 
@@ -419,6 +418,17 @@ static PyObject *py_zstd_min_compression_level(PyObject* self, PyObject *args)
 }
 
 /**
+ * Returns ZSTD determined default standard compression level, int
+ */
+static PyObject *py_zstd_default_compression_level(PyObject* self, PyObject *args)
+{
+    UNUSED(self);
+    UNUSED(args);
+
+    return Py_BuildValue("i", ZSTD_CLEVEL_DEFAULT);
+}
+
+/**
  * Returns ZSTD determined maximum number of compression level, int
  */
 static PyObject *py_zstd_max_compression_level(PyObject* self, PyObject *args)
@@ -450,6 +460,7 @@ static PyMethodDef ZstdMethods[] = {
     {"ZSTD_max_threads_count",  py_zstd_max_threads_count, METH_NOARGS, ZSTD_MAX_THREADS_COUNT_DOCSTRING},
     {"ZSTD_min_compression_level",  py_zstd_min_compression_level, METH_NOARGS, ZSTD_MIN_COMPRESSION_LEVEL_DOCSTRING},
     {"ZSTD_max_compression_level",  py_zstd_max_compression_level, METH_NOARGS, ZSTD_MAX_COMPRESSION_LEVEL_DOCSTRING},
+    {"ZSTD_default_compression_level",  py_zstd_default_compression_level, METH_NOARGS, ZSTD_DEFAULT_COMPRESSION_LEVEL_DOCSTRING},
 
     {"ZSTD_external",  py_zstd_library_external, METH_NOARGS, ZSTD_EXTERNAL_DOCSTRING},
     {"ZSTD_legacy_support",  py_zstd_library_legacy_format_support, METH_NOARGS, ZSTD_LEGACY_DOCSTRING},
