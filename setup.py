@@ -264,10 +264,10 @@ else:
 if SUP_DEBUG:
     for comp in COPT:
         if comp == 'msvc':
-            COPT[comp].extend([ '/DZSTD_DEBUG=1'
+            COPT[comp].extend([ '/DZSTD_DEBUG=1','-g',
             ])
         else:
-            COPT[comp].extend([ '-DZSTD_DEBUG=1',
+            COPT[comp].extend([ '-DZSTD_DEBUG=1','-g',
             ])
 
 if BUILD_SPEEDMAX:
@@ -299,7 +299,7 @@ if SUP_WERROR:
             COPT[comp].extend(['//WX'])
         else:
             COPT[comp].extend(['-Werror'])
-            
+
 # Force traceing support or disable
 if SUP_TRACE:
     for comp in COPT:
@@ -372,6 +372,7 @@ if not SUP_EXTERNAL:
             ]:
             zstdFiles.append('zstd/lib/'+f)
 
+zstdFiles.append('src/debug.c')
 zstdFiles.append('src/util.c')
 zstdFiles.append('src/python-zstd.c')
 
