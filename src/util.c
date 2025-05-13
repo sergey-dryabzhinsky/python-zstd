@@ -166,7 +166,7 @@ int UTIL_countPhysicalCores(void)
         }
 
         /* assume the cpu cores/siblings values will be constant across all
-         * present processors, thou in vm/containers it may be different */
+         * present processors, in vm/containers lxc/openvz it shows all physical cores/threads */
         while (!feof(cpuinfo)) {
             if (fgets(buff, BUF_SIZE, cpuinfo) != NULL) {
                 if (strncmp(buff, "siblings", 8) == 0) {
@@ -205,7 +205,7 @@ int UTIL_countPhysicalCores(void)
         if (siblings && cpu_cores) {
             ratio = siblings / cpu_cores;
         }
-        if (cores) return cores;
+        if (cores) return numPhysicalCores = cores;
 failed:
         fclose(cpuinfo);
         return numPhysicalCores = numPhysicalCores / ratio;
