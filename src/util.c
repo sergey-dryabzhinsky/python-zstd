@@ -16,9 +16,11 @@ extern "C" {
 /*-****************************************
 *  Dependencies
 ******************************************/
+#include "debug.h"
 #include "util.h"       /* note : ensure that platform.h is included first ! */
 #include <errno.h>
 #include <string.h>
+#include <stdio.h>
 
 #if defined(_MSC_VER) || defined(__MINGW32__) || defined (__MSVCRT__)
 #include <direct.h>     /* needed for _mkdir in windows */
@@ -142,27 +144,33 @@ int UTIL_countPhysicalCores(void)
 {
     static int numPhysicalCores = 0;
 
-    if (numPhysicalCores != 0) return numPhysicalCores;
+    if (numPhysicalCores != 0) {
+	printd("\nStored static numPhysicalCores: %d", numPhysicalCores);
+	return numPhysicalCores;
+    }
 
     numPhysicalCores = (int)sysconf(_SC_NPROCESSORS_ONLN);
     if (numPhysicalCores == -1) {
         /* value not queryable, fall back on 1 */
+	printd("\nSysconf fail. numPhysicalCores: %d", numPhysicalCores);
         return numPhysicalCores = 1;
     }
+	printd("\nSysconf readed. numPhysicalCores: %d", numPhysicalCores);
 
     /* try to determine if there's hyperthreading */
-    {   FILE* const cpuinfo = fopen("/proc/cpuinfo", "r");
+    {   FILE* cpuinfo = fopen("/proc/cpuinfo", "r");
 #define BUF_SIZE 80
         char buff[BUF_SIZE];
 
         int siblings = 0;
         int cpu_cores = 0;
-        int cores = 0;
+        int procs = 0;
         int ratio = 1;
 
         if (cpuinfo == NULL) {
-            /* fall back on the sysconf value */
-            return numPhysicalCores;
+            /* fall back on the sysconf value, fallback to 1 */
+            printd("\nCpuinfo not open. numPhysicalCores: %d", numPhysicalCores);
+            return numPhysicalCores = 1;
         }
 
         /* assume the cpu cores/siblings values will be constant across all
@@ -177,7 +185,9 @@ int UTIL_countPhysicalCores(void)
                     }
 
                     siblings = atoi(sep + 1);
+                    printd("\nCpuinfo: got siblings: %d", siblings);
                 }
+                // here are stored count of physical cores
                 if (strncmp(buff, "cpu cores", 9) == 0) {
                     const char* const sep = strchr(buff, ':');
                     if (sep == NULL || *sep == '\0') {
@@ -186,8 +196,9 @@ int UTIL_countPhysicalCores(void)
                     }
 
                     cpu_cores = atoi(sep + 1);
+                    printd("\nCpuinfo: got cpu-cores: %d", cpu_cores);
                 }
-
+                // just do stupid line counting
                 if (strncmp(buff, "processor", 9) == 0) {
                     const char* const sep = strchr(buff, ':');
                     if (sep == NULL || *sep == '\0') {
@@ -195,7 +206,7 @@ int UTIL_countPhysicalCores(void)
                         goto failed;
                     }
 
-                    cores ++;
+                    procs++;
                 }
             } else if (ferror(cpuinfo)) {
                 /* fall back on the sysconf value */
@@ -205,9 +216,13 @@ int UTIL_countPhysicalCores(void)
         if (siblings && cpu_cores) {
             ratio = siblings / cpu_cores;
         }
-        if (cores) return numPhysicalCores = cores;
+        fclose(cpuinfo); cpuinfo = NULL;
+        if (procs){
+            printd("\nCpuinfo found cores: %d", procs);
+            return numPhysicalCores = procs;
+        }
 failed:
-        fclose(cpuinfo);
+        if (cpuinfo){ fclose(cpuinfo); cpuinfo = NULL;}
         return numPhysicalCores = numPhysicalCores / ratio;
     }
 }
