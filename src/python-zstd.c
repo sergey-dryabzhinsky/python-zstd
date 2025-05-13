@@ -75,14 +75,14 @@ static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args)
         return NULL;
 #endif
 
-    printd("\ngot Compression level:%d\n",level);
-    if (0 == level) level=ZSTD_CLEVEL_DEFAULT;
+    printd("got Compression level:%d\n",level);
+    if (0 == level) level=ZSTD_defaultCLevel();
     /* Fast levels (zstd >= 1.3.4) - [-1..-100] */
     /* Usual levels                - [ 1..22] */
     /* If level less than -100 or 1 - raise Error, level 0 handled before. */
-    printd("\nCompression min level:%d\n",ZSTD_MIN_CLEVEL);
+    printd("Compression min level:%d\n",ZSTD_MIN_CLEVEL);
     if (level < ZSTD_MIN_CLEVEL) {
-        printd2("Bad compression level - less than %d: %d", ZSTD_MIN_CLEVEL, level);
+        printd2("Bad compression level - less than %d: %d\n", ZSTD_MIN_CLEVEL, level);
 	if (strict) {
         PyErr_Format(ZstdError, "Bad compression level - less than %d: %d", ZSTD_MIN_CLEVEL, level);
         return NULL;
@@ -91,9 +91,9 @@ static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args)
 	}
     }
     /* If level more than 22 - raise Error. */
-    printd("\nCompression max level:%d\n",ZSTD_maxCLevel());
+    printd("Compression max level:%d\n",ZSTD_maxCLevel());
     if (level > ZSTD_maxCLevel()) {
-        printd2("Bad compression level - more than %d: %d", ZSTD_maxCLevel(), level);
+        printd2("Bad compression level - more than %d: %d\n", ZSTD_maxCLevel(), level);
 	if (strict) {
         PyErr_Format(ZstdError, "Bad compression level - more than %d: %d", ZSTD_MAX_CLEVEL, level);
         return NULL;
@@ -101,26 +101,27 @@ static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args)
 	    level = ZSTD_maxCLevel();
 	}
     }
-    printd("\nCompression level will be:%d\n",level);
+    printd("Compression level will be:%d\n",level);
 
-    printd("\ngot Compression threads:%d\n",threads);
+    printd("got Compression threads:%d\n",threads);
     if (threads < 0) {
-        printd2("Bad threads count - less than %d: %d", 0, threads);
+        printd2("Bad threads count - less than %d: %d\n", 0, threads);
 	if (strict) {
         PyErr_Format(ZstdError, "Bad threads count - less than %d: %d", 0, threads);
         return NULL;
 	} else threads = 1;
     }
-    if (0 == threads) threads = UTIL_countPhysicalCores();
-    printd("\ngot CPU cores:%d\n",threads);
+    if (0 == threads) threads = UTIL_countAvailableCores();
+    printd("got CPU cores:%d\n",threads);
     /* If threads more than 200 - raise Error. */
     if (threads > ZSTDMT_NBWORKERS_MAX) {
+        printd2("Bad threads count - more than %d: %d\n", ZSTDMT_NBWORKERS_MAX, threads);
         threads = ZSTDMT_NBWORKERS_MAX;
         // do not fail here, due auto thread counter
         //PyErr_Format(ZstdError, "Bad threads count - more than %d: %d", ZSTDMT_NBWORKERS_MAX, threads);
         //return NULL;
     }
-    printd("\nCompression will use:%d threads\n",threads);
+    printd("Compression will use:%d threads\n",threads);
 
     dest_size = (Py_ssize_t)ZSTD_compressBound(source_size);
     result = PyBytes_FromStringAndSize(NULL, dest_size);
@@ -402,7 +403,7 @@ static PyObject *py_zstd_threads_count(PyObject* self, PyObject *args)
     UNUSED(self);
     UNUSED(args);
 
-    int32_t threads = UTIL_countPhysicalCores();
+    int32_t threads = UTIL_countAvailableCores();
 
     return Py_BuildValue("i", threads);
 }
@@ -426,7 +427,7 @@ static PyObject *py_zstd_min_compression_level(PyObject* self, PyObject *args)
     UNUSED(self);
     UNUSED(args);
 
-    return Py_BuildValue("i", ZSTD_MIN_CLEVEL);
+    return Py_BuildValue("i", ZSTD_minCLevel());
 }
 
 /**
@@ -437,7 +438,7 @@ static PyObject *py_zstd_default_compression_level(PyObject* self, PyObject *arg
     UNUSED(self);
     UNUSED(args);
 
-    return Py_BuildValue("i", ZSTD_CLEVEL_DEFAULT);
+    return Py_BuildValue("i", ZSTD_defaultCLevel());
 }
 
 /**
@@ -448,7 +449,7 @@ static PyObject *py_zstd_max_compression_level(PyObject* self, PyObject *args)
     UNUSED(self);
     UNUSED(args);
 
-    return Py_BuildValue("i", ZSTD_MAX_CLEVEL);
+    return Py_BuildValue("i", ZSTD_maxCLevel());
 }
 
 
