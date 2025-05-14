@@ -241,7 +241,7 @@ if BUILD_SPEED1:
     COPT = {
         'msvc': ['/O1', ],
         'mingw32': ['-O1',],
-        'unix': ['-O0',],
+        'unix': ['-O1',],
         'clang': ['-O1',],
         'gcc': ['-O1',],
     }
