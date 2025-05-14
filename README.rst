@@ -225,7 +225,7 @@ When using a PEP 517 builder you can use ``ZSTD_THREADS`` environment variable i
 
    >>> $ ZSTD_THREADS=0 python -m build -w
 
-If you're meet some cpu instruction errors you may try to ensable built-in optimizations and pass option `--libzstd-use-asm`:
+If you're want to enable some speedup (maybe) you may try to enable built-in optimizations and pass option `--libzstd-use-asm`:
 
    >>> $ python setup.py build_ext --libzstd-use-asm clean
 
@@ -233,7 +233,7 @@ Or add more speed with option `--libzstd-use-asm-bmi2` to use instructions for n
 When using a PEP 517 builder you can use ``ZSTD_ASM`` environment variable instead:
 And ``ZST_ASM_BMI2=1`` too for bmi2 use.
 
-   >>> $ ZSTD_ASM=0 python -m build -w
+   >>> $ ZSTD_ASM=1 python -m build -w
 
 If you want to build smaller module by size try to use option `--small`, but it will work slower.
 
