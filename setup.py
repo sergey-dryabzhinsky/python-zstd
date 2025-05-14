@@ -109,20 +109,39 @@ if "--small" in sys.argv:
     # Support tracing for debug
     BUILD_SMALL=True 
     sys.argv.remove("--small")
-    
-BUILD_SPEED="ZSTD_SPEED" in os.environ
-if "--speed" in sys.argv:
-    # Support tracing for debug
+
+BUILD_SPEED0="ZSTD_SPEED0" in os.environ
+if "--speed0" in sys.argv:
     # speed or size choose only one
-    BUILD_SPEED=True 
+    BUILD_SPEED0=True
     BUILD_SMALL=False
-    sys.argv.remove("--speed")
-    
+    sys.argv.remove("--speed0")
+
+BUILD_SPEED1="ZSTD_SPEED1" in os.environ
+if "--speed1" in sys.argv:
+    # speed or size choose only one
+    BUILD_SPEED1=True
+    BUILD_SMALL=False
+    sys.argv.remove("--speed1")
+
+BUILD_SPEED2="ZSTD_SPEED2" in os.environ
+if "--speed2" in sys.argv:
+    # speed or size choose only one
+    BUILD_SPEED2=True
+    BUILD_SMALL=False
+    sys.argv.remove("--speed2")
+
+BUILD_SPEED3="ZSTD_SPEED3" in os.environ
+if "--speed3" in sys.argv:
+    # speed or size choose only one
+    BUILD_SPEED3=True
+    BUILD_SMALL=False
+    sys.argv.remove("--speed3")
+
 BUILD_SPEEDMAX="ZSTD_SPEEDMAX" in os.environ
 if "--speed-max" in sys.argv:
-    # Support tracing for debug
     # speed or size choose only one
-    BUILD_SPEED=True 
+    BUILD_SPEED3=True
     BUILD_SPEEDMAX=True 
     BUILD_SMALL=False
     sys.argv.remove("--speed-max")
@@ -192,7 +211,14 @@ if platform.system() == "Linux" and "build_ext" in sys.argv or "build" in sys.ar
         print("\n Need pkg-config to find system libzstd. Or we try bundled one.")
 
 
-
+# default standard optimization
+COPT = {
+    'msvc': ['/Ox', ],
+    'mingw32': ['-O2',],
+    'unix': ['-O2',],
+    'clang': ['-O2',],
+    'gcc': ['-O2',],
+}
 if BUILD_SMALL:
    COPT = {
        'msvc': ['/O1', ],
@@ -201,33 +227,40 @@ if BUILD_SMALL:
        'clang': ['-Os',],
        'gcc': ['-Os',],
    }
-else:
-    """
-    COPT = {
-       'msvc': ['/Ox', ],
-       'mingw32': ['-O2',],
-       'unix': ['-O2',],
-       'clang': ['-O2',],
-       'gcc': ['-O2',],
-    }
-    """
+
 # not small, but speed?
-    if BUILD_SPEED:
-       COPT = {
-           'msvc': ['/O2', ],
-           'mingw32': ['-O3',],
-           'unix': ['-O3',],
-           'clang': ['-O3',],
-           'gcc': ['-O3',],
-       }
-    else:
-        COPT = {
-            'msvc': ['/Ox', ],
-            'mingw32': ['-O2',],
-            'unix': ['-O2',],
-            'clang': ['-O2',],
-            'gcc': ['-O2',],
-       }
+if BUILD_SPEED0:
+    COPT = {
+        'msvc': ['/O0', ],
+        'mingw32': ['-O0',],
+        'unix': ['-O0',],
+        'clang': ['-O0',],
+        'gcc': ['-O0',],
+    }
+if BUILD_SPEED1:
+    COPT = {
+        'msvc': ['/O1', ],
+        'mingw32': ['-O1',],
+        'unix': ['-O0',],
+        'clang': ['-O1',],
+        'gcc': ['-O1',],
+    }
+if BUILD_SPEED2:
+    COPT = {
+        'msvc': ['/O2', ],
+        'mingw32': ['-O3',],
+        'unix': ['-O3',],
+        'clang': ['-O3',],
+        'gcc': ['-O3',],
+    }
+if BUILD_SPEED3:
+    COPT = {
+        'msvc': ['/O2', ],
+        'mingw32': ['-O3',],
+        'unix': ['-O3',],
+        'clang': ['-O3',],
+        'gcc': ['-O3',],
+    }
 ###
 # DVERSION - pass module version string
 # DDYNAMIC_BMI2 - disable BMI2 amd64 asembler code - can't build it, use CFLAGS with -march= bdver4, znver1/2/3, native
