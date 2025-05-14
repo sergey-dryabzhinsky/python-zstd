@@ -69,10 +69,10 @@ SUP_ASM="ZSTD_ASM" in os.environ
 if "ZSTD_ASM" not in os.environ:
     SUP_ASM = False
 #a asm off by default
-if "--libzstd0-use-asm" in sys.argv:
+if "--libzstd-use-asm" in sys.argv:
     # Support assembler builtin optimization in lizstd
     SUP_ASM=True
-    sys.argv.remove("--libzstdo-use-asm")
+    sys.argv.remove("--libzstd-use-asm")
 DISABLE_ASM=0
 if not SUP_ASM:
      DISABLE_ASM=1
