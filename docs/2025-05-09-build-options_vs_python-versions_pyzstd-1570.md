@@ -3,11 +3,11 @@
 benchmark over multiple versions of python with different build options.
 
 ## system
-CPU: i7-6850K CPU @ 3.60GHz
-MEM:4x116Gb DDR4 2400
-SYS:
-- host: proxmox3 (debian7)
-- guest: vm container openvz6 (ubuntu16):g gcc-5
+- CPU: i7-6850K CPU @ 3.60GHz
+- MEM:4x116Gb DDR4 2400
+- SYS:
+ - host: proxmox3 (debian7)
+ - guest: vm container openvz6 (ubuntu16):g gcc-5
 
 ## tests
 mainly results from internal `pythonX.Y setup.py test`
@@ -15,7 +15,11 @@ mainly results from internal `pythonX.Y setup.py test`
 ### options:
 - `--small`: compilation with `-Os`
 - `--speed`: compilation with `-O3`
-- `--speed-max`: compilation with `-march=native`
+- `--speed0`: compilation with `-O0`
+- `--speed1`: compilation with `-O1`
+- `--speed2`: compilation with `-O2`
+- `--speed3`: compilation with `-O3`
+- `--speed-max`: compilation with `-march=native` and `-O3`
 - `--libzstd-no-threads`: compilation without threads support
 - `--libzstd-no-use-asm`: compilation without use assembler (if any...)
 
@@ -99,4 +103,26 @@ python version	size,kb	check Mb/Sec	compress Mb/Sec	decompress blk Mb/Sec	decomp
 .3.12.10.	588	590,05	30,2	43,23	40,79
 .3.13.3-gil	588	602,03	31,48	44,72	41,52
 .3.14.0b1-gil	588	584,01	31,09	43,57	39,08
+```
+
+- gcc:5
+- **asm:no**
+- threads:yes,fixed
+- optimization: -O2
+```
+python version	size,kb	check Mb/Sec	compress one thread Mb/Sec	compress Mb/Sec	decompress blk Mb/Sec	decompress strm Mb/Sec
+.2.7.18.	592	598,95	29,75	29,8	44,67	41,06
+.3.4.10.	588	516,78	30,62	30,8	43,95	41,37
+.3.5.10.	588	500,65	30,8	31,02	41,84	38,86
+.3.6.15.	588	532,63	30,98	30,42	44,18	41,54
+.3.7.17.	588	520,29	30,54	30,4	43,85	41,35
+.3.8.20.	580	522,47	29,02	29,44	42,76	40,18
+.3.9.22.	580	522,08	30,5	30,54	43,69	41,2
+.3.10.17.	588	484,36	27,03	29,54	42,67	40,45
+.3.11.12.	588	499,28	30,02	30,18	40,12	39,52
+.3.12.10.	592	592,67	31,1	30,93	43,76	41,56
+.3.13.3-gil	588	607,58	30,53	30,23	44,22	41,11
+.3.13.3-nogil	592	493,77	29,5	27,45	42	37,28
+.3.14.0b1-gil	588	577,32	30,85	30,89	44,05	40,41
+.3.14.0b1-nogil	592	562,94	29,66	30,42	42,61	37,79
 ```
