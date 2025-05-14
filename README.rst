@@ -225,23 +225,39 @@ When using a PEP 517 builder you can use ``ZSTD_THREADS`` environment variable i
 
    >>> $ ZSTD_THREADS=0 python -m build -w
 
-If you're meet some cpu instruction errorrs you may try to disable built-in optimizations and pass option `--libzstd-no-use-asm`:
+If you're want to enable some speedup (maybe) you may try to enable built-in optimizations and pass option `--libzstd-use-asm`:
 
-   >>> $ python setup.py build_ext --libzstd-no-use-asm clean
+   >>> $ python setup.py build_ext --libzstd-use-asm clean
 
 Or add more speed with option `--libzstd-use-asm-bmi2` to use instructions for new AMD CPU.
 When using a PEP 517 builder you can use ``ZSTD_ASM`` environment variable instead:
 And ``ZST_ASM_BMI2=1`` too for bmi2 use.
 
-   >>> $ ZSTD_ASM=0 python -m build -w
+   >>> $ ZSTD_ASM=1 python -m build -w
 
-If you want bo build smaller module by size try to use option `--small`, but it will work slower.
+If you want to build smaller module by size try to use option `--small`, but it will work slower.
 
    >>> $ python setup.py build_ext --small clean
 
 When using a PEP 517 builder you can use ``ZSTD_SMALL`` environment variable instead:
 
    >>> $ ZSTD_SMALL=1 python -m build -w
+
+If you want to build faster module try to use option `--speed`.
+
+   >>> $ python setup.py build_ext --speed clean
+
+When using a PEP 517 builder you can use ``ZSTD_SPEED`` environment variable instead:
+
+   >>> $ ZSTD_SPEED=1 python -m build -w
+
+If you want to build even faster module try to use option `--speed-max`, but it will be optimized to your procesor only.
+
+   >>> $ python setup.py build_ext --speed-max clean
+
+When using a PEP 517 builder you can use ``ZSTD_SPEEDMAX`` environment variable instead:
+
+   >>> $ ZSTD_SPEEDMAX=1 python -m build -w
 
 If you want to build with existing distribution of libzstd just add ``--external`` option
 
@@ -250,6 +266,14 @@ If you want to build with existing distribution of libzstd just add ``--external
 When using a PEP 517 builder you can use ``ZSTD_EXTERNAL`` environment variable instead:
 
    >>> $ ZSTD_EXTERNAL=1 python -m build -w
+
+If you want to build with a lot of debug output just add ``--debug`` option
+
+   >>> $ python setup.py build_ext --debug clean
+
+When using a PEP 517 builder you can use ``ZSTD_DEBUG`` environment variable instead:
+
+   >>> $ ZSTD_DEBUG=1 python -m build -w
 
 If paths to header file ``zstd.h`` and libraries is uncommon - use common ``build`` params:
 --libraries --include-dirs --library-dirs.

@@ -67,15 +67,15 @@ if "--all-warnings-errors" in sys.argv:
     
 SUP_ASM="ZSTD_ASM" in os.environ
 if "ZSTD_ASM" not in os.environ:
-    SUP_ASM = True 
-#a asm on by default
-if "--libzstd-no-use-asm" in sys.argv:
+    SUP_ASM = False
+#a asm off by default
+if "--libzstd-use-asm" in sys.argv:
     # Support assembler builtin optimization in lizstd
-    SUP_ASM=False
-    sys.argv.remove("--libzstd-no-use-asm")
-DISABLE_ASM=1
-if SUP_ASM:
-     DISABLE_ASM=0
+    SUP_ASM=True
+    sys.argv.remove("--libzstd-use-asm")
+DISABLE_ASM=0
+if not SUP_ASM:
+     DISABLE_ASM=1
 
 SUP_THREADS="ZSTD_THREADS" in os.environ 
 if "ZSTD_THREADS" not in os.environ:
@@ -110,12 +110,36 @@ if "--small" in sys.argv:
     BUILD_SMALL=True 
     sys.argv.remove("--small")
     
+BUILD_SPEED="ZSTD_SPEED" in os.environ
+if "--speed" in sys.argv:
+    # Support tracing for debug
+    # speed or size choose only one
+    BUILD_SPEED=True 
+    BUILD_SMALL=False
+    sys.argv.remove("--speed")
+    
+BUILD_SPEEDMAX="ZSTD_SPEEDMAX" in os.environ
+if "--speed-max" in sys.argv:
+    # Support tracing for debug
+    # speed or size choose only one
+    BUILD_SPEED=True 
+    BUILD_SPEEDMAX=True 
+    BUILD_SMALL=False
+    sys.argv.remove("--speed-max")
+    
 SUP_EXTERNAL="ZSTD_EXTERNAL" in os.environ
 ext_libraries=[]
 if "--external" in sys.argv:
     # You want use external Zstd library?
     SUP_EXTERNAL=True
     sys.argv.remove("--external")
+
+SUP_DEBUG="ZSTD_DEBUG" in os.environ
+ext_libraries=[]
+if "--debug" in sys.argv:
+    # You want use external Zstd library?
+    SUP_DEBUG=True
+    sys.argv.remove("--debug")
 
 pkgconf = which("pkg-config")
 if "--libzstd-bundled" in sys.argv:
@@ -178,6 +202,7 @@ if BUILD_SMALL:
        'gcc': ['-Os',],
    }
 else:
+    """
     COPT = {
        'msvc': ['/Ox', ],
        'mingw32': ['-O2',],
@@ -185,6 +210,24 @@ else:
        'clang': ['-O2',],
        'gcc': ['-O2',],
     }
+    """
+# not small, but speed?
+    if BUILD_SPEED:
+       COPT = {
+           'msvc': ['/O2', ],
+           'mingw32': ['-O3',],
+           'unix': ['-O3',],
+           'clang': ['-O3',],
+           'gcc': ['-O3',],
+       }
+    else:
+        COPT = {
+            'msvc': ['/Ox', ],
+            'mingw32': ['-O2',],
+            'unix': ['-O2',],
+            'clang': ['-O2',],
+            'gcc': ['-O2',],
+       }
 ###
 # DVERSION - pass module version string
 # DDYNAMIC_BMI2 - disable BMI2 amd64 asembler code - can't build it, use CFLAGS with -march= bdver4, znver1/2/3, native
@@ -196,8 +239,8 @@ for comp in COPT:
         COPT[comp].extend([ '/DVERSION=%s' % PKG_VERSION_STR, '/DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '/DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ]),
     else:
         COPT[comp].extend([ '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '-DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ]),
-   
-        
+
+
 if not SUP_EXTERNAL:
     for comp in COPT:
         if comp == 'msvc':
@@ -207,6 +250,7 @@ if not SUP_EXTERNAL:
         else:
             COPT[comp].extend([ '-DZSTD_MULTITHREAD=%d' % ENABLE_THREADS,
                 '-Izstd/lib', '-Izstd/lib/common', '-Izstd/lib/compress', '-Izstd/lib/decompress',
+                ENABLE_THREADS and '-lpthread' or ''
             ])
 else:
     for comp in COPT:
@@ -215,6 +259,24 @@ else:
             ])
         else:
             COPT[comp].extend([ '-DLIBZSTD_EXTERNAL=1',
+            ])
+
+if SUP_DEBUG:
+    for comp in COPT:
+        if comp == 'msvc':
+            COPT[comp].extend([ '/DZSTD_DEBUG=1','-g',
+            ])
+        else:
+            COPT[comp].extend([ '-DZSTD_DEBUG=1','-g',
+            ])
+
+if BUILD_SPEEDMAX:
+    for comp in COPT:
+        if comp == 'msvc':
+            COPT[comp].extend([ ''
+            ])
+        else:
+            COPT[comp].extend([ '-march=native',
             ])
 
 if SUP_LEGACY:
@@ -237,7 +299,7 @@ if SUP_WERROR:
             COPT[comp].extend(['//WX'])
         else:
             COPT[comp].extend(['-Werror'])
-            
+
 # Force traceing support or disable
 if SUP_TRACE:
     for comp in COPT:
@@ -252,6 +314,13 @@ else:
         else:
             COPT[comp].extend(['-DZSTD_TRACE=0'])
 
+# protect from python packaged flags that prevent from exporting symbols
+for comp in COPT:
+    if comp == 'msvc':
+        pass
+    else:
+        COPT[comp].extend(['-fvisibility=default'])
+            
 
 class ZstdBuildExt( build_ext ):
 
@@ -303,6 +372,7 @@ if not SUP_EXTERNAL:
             ]:
             zstdFiles.append('zstd/lib/'+f)
 
+zstdFiles.append('src/debug.c')
 zstdFiles.append('src/util.c')
 zstdFiles.append('src/python-zstd.c')
 

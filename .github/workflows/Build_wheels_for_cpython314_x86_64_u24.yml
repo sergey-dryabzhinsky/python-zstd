@@ -1,4 +1,4 @@
-name: Build wheels for CPython3.14 x86_64 on Ubuntu16 with GCC All warnings
+name: Build wheels for CPython3.14 x86_64 on Ubuntu16 with GCC-5 All warnings
 
 on: [push, pull_request]
 

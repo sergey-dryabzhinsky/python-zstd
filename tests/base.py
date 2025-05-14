@@ -26,6 +26,7 @@ log.info("libzstd linked external:%r"% zstd.ZSTD_external())
 log.info("libzstd built with legacy formats support:%r"% zstd.ZSTD_legacy_support())
 log.info("zstd max number of threads:%r"% zstd.ZSTD_max_threads_count())
 log.info("zstd found CPU cores :%r"% zstd.ZSTD_threads_count())
+log.info("zstd default compression level:%r"% zstd.ZSTD_default_compression_level())
 log.info("zstd max compression level:%r"% zstd.ZSTD_max_compression_level())
 log.info("zstd min compression level:%r"% zstd.ZSTD_min_compression_level())
 log.info("pyzstd module version: %r"% zstd.version())
@@ -82,6 +83,9 @@ class BaseTestZSTD(unittest.TestCase):
     def helper_compression_default_level(self):
         CDATA = zstd.compress(tDATA)
         self.assertEqual(tDATA, zstd.decompress(CDATA))
+
+    def helper_compression_default_level_number(self):
+        self.assertEqual(3, zstd.ZSTD_default_compression_level())
 
     def helper_compression_default_level_zero(self):
         CDATA = zstd.compress(tDATA)

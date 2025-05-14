@@ -66,7 +66,7 @@ extern "C" {
     typedef struct stat stat_t;
 #endif
 
-int UTIL_countPhysicalCores(void);
+int UTIL_countAvailableCores(void);
 
 #if defined (__cplusplus)
 }

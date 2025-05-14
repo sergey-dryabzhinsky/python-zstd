@@ -35,6 +35,7 @@
 #define UNUSED(x)  (void)(x)
 
 #include "Python.h"
+#include "zstd.h"
 
 
 /*-=====  Do you need legacy old-format functions?  =====-*/
@@ -56,6 +57,10 @@
 /*-=====  Do you build legacy format support?  =====-*/
 #ifndef ZSTD_LEGACY_SUPPORT
 #define ZSTD_LEGACY_SUPPORT 0
+#endif
+
+#ifndef ZSTD_DEBUG
+#define ZSTD_DEBUG 0
 #endif
 
 /*-=====  Pre-defined compression levels  =====-*/
@@ -131,6 +136,7 @@ Raises a zstd.Error exception if any error occurs."
 
 #define ZSTD_MIN_COMPRESSION_LEVEL_DOCSTRING  "ZSTD_min_compression_level(): int -- Returns ZSTD library determined minimum number of compression level in integer."
 #define ZSTD_MAX_COMPRESSION_LEVEL_DOCSTRING  "ZSTD_max_compression_level(): int -- Returns ZSTD library determined maximum number of compression level in integer."
+#define ZSTD_DEFAULT_COMPRESSION_LEVEL_DOCSTRING  "ZSTD_default_compression_level(): int -- Returns ZSTD library determined default number of compression level in integer, must be 3."
 
 #if PYZSTD_LEGACY > 0
 #define COMPRESS_OLD_DOCSTRING      "compress_old(string[, level]): "PY_BYTESTR_TYPE" -- Compress string, old version, returning the compressed data.\n\nUses custom format. Not compatible with streaming or origin compression tools.\n\nRaises a zstd.Error exception if any error occurs.\n\n@deprecated"
