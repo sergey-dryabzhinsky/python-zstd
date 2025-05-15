@@ -80,6 +80,9 @@ if not SUP_ASM:
 SUP_THREADS="ZSTD_THREADS" in os.environ 
 if "ZSTD_THREADS" not in os.environ:
     SUP_THREADS = True
+else:
+    if os.environ['ZSTD_THREDS']=='0':
+        SUP_THREADS = False
 # threads on by default
 if "--libzstd-no-threads" in sys.argv:
     # Disable support multithreading in lizstd
@@ -152,15 +155,15 @@ else:
 
 BUILD_SPEED3="ZSTD_SPEED3" in os.environ
 if "--speed3" in sys.argv:
-    if BUILD_SPEED3:
-        if os.environ["ZSTD_SPEED3"]=='0':
-            BUILD_SPEED3=False
     # speed or size choose only one
     BUILD_SPEED3=True
     BUILD_SMALL=False
     sys.argv.remove("--speed3")
 else:
-    BUILD_SPEED3=False
+    BUILD_SPEED3=True
+if BUILD_SPEED3:
+    if os.environ.get("ZSTD_SPEED3")=='0':
+        BUILD_SPEED3=False
 
 BUILD_SPEEDMAX="ZSTD_SPEEDMAX" in os.environ
 if "--speed-max" in sys.argv:
