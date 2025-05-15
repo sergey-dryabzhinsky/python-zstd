@@ -48,6 +48,6 @@ class TestZstdDecompress(BaseTestZSTD):
         
     def test_check_uncompressed(self):
         cdata = b''
-        log.info("zstd uncompressed data check:%r" % zstd.check(cdata))
+        log.info("zstd uncompressed data check, must be (0):%r" % zstd.check(cdata))
         self.assertEqual(0, zstd.check(cdata))
         

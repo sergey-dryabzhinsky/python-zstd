@@ -106,37 +106,61 @@ if "--debug-trace" in sys.argv:
 
 BUILD_SMALL="ZSTD_SMALL" in os.environ
 if "--small" in sys.argv:
-    # Support tracing for debug
+    if BUILD_SMALL:
+        if os.environ["ZSTD_SMALL"]=='0':
+            BUILD_SMALL=False
     BUILD_SMALL=True 
     sys.argv.remove("--small")
+else:
+    BUILD_SMALL=False
 
 BUILD_SPEED0="ZSTD_SPEED0" in os.environ
 if "--speed0" in sys.argv:
     # speed or size choose only one
+    if BUILD_SPEED0:
+        if os.environ["ZSTD_SPEED0"]=='0':
+            BUILD_SPEED0=False
     BUILD_SPEED0=True
     BUILD_SMALL=False
     sys.argv.remove("--speed0")
+else:
+    BUILD_SPEED0=False
 
 BUILD_SPEED1="ZSTD_SPEED1" in os.environ
 if "--speed1" in sys.argv:
+    if BUILD_SPEED1:
+        if os.environ["ZSTD_SPEED1"]=='0':
+            BUILD_SPEED1=False
     # speed or size choose only one
     BUILD_SPEED1=True
     BUILD_SMALL=False
     sys.argv.remove("--speed1")
+else:
+    BUILD_SPEED1=False
 
 BUILD_SPEED2="ZSTD_SPEED2" in os.environ
 if "--speed2" in sys.argv:
+    if BUILD_SPEED2:
+        if os.environ["ZSTD_SPEED2"]=='0':
+            BUILD_SPEED2=False
     # speed or size choose only one
     BUILD_SPEED2=True
     BUILD_SMALL=False
     sys.argv.remove("--speed2")
+else:
+    BUILD_SPEED2=False
 
 BUILD_SPEED3="ZSTD_SPEED3" in os.environ
 if "--speed3" in sys.argv:
+    if BUILD_SPEED3:
+        if os.environ["ZSTD_SPEED3"]=='0':
+            BUILD_SPEED3=False
     # speed or size choose only one
     BUILD_SPEED3=True
     BUILD_SMALL=False
     sys.argv.remove("--speed3")
+else:
+    BUILD_SPEED3=False
 
 BUILD_SPEEDMAX="ZSTD_SPEEDMAX" in os.environ
 if "--speed-max" in sys.argv:
