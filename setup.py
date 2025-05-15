@@ -106,17 +106,6 @@ if "--debug-trace" in sys.argv:
     # Support tracing for debug
     SUP_TRACE=True
     sys.argv.remove("--debug-trace")
-
-BUILD_SMALL="ZSTD_SMALL" in os.environ
-if "--small" in sys.argv:
-    if BUILD_SMALL:
-        if os.environ["ZSTD_SMALL"]=='0':
-            BUILD_SMALL=False
-    BUILD_SMALL=True 
-    sys.argv.remove("--small")
-else:
-    BUILD_SMALL=False
-
 BUILD_SPEED0="ZSTD_SPEED0" in os.environ
 if "--speed0" in sys.argv:
     # speed or size choose only one
@@ -172,7 +161,18 @@ if "--speed-max" in sys.argv:
     BUILD_SPEEDMAX=True 
     BUILD_SMALL=False
     sys.argv.remove("--speed-max")
-    
+
+BUILD_SMALL="ZSTD_SMALL" in os.environ
+if "--small" in sys.argv:
+    if BUILD_SMALL:
+        if os.environ["ZSTD_SMALL"]=='0':
+            BUILD_SMALL=False
+    BUILD_SMALL=True
+    BUILD_SPEED3=False
+    sys.argv.remove("--small")
+else:
+    BUILD_SMALL=False
+
 SUP_EXTERNAL="ZSTD_EXTERNAL" in os.environ
 ext_libraries=[]
 if "--external" in sys.argv:
