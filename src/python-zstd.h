@@ -36,7 +36,7 @@
 
 #include "Python.h"
 #include "zstd.h"
-
+#include "thread_pool_compression.h"
 
 /*-=====  Do you need legacy old-format functions?  =====-*/
 #ifndef PYZSTD_LEGACY
@@ -57,10 +57,6 @@
 /*-=====  Do you build legacy format support?  =====-*/
 #ifndef ZSTD_LEGACY_SUPPORT
 #define ZSTD_LEGACY_SUPPORT 0
-#endif
-
-#ifndef ZSTD_DEBUG
-#define ZSTD_DEBUG 0
 #endif
 
 /*-=====  Pre-defined compression levels  =====-*/

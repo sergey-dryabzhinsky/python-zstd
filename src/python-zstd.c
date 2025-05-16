@@ -75,14 +75,14 @@ static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args)
         return NULL;
 #endif
 
-    printd("got Compression level:%d\n",level);
+    printdn("got Compression level:%d\n",level);
     if (0 == level) level=ZSTD_defaultCLevel();
     /* Fast levels (zstd >= 1.3.4) - [-1..-100] */
     /* Usual levels                - [ 1..22] */
     /* If level less than -100 or 1 - raise Error, level 0 handled before. */
-    printd("Compression min level:%d\n",ZSTD_MIN_CLEVEL);
+    printdn("Compression min level:%d\n",ZSTD_MIN_CLEVEL);
     if (level < ZSTD_MIN_CLEVEL) {
-        printd2("Bad compression level - less than %d: %d\n", ZSTD_MIN_CLEVEL, level);
+        printd2n("Bad compression level - less than %d: %d\n", ZSTD_MIN_CLEVEL, level);
 	if (strict) {
         PyErr_Format(ZstdError, "Bad compression level - less than %d: %d", ZSTD_MIN_CLEVEL, level);
         return NULL;
@@ -91,9 +91,9 @@ static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args)
 	}
     }
     /* If level more than 22 - raise Error. */
-    printd("Compression max level:%d\n",ZSTD_maxCLevel());
+    printdn("Compression max level:%d\n",ZSTD_maxCLevel());
     if (level > ZSTD_maxCLevel()) {
-        printd2("Bad compression level - more than %d: %d\n", ZSTD_maxCLevel(), level);
+        printd2n("Bad compression level - more than %d: %d\n", ZSTD_maxCLevel(), level);
 	if (strict) {
         PyErr_Format(ZstdError, "Bad compression level - more than %d: %d", ZSTD_MAX_CLEVEL, level);
         return NULL;
@@ -101,27 +101,27 @@ static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args)
 	    level = ZSTD_maxCLevel();
 	}
     }
-    printd("Compression level will be:%d\n",level);
+    printdn("Compression level will be:%d\n",level);
 
-    printd("got Compression threads:%d\n",threads);
+    printdn("got Compression threads:%d\n",threads);
     if (threads < 0) {
-        printd2("Bad threads count - less than %d: %d\n", 0, threads);
+        printd2n("Bad threads count - less than %d: %d\n", 0, threads);
 	if (strict) {
         PyErr_Format(ZstdError, "Bad threads count - less than %d: %d", 0, threads);
         return NULL;
 	} else threads = 1;
     }
     if (0 == threads) threads = UTIL_countAvailableCores();
-    printd("got CPU cores:%d\n",threads);
+    printdn("got CPU cores:%d\n",threads);
     /* If threads more than 200 - raise Error. */
     if (threads > ZSTDMT_NBWORKERS_MAX) {
-        printd2("Bad threads count - more than %d: %d\n", ZSTDMT_NBWORKERS_MAX, threads);
+        printd2n("Bad threads count - more than %d: %d\n", ZSTDMT_NBWORKERS_MAX, threads);
         threads = ZSTDMT_NBWORKERS_MAX;
         // do not fail here, due auto thread counter
         //PyErr_Format(ZstdError, "Bad threads count - more than %d: %d", ZSTDMT_NBWORKERS_MAX, threads);
         //return NULL;
     }
-    printd("Compression will use:%d threads\n",threads);
+    printdn("Compression will use:%d threads\n",threads);
 
     dest_size = (Py_ssize_t)ZSTD_compressBound(source_size);
     result = PyBytes_FromStringAndSize(NULL, dest_size);
@@ -452,6 +452,31 @@ static PyObject *py_zstd_max_compression_level(PyObject* self, PyObject *args)
     return Py_BuildValue("i", ZSTD_maxCLevel());
 }
 
+/**
+ * Returns how many threads started, int
+ */
+static PyObject *py_zstd_thread_pool_init(PyObject* self, PyObject *args)
+{
+    UNUSED(self);
+    UNUSED(args);
+
+    int threads = init_thread_pool_compression();
+
+    return Py_BuildValue("i", threads);
+}
+/**
+ * Returns how many threads stopped, int
+ */
+static PyObject *py_zstd_thread_pool_free(PyObject* self, PyObject *args)
+{
+    UNUSED(self);
+    UNUSED(args);
+
+    int threads = free_thread_pool_compression();
+
+    return Py_BuildValue("i", threads);
+}
+
 
 static PyMethodDef ZstdMethods[] = {
     {"ZSTD_compress",  py_zstd_compress_mt, METH_VARARGS, COMPRESS_DOCSTRING},
@@ -479,6 +504,9 @@ static PyMethodDef ZstdMethods[] = {
     {"ZSTD_legacy_support",  py_zstd_library_legacy_format_support, METH_NOARGS, ZSTD_LEGACY_DOCSTRING},
     {"ZSTD_with_threads",  py_zstd_with_threads, METH_NOARGS, ZSTD_WITH_THREADS_DOCSTRING},
     {"ZSTD_with_asm",  py_zstd_with_asm, METH_NOARGS, ZSTD_WITH_ASM_DOCSTRING},
+
+    {"Thread_pool_init",  py_zstd_thread_pool_init, METH_NOARGS, NULL},
+    {"Thread_pool_free",  py_zstd_thread_pool_free, METH_NOARGS, NULL},
     {NULL, NULL, 0, NULL}
 };
 
@@ -512,12 +540,27 @@ static int init_py_zstd(PyObject *module) {
 
 static int myextension_traverse(PyObject *m, visitproc visit, void *arg) {
     Py_VISIT(GETSTATE(m)->error);
+    printdi("ZSTD module->traverse",0);
     return 0;
 }
 
-static int myextension_clear(PyObject *m) {
-    Py_CLEAR(GETSTATE(m)->error);
+static int myextension_clear(PyObject *self) {
+    Py_CLEAR(GETSTATE(self)->error);
+    printdi("ZSTD module->clear",0);
+    #if ZSTD_MULTITHREAD>0
+	free_thread_pool_compression();
+    #endif
     return 0;
+}
+
+static void myextension_free(void *self) {
+    Py_CLEAR(GETSTATE((PyObject *)self)->error);
+    printdi("ZSTD module->free",0);
+    #if ZSTD_MULTITHREAD>0
+	int threads=free_thread_pool_compression();
+	printdi("ZSTD module->free: stopped %d threads", threads);
+    #endif
+    return;
 }
 
 //Slots not supported in Python 3.4
@@ -545,7 +588,8 @@ static struct PyModuleDef moduledef = {
         #endif
         myextension_traverse,
         myextension_clear,
-        NULL
+//        NULL
+        myextension_free,
 };
 
 
@@ -558,6 +602,8 @@ void initzstd(void)
 
 #endif
 {
+    UNUSED(thread_pool);
+    UNUSED(thread_pool_size);
 #if PY_MAJOR_VERSION >= 3
     //Slots not supported in Python 3.4
     #if PY_MINOR_VERSION >= 5
@@ -567,10 +613,20 @@ void initzstd(void)
     if (init_py_zstd(module) != 0) {
         return NULL;
     }
+	#if ZSTD_MULTITHREAD > 0
+	int threads = init_thread_pool_compression();
+	#endif
+    printdi("ZSTD module initialized",0);
+    printdi("ZSTD module started %d threads",threads);
     return module;
     #endif
 #else
     PyObject *module = Py_InitModule("zstd", ZstdMethods);
     init_py_zstd(module);
+	#if ZSTD_MULTITHREAD > 0
+	int threads = init_thread_pool_compression();
+	#endif
+    printdi("ZSTD module initialized",0);
+    printdi("ZSTD module started %d threads",threads);
 #endif
 }
