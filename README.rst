@@ -243,15 +243,15 @@ When using a PEP 517 builder you can use ``ZSTD_SMALL`` environment variable ins
 
    >>> $ ZSTD_SMALL=1 python -m build -w
 
-If you want to build faster module try to use option `--speed`.
+If you want to build faster module try to use options `--speed3`, `--speed1`, `--speed2`, which corresponds with gcc options `-O3, -O1, -O2`.
 
-   >>> $ python setup.py build_ext --speed clean
+   >>> $ python setup.py build_ext --speed1 clean
 
-When using a PEP 517 builder you can use ``ZSTD_SPEED`` environment variable instead:
+When using a PEP 517 builder you can use ``ZSTD_SPEED3`` (default), `ZSTD_SPEED1`, `ZSTD_SPEED2` environment variables instead:
 
-   >>> $ ZSTD_SPEED=1 python -m build -w
+   >>> $ ZSTD_SPEED2=1 python -m build -w
 
-If you want to build even faster module try to use option `--speed-max`, but it will be optimized to your procesor only.
+If you want to build even faster module try to use option `--speed-max`, but it will be optimized to your procesor only, similar to gcc options `-O3 -march=native`.
 
    >>> $ python setup.py build_ext --speed-max clean
 
@@ -267,13 +267,29 @@ When using a PEP 517 builder you can use ``ZSTD_EXTERNAL`` environment variable 
 
    >>> $ ZSTD_EXTERNAL=1 python -m build -w
 
-If you want to build with a lot of debug output just add ``--debug`` option
+If you want to build with a lot of debug output to stderr just add ``--debug`` option
 
    >>> $ python setup.py build_ext --debug clean
 
 When using a PEP 517 builder you can use ``ZSTD_DEBUG`` environment variable instead:
 
    >>> $ ZSTD_DEBUG=1 python -m build -w
+
+If you want to build with a lot more of debug output to stderr just add ``--debug-notice`` option
+
+   >>> $ python setup.py build_ext --debug-notice clean
+
+When using a PEP 517 builder you can use ``ZSTD_DEBUG_NOTICE`` environment variable instead:
+
+   >>> $ ZSTD_DEBUG_NOTICE=1 python -m build -w
+
+If you want to build with a lot more of debug output to stderr just add ``--debug-info`` option
+
+   >>> $ python setup.py build_ext --debug-info clean
+
+When using a PEP 517 builder you can use ``ZSTD_DEBUG_INFO`` environment variable instead:
+
+   >>> $ ZSTD_DEBUG_INFO=1 python -m build -w
 
 If paths to header file ``zstd.h`` and libraries is uncommon - use common ``build`` params:
 --libraries --include-dirs --library-dirs.

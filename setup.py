@@ -50,16 +50,29 @@ def which(bin_exe):
 SUP_LEGACY="ZSTD_LEGACY" in os.environ
 if "--legacy" in sys.argv:
     # Support legacy output format functions
-    SUP_LEGACY=True
+    if SUP_LEGACY:
+        if os.environ[ZSTD_LEGACY]=='0':
+            SUP_LEGACY=False
+        else:
+            SUP_LEGACY=True
     sys.argv.remove("--legacy")
 
 SUP_WARNINGS="ZSTD_WARNINGS" in os.environ
+if SUP_WARNINGS:
+    if os.environ["ZSTD_WARNINGS"]=='0':
+        SUP_WARNINS=False
+    else:
+        SUP_WARNINGS=True
 if "--all-warnings" in sys.argv:
-    # Support legacy output format functions
     SUP_WARNINGS=True
     sys.argv.remove("--all-warnings")
 
 SUP_WERROR="ZSTD_WERRORS" in os.environ
+if SUP_WERROR:
+    if os.environ["ZSTD_WERRORS"]=='0':
+        SUP_WERROR=False
+    else:
+        SUP_WERROR=True
 if "--all-warnings-errors" in sys.argv:
     # Support legacy output format functions
     SUP_WERROR=True
@@ -81,7 +94,7 @@ SUP_THREADS="ZSTD_THREADS" in os.environ
 if "ZSTD_THREADS" not in os.environ:
     SUP_THREADS = True
 else:
-    if os.environ['ZSTD_THREDS']=='0':
+    if os.environ['ZSTD_THREADS']=='0':
         SUP_THREADS = False
 # threads on by default
 if "--libzstd-no-threads" in sys.argv:
@@ -181,11 +194,35 @@ if "--external" in sys.argv:
     sys.argv.remove("--external")
 
 SUP_DEBUG="ZSTD_DEBUG" in os.environ
+if SUP_DEBUG:
+    if os.environ["ZSTD_DEBUG"]=='0':
+        SUP_DEBUG=False
 ext_libraries=[]
 if "--debug" in sys.argv:
-    # You want use external Zstd library?
     SUP_DEBUG=True
     sys.argv.remove("--debug")
+
+SUP_DEBUG_NOTICE="ZSTD_DEBUG_NOTICE" in os.environ
+if SUP_DEBUG_NOTICE:
+    SUP_DEBUG=True
+    if os.environ["ZSTD_DEBUG_NOTICE"]=='0':
+        SUP_DEBUG_NOTICE=False
+ext_libraries=[]
+if "--debug-notice" in sys.argv:
+    SUP_DEBUG_NOTICE=True
+    SUP_DEBUG=True
+    sys.argv.remove("--debug-notice")
+
+SUP_DEBUG_INFO="ZSTD_DEBUG_INFO" in os.environ
+if SUP_DEBUG_INFO:
+    SUP_DEBUG=True
+    if os.environ["ZSTD_DEBUG_INFO"]=='0':
+        SUP_DEBUG_INFO=False
+ext_libraries=[]
+if "--debug-info" in sys.argv:
+    SUP_DEBUG_INFO=True
+    SUP_DEBUG=True
+    sys.argv.remove("--debug-info")
 
 pkgconf = which("pkg-config")
 if "--libzstd-bundled" in sys.argv:
@@ -193,7 +230,7 @@ if "--libzstd-bundled" in sys.argv:
     SUP_EXTERNAL=False
     sys.argv.remove("--libzstd-bundled")
     pkgconf = False
-    
+
 #if SUP_EXTERNAL:
 if platform.system() == "Linux" and "build_ext" in sys.argv or "build" in sys.argv or "bdist_wheel" in sys.argv:
     # You should add external library by option: --libraries zstd
@@ -221,7 +258,8 @@ if platform.system() == "Linux" and "build_ext" in sys.argv or "build" in sys.ar
             # It's bytes in PY3
             VERSION_STR = VERSION_STR.decode()
         #debug
-        print("\nFound libzstd version %r" % VERSION_STR)
+        if SUP_DEBUG:
+            print("\nFound libzstd version %r" % VERSION_STR)
         if VERSION_STR and SUP_EXTERNAL:
             if VERSION_STR>="1.4.0":
                 SUP_EXTERNAL=True
@@ -330,6 +368,24 @@ if SUP_DEBUG:
             COPT[comp].extend([ '-DZSTD_DEBUG=1','-g',
             ])
 
+if SUP_DEBUG_NOTICE:
+    for comp in COPT:
+        if comp == 'msvc':
+            COPT[comp].extend([ '/DZSTD_DEBUG_NOTICE=1',
+            ])
+        else:
+            COPT[comp].extend([ '-DZSTD_DEBUG_NOTICE=1',
+            ])
+
+if SUP_DEBUG_INFO:
+    for comp in COPT:
+        if comp == 'msvc':
+            COPT[comp].extend([ '/DZSTD_DEBUG_INFO=1',
+            ])
+        else:
+            COPT[comp].extend([ '-DZSTD_DEBUG_INFO=1',
+            ])
+
 if BUILD_SPEEDMAX:
     for comp in COPT:
         if comp == 'msvc':
@@ -435,6 +491,8 @@ if not SUP_EXTERNAL:
 zstdFiles.append('src/debug.c')
 zstdFiles.append('src/sleep.c')
 zstdFiles.append('src/util.c')
+if SUP_THREADS:
+    zstdFiles.append('src/thread_pool_compression.c')
 zstdFiles.append('src/python-zstd.c')
 
 
