@@ -12,18 +12,18 @@
 void *thread_compression_worker(void *param)
 {
     int idx = *(int*)param;
-    printd("Started thread #%d\n", idx);
+    printdn("Started thread #%d\n", idx);
     thread_pool[idx].exited=0;
     thread_pool[idx].started=1;
 	while (true) {
 	    if (thread_pool[idx].flag_exit==1){
-		printd("Thread #%d asked to exit\n",idx);
+		printdn("Thread #%d asked to exit\n",idx);
 		break;
 	    }
 	    msleep(10);
 	}
     thread_pool[idx].exited=1;
-    printd("Stopped thread #%d\n",idx);
+    printdn("Stopped thread #%d\n",idx);
     pthread_exit(0);
 }
 
@@ -35,7 +35,7 @@ int init_thread_pool_compression(void)
     if (pool_status.started) return pool_status.started;
 
     int threads = UTIL_countAvailableCores();
-    printd("Init threads pool and start %d threads\n", threads);
+    printdn("Init threads pool and start %d threads\n", threads);
     thread_pool_size=threads;
     for(int i=0;i<threads;i++){
         /*  get default values for attributes*/
@@ -54,7 +54,7 @@ int init_thread_pool_compression(void)
 		pool_status.started++;
 //		pthread_setname_np(thread_pool[i].tid,thname);
 	}
-	else printd2("Thread #%d failed to start with error: %d\n",i,res);
+	else printd2n("Thread #%d failed to start with error: %d\n",i,res);
     }
     return pool_status.started;
 }
@@ -65,7 +65,7 @@ int free_thread_pool_compression(void)
     pool_status.stopped=0;
     if (pool_status.stopped) return pool_status.stopped;
 
-    printd("Free threads pool and stop %d threads\n", thread_pool_size);
+    printdn("Free threads pool and stop %d threads\n", thread_pool_size);
 
     for(int i=0;i<thread_pool_size;i++){
 	thread_pool[i].flag_exit=1;
@@ -78,7 +78,7 @@ int free_thread_pool_compression(void)
 		continue;
 	}
 	int res=pthread_cancel(thread_pool[i].tid);
-	if (res) printd2("Thread #%d failed to exit with error: %d\n",i,res);
+	if (res) printd2n("Thread #%d failed to exit with error: %d\n",i,res);
 	else pool_status.stopped++;
     }
 

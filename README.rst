@@ -183,6 +183,10 @@ LINKS
 Build from source
 -----------------
 
+ You need module setuptools <72 to run tests:
+
+    >>> $ pip install -U 'setuptools<72'
+
    >>> $ git clone https://github.com/sergey-dryabzhinsky/python-zstd
    >>> $ git submodule update --init
    >>> $ apt-get install python-dev python3-dev python-setuptools python3-setuptools
