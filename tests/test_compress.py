@@ -32,12 +32,21 @@ class TestZstdCompress(BaseTestZSTD):
 
     def test_compression_wrong_level_strict(self):
         self.assertRaises(zstd.Error, zstd.compress, tDATA, 100, 0, 1)
-        #BaseTestZSTD.helper_compression_wrong_level(self)
 
     def test_compression_equal_high_level(self):
         cdata1 = zstd.compress(tDATA, 22)
         cdata2 = zstd.compress(tDATA, 2200)
         self.assertEqual(cdata1, cdata2)
+
+    def test_compression_MT_and_not(self):
+        cdata1 = zstd.compress(tDATA, 14)
+        cdata2 = zstd.compress_real_mt(tDATA, 14)
+        self.assertEqual(cdata1, cdata2)
+
+    def test_compression_MT_and_raw(self):
+        cdata2 = zstd.compress_real_mt(tDATA, 14)
+        data2 = zstd.decompress(cdata2)
+        self.assertEqual(tDATA, data2)
 
     def test_compression_equal_low_level(self):
         cdata1 = zstd.compress(tDATA, -100)

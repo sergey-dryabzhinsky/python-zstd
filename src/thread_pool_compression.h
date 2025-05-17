@@ -18,8 +18,12 @@ typedef struct {
     /* task data */
     char* src;
     uint64_t src_pos;
-    int chunk_size;
+    size_t chunk_size;
+    int level;
+    int threads;
     char* dst;
+    size_t dest_size;
+    int64_t cSize;
 } tCThreadPool;
 
 typedef struct {

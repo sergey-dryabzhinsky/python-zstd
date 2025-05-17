@@ -1,6 +1,8 @@
 #include <stdbool.h>
 #include <stdio.h>
-#define _GNU_SOURCE
+#include <zstd.h>
+#include <Python.h>
+//#define _GNU_SOURCE 1
 #include "thread_pool_compression.h"
 #include "util.h"
 #include "sleep.h"
@@ -12,6 +14,7 @@
 void *thread_compression_worker(void *param)
 {
     int idx = *(int*)param;
+    ZSTD_CCtx* cctx = 0;
     printdn("Started thread #%d\n", idx);
     thread_pool[idx].exited=0;
     thread_pool[idx].started=1;
@@ -21,6 +24,22 @@ void *thread_compression_worker(void *param)
 		break;
 	    }
 	    msleep(10);
+
+	    if (thread_pool[idx].task_set==0){
+		continue;
+	    }
+
+	    thread_pool[idx].task_set=0; // drop flag
+	    /* make compression magic */
+	    Py_BEGIN_ALLOW_THREADS
+		cctx = ZSTD_createCCtx();
+	    ZSTD_CCtx_setParameter(cctx, ZSTD_c_compressionLevel, thread_pool[idx].level);
+	    ZSTD_CCtx_setParameter(cctx, ZSTD_c_nbWorkers, thread_pool[idx].threads);
+	    size_t cSize = ZSTD_compress2(cctx, thread_pool[idx].dst, (size_t)thread_pool[idx].dest_size, thread_pool[idx].src, (size_t)thread_pool[idx].chunk_size);
+	    thread_pool[idx].cSize=cSize;
+	    thread_pool[idx].task_done=1;
+	    ZSTD_freeCCtx(cctx);
+	    Py_END_ALLOW_THREADS
 	}
     thread_pool[idx].exited=1;
     printdn("Stopped thread #%d\n",idx);
