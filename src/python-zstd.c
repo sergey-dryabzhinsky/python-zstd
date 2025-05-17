@@ -138,7 +138,11 @@ static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args)
         ZSTD_CCtx_setParameter(cctx, ZSTD_c_nbWorkers, threads);
 
         Py_BEGIN_ALLOW_THREADS
+
+        init_thread_pool_compression();
         cSize = ZSTD_compress2(cctx, dest, (size_t)dest_size, source, (size_t)source_size);
+        free_thread_pool_compression();
+
         Py_END_ALLOW_THREADS
 
         ZSTD_freeCCtx(cctx);
@@ -540,13 +544,13 @@ static int init_py_zstd(PyObject *module) {
 
 static int myextension_traverse(PyObject *m, visitproc visit, void *arg) {
     Py_VISIT(GETSTATE(m)->error);
-    printdi("ZSTD module->traverse",0);
+    printdi("ZSTD module->traverse\n",0);
     return 0;
 }
 
 static int myextension_clear(PyObject *self) {
     Py_CLEAR(GETSTATE(self)->error);
-    printdi("ZSTD module->clear",0);
+    printdi("ZSTD module->clear\n",0);
     #if ZSTD_MULTITHREAD>0
 	free_thread_pool_compression();
     #endif
@@ -555,10 +559,10 @@ static int myextension_clear(PyObject *self) {
 
 static void myextension_free(void *self) {
     Py_CLEAR(GETSTATE((PyObject *)self)->error);
-    printdi("ZSTD module->free",0);
+    printdi("ZSTD module->free\n",0);
     #if ZSTD_MULTITHREAD>0
 	int threads=free_thread_pool_compression();
-	printdi("ZSTD module->free: stopped %d threads", threads);
+	printdi("ZSTD module->free: stopped %d threads\n", threads);
     #endif
     return;
 }
@@ -603,6 +607,7 @@ void initzstd(void)
 #endif
 {
     UNUSED(thread_pool);
+    UNUSED(pool_status);
     UNUSED(thread_pool_size);
 #if PY_MAJOR_VERSION >= 3
     //Slots not supported in Python 3.4
@@ -616,8 +621,8 @@ void initzstd(void)
 	#if ZSTD_MULTITHREAD > 0
 	int threads = init_thread_pool_compression();
 	#endif
-    printdi("ZSTD module initialized",0);
-    printdi("ZSTD module started %d threads",threads);
+    printdi("ZSTD module initialized\n",0);
+    printdi("ZSTD module started %d threads\n",threads);
     return module;
     #endif
 #else
@@ -626,7 +631,7 @@ void initzstd(void)
 	#if ZSTD_MULTITHREAD > 0
 	int threads = init_thread_pool_compression();
 	#endif
-    printdi("ZSTD module initialized",0);
-    printdi("ZSTD module started %d threads",threads);
+    printdi("ZSTD module initialized\n",0);
+    printdi("ZSTD module started %d threads\n",threads);
 #endif
 }

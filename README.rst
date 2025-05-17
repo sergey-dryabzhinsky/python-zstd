@@ -291,6 +291,14 @@ When using a PEP 517 builder you can use ``ZSTD_DEBUG_INFO`` environment variabl
 
    >>> $ ZSTD_DEBUG_INFO=1 python -m build -w
 
+Some python builds need to force disabing LTO, so just add ``--force-no-lto`` option
+
+   >>> $ python setup.py build_ext --force-no-lto clean
+
+When using a PEP 517 builder you can use ``ZSTD_BUILD_NO_LTO`` environment variable instead:
+
+   >>> $ ZSTD_BUILD_NO_LTO=1 python -m build -w
+
 If paths to header file ``zstd.h`` and libraries is uncommon - use common ``build`` params:
 --libraries --include-dirs --library-dirs.
 

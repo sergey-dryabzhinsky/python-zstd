@@ -223,6 +223,15 @@ if "--debug-info" in sys.argv:
     SUP_DEBUG_INFO=True
     SUP_DEBUG=True
     sys.argv.remove("--debug-info")
+#Some python builds need to disable LTO by force
+BUILD_NO_LTO="ZSTD_BUILD_NO_LTO" in os.environ
+if BUILD_NO_LTO:
+    if os.environ["ZSTD_BUILD_NO_LTO"]=='0':
+        BUILD_NO_LTO=False
+ext_libraries=[]
+if "--force-no-lto" in sys.argv:
+    BUILD_NO_LTO=True
+    sys.argv.remove("--force-no-lto")
 
 pkgconf = which("pkg-config")
 if "--libzstd-bundled" in sys.argv:
@@ -368,6 +377,14 @@ if SUP_DEBUG:
             COPT[comp].extend([ '-DZSTD_DEBUG=1','-g',
             ])
 
+if BUILD_NO_LTO:
+    for comp in COPT:
+        if comp == 'msvc':
+            pass
+        else:
+            COPT[comp].extend([ '-fno-lto',
+            ])
+
 if SUP_DEBUG_NOTICE:
     for comp in COPT:
         if comp == 'msvc':
@@ -511,6 +528,11 @@ def my_test_suite():
     return test_suite
 
 test_func_name = "setup.my_test_suite"
+if "test" in sys.argv:
+    from setuptools.version import __version__ as version
+    print("setuptools version %r" % version)
+    if version < '72.0':
+        test_func_name = "tests"
 
 setup(
     name='zstd',
