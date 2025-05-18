@@ -5,12 +5,14 @@ from tests.base import BaseTestZSTD, zstd, tDATA, log
 class TestZstdCompress(BaseTestZSTD):
 
     def setup(self):
-        th = zstd.Thread_pool_init()
-        log.info("Stated pool of %d threads" % th)
+        pass
+#        th = zstd.Thread_pool_init()
+#        log.info("Stated pool of %d threads" % th)
 
     def tearDown(self):
-        th = zstd.Thread_pool_free()
-        log.info("Freed pool of %d threads" % th)
+        pass
+#        th = zstd.Thread_pool_free()
+#        log.info("Freed pool of %d threads" % th)
 
     def test_compression_random(self):
         BaseTestZSTD.helper_compression_random(self)
