@@ -222,7 +222,7 @@ ext_libraries=[]
 if "--debug-info" in sys.argv:
     SUP_DEBUG_INFO=True
     SUP_DEBUG=True
-    sys.argv.remove("--debug-info"0)
+    sys.argv.remove("--debug-info")
 #Some python builds need to disable LTO by force
 BUILD_NO_LTO="ZSTD_BUILD_NO_LTO" in os.environ
 if BUILD_NO_LTO:
@@ -232,7 +232,7 @@ ext_libraries=[]
 if "--force-no-lto" in sys.argv:
     BUILD_NO_LTO=True
     sys.argv.remove("--force-no-lto")
-else
+else:
     BUILD_NO_LTO=True
     
 pkgconf = which("pkg-config")
