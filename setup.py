@@ -223,6 +223,18 @@ if "--debug-info" in sys.argv:
     SUP_DEBUG_INFO=True
     SUP_DEBUG=True
     sys.argv.remove("--debug-info")
+
+SUP_DEBUG_ERROR="ZSTD_DEBUG_ERROR" in os.environ
+if SUP_DEBUG_ERROR:
+    SUP_DEBUG=True
+    if os.environ["ZSTD_DEBUG_ERROR"]=='0':
+        SUP_DEBUG_ERROR=False
+ext_libraries=[]
+if "--debug-error" in sys.argv:
+    SUP_DEBUG_ERROR=True
+    SUP_DEBUG=True
+    sys.argv.remove("--debug-error")
+
 #Some python builds need to disable LTO by force
 BUILD_NO_LTO="ZSTD_BUILD_NO_LTO" in os.environ
 if BUILD_NO_LTO:
@@ -403,6 +415,15 @@ if SUP_DEBUG_INFO:
             ])
         else:
             COPT[comp].extend([ '-DZSTD_DEBUG_INFO=1',
+            ])
+
+if SUP_DEBUG_ERROR:
+    for comp in COPT:
+        if comp == 'msvc':
+            COPT[comp].extend([ '/DZSTD_DEBUG_ERROR=1',
+            ])
+        else:
+            COPT[comp].extend([ '-DZSTD_DEBUG_ERROR=1',
             ])
 
 if BUILD_SPEEDMAX:

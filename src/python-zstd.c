@@ -88,7 +88,7 @@ static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args)
     /* If level less than -100 or 1 - raise Error, level 0 handled before. */
     printdn("Compression min level:%d\n",ZSTD_MIN_CLEVEL);
     if (level < ZSTD_MIN_CLEVEL) {
-        printd2n("Bad compression level - less than %d: %d\n", ZSTD_MIN_CLEVEL, level);
+        printd2e("Bad compression level - less than %d: %d\n", ZSTD_MIN_CLEVEL, level);
 	if (strict) {
         PyErr_Format(ZstdError, "Bad compression level - less than %d: %d", ZSTD_MIN_CLEVEL, level);
         return NULL;
@@ -99,7 +99,7 @@ static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args)
     /* If level more than 22 - raise Error. */
     printdn("Compression max level:%d\n",ZSTD_maxCLevel());
     if (level > ZSTD_maxCLevel()) {
-        printd2n("Bad compression level - more than %d: %d\n", ZSTD_maxCLevel(), level);
+        printd2e("Bad compression level - more than %d: %d\n", ZSTD_maxCLevel(), level);
 	if (strict) {
         PyErr_Format(ZstdError, "Bad compression level - more than %d: %d", ZSTD_MAX_CLEVEL, level);
         return NULL;
@@ -111,7 +111,7 @@ static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args)
 
     printdn("got Compression threads:%d\n",threads);
     if (threads < 0) {
-        printd2n("Bad threads count - less than %d: %d\n", 0, threads);
+        printd2e("Bad threads count - less than %d: %d\n", 0, threads);
 	if (strict) {
         PyErr_Format(ZstdError, "Bad threads count - less than %d: %d", 0, threads);
         return NULL;
@@ -121,7 +121,7 @@ static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args)
     printdn("got CPU cores:%d\n",threads);
     /* If threads more than 200 - raise Error. */
     if (threads > ZSTDMT_NBWORKERS_MAX) {
-        printd2n("Bad threads count - more than %d: %d\n", ZSTDMT_NBWORKERS_MAX, threads);
+        printd2e("Bad threads count - more than %d: %d\n", ZSTDMT_NBWORKERS_MAX, threads);
         threads = ZSTDMT_NBWORKERS_MAX;
         // do not fail here, due auto thread counter
         //PyErr_Format(ZstdError, "Bad threads count - more than %d: %d", ZSTDMT_NBWORKERS_MAX, threads);
@@ -150,7 +150,7 @@ static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args)
 
         printdn("Compression result: %d\n", cSize);
         if (ZSTD_isError(cSize)) {
-            if (ZSTD_DEBUG_INFO) printf("debug INFO: Compression error: %s", ZSTD_getErrorName(cSize));
+            printdes("debug INFO: Compression error: %s", ZSTD_getErrorName(cSize));
             PyErr_Format(ZstdError, "Compression error: %s", ZSTD_getErrorName(cSize));
             Py_CLEAR(result);
             return NULL;
@@ -186,11 +186,15 @@ static PyObject *py_zstd_compress_real_mt(PyObject* self, PyObject *args)
     int32_t strict = 0;
 
 #if PY_MAJOR_VERSION >= 3
-    if (!PyArg_ParseTuple(args, "y#|iii", &source, &source_size, &level, &threads, &strict))
+    if (!PyArg_ParseTuple(args, "y#|iii", &source, &source_size, &level, &threads, &strict)){
+        printde("Input asrguments not parsed",0);
         return NULL;
+    }
 #else
-    if (!PyArg_ParseTuple(args, "s#|iii", &source, &source_size, &level, &threads, &strict))
+    if (!PyArg_ParseTuple(args, "s#|iii", &source, &source_size, &level, &threads, &strict)){
+        printde("Input asrguments not parsed",0);
         return NULL;
+    }
 #endif
 
     printdn("got Compression level:%d\n",level);
@@ -200,7 +204,7 @@ static PyObject *py_zstd_compress_real_mt(PyObject* self, PyObject *args)
     /* If level less than -100 or 1 - raise Error, level 0 handled before. */
     printdn("Compression min level:%d\n",ZSTD_MIN_CLEVEL);
     if (level < ZSTD_MIN_CLEVEL) {
-        printd2n("Bad compression level - less than %d: %d\n", ZSTD_MIN_CLEVEL, level);
+        printd2e("Bad compression level - less than %d: %d\n", ZSTD_MIN_CLEVEL, level);
 	if (strict) {
         PyErr_Format(ZstdError, "Bad compression level - less than %d: %d", ZSTD_MIN_CLEVEL, level);
         return NULL;
@@ -211,7 +215,7 @@ static PyObject *py_zstd_compress_real_mt(PyObject* self, PyObject *args)
     /* If level more than 22 - raise Error. */
     printdn("Compression max level:%d\n",ZSTD_maxCLevel());
     if (level > ZSTD_maxCLevel()) {
-        printd2n("Bad compression level - more than %d: %d\n", ZSTD_maxCLevel(), level);
+        printd2e("Bad compression level - more than %d: %d\n", ZSTD_maxCLevel(), level);
 	if (strict) {
         PyErr_Format(ZstdError, "Bad compression level - more than %d: %d", ZSTD_MAX_CLEVEL, level);
         return NULL;
@@ -223,7 +227,7 @@ static PyObject *py_zstd_compress_real_mt(PyObject* self, PyObject *args)
 
     printdn("got Compression threads:%d\n",threads);
     if (threads < 0) {
-        printd2n("Bad threads count - less than %d: %d\n", 0, threads);
+        printd2e("Bad threads count - less than %d: %d\n", 0, threads);
 	if (strict) {
         PyErr_Format(ZstdError, "Bad threads count - less than %d: %d", 0, threads);
         return NULL;
@@ -233,7 +237,7 @@ static PyObject *py_zstd_compress_real_mt(PyObject* self, PyObject *args)
     printdn("got CPU cores:%d\n",threads);
     /* If threads more than 200 - raise Error. */
     if (threads > ZSTDMT_NBWORKERS_MAX) {
-        printd2n("Bad threads count - more than %d: %d\n", ZSTDMT_NBWORKERS_MAX, threads);
+        printd2e("Bad threads count - more than %d: %d\n", ZSTDMT_NBWORKERS_MAX, threads);
         threads = ZSTDMT_NBWORKERS_MAX;
         // do not fail here, due auto thread counter
         //PyErr_Format(ZstdError, "Bad threads count - more than %d: %d", ZSTDMT_NBWORKERS_MAX, threads);
@@ -258,7 +262,7 @@ static PyObject *py_zstd_compress_real_mt(PyObject* self, PyObject *args)
         init_thread_pool_compression();
 	uint64_t pos=0;
 	for(int i=0;i<threads;i++){
-		thread_pool[i].src=source;
+		thread_pool[i].src=(char*)source;
 		thread_pool[i].src_pos=pos;
 		thread_pool[i].chunk_size=chunk_size;
 		thread_pool[i].dest_size=dest_size;
@@ -295,7 +299,7 @@ static PyObject *py_zstd_compress_real_mt(PyObject* self, PyObject *args)
 	cSize = thread_pool[i].cSize;
 	        printdi("Chunk Compression result: %d\n", cSize);
         if (ZSTD_isError(cSize)) {
-            if (ZSTD_DEBUG_INFO) printf("debug INFO: Chunk Compression error: %s", ZSTD_getErrorName(cSize));
+            printdes("debug INFO: Chunk Compression error: %s", ZSTD_getErrorName(cSize));
             PyErr_Format(ZstdError, "Chunk Compression error: %s", ZSTD_getErrorName(cSize));
             Py_CLEAR(result);
             return NULL;
