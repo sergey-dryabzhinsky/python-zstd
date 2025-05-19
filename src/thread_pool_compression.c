@@ -45,6 +45,7 @@ void *thread_compression_worker(void *param)
 	    size_t cSize = ZSTD_compress2(cctx, thread_pool[idx].dst, (size_t)thread_pool[idx].dest_size, thread_pool[idx].src, (size_t)thread_pool[idx].chunk_size);
 	    thread_pool[idx].cSize=cSize;
 	    thread_pool[idx].task_done=1;
+	    thread_pool[idx].task_working=0; // drop flag
 	    thread_pool[idx].task_wait_data=1; // set flag again
 	    ZSTD_freeCCtx(cctx);
 	    Py_END_ALLOW_THREADS

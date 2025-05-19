@@ -13,6 +13,7 @@ typedef struct {
     char flag_exit;
     char exited;
     char started;
+
     char task_wait_data;
     char task_set;
     char task_working;

@@ -258,10 +258,14 @@ static PyObject *py_zstd_compress_real_mt(PyObject* self, PyObject *args)
 
 	chunk_size=source_size/threads;
 	if (chunk_size<THREAD_JOB_CHUNK_MIN_SIZE) chunk_size=THREAD_JOB_CHUNK_MIN_SIZE;
+	printd2i("Source size %d bytes, chunk size %d bytes",source_size,chunk_size);
+
+	int workers=source_size/chunk_size;
+	printd2i("Threads to start: %d, workers to use: %d",threads, workers);
 
         init_thread_pool_compression();
 	uint64_t pos=0;
-	for(int i=0;i<threads;i++){
+	for(int i=0;i<workers;i++){
 		thread_pool[i].src=(char*)source;
 		thread_pool[i].src_pos=pos;
 		thread_pool[i].chunk_size=chunk_size;
@@ -278,10 +282,11 @@ static PyObject *py_zstd_compress_real_mt(PyObject* self, PyObject *args)
 			pos+=chunk_size;
 		}
 	}
-	/* wait for taask to be done */
+	/* wait for task to be done */
 	int done=0;
-	while (done<threads){
-	    for(int i=0;i<threads;i++){
+	while (done<workers){
+	    done=0;
+	    for(int i=0;i<workers;i++){
 		if (thread_pool[i].task_done){
 			done++;
 			continue;
@@ -291,9 +296,9 @@ static PyObject *py_zstd_compress_real_mt(PyObject* self, PyObject *args)
 	}
         free_thread_pool_compression();
 	pos=0;
-	if (done==threads){
+	if (done==workers){
 		/* copy all done threads results into dest */
-		for(int i=0;i<threads;i++){
+		for(int i=0;i<workers;i++){
 		if (thread_pool[i].task_done){
 
 	cSize = thread_pool[i].cSize;
