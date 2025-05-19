@@ -287,7 +287,7 @@ static PyObject *py_zstd_compress_real_mt(PyObject* self, PyObject *args)
 			continue;
 		}
 	    }
-	    msleep(50);
+	    msleep(5);
 	}
         free_thread_pool_compression();
 	pos=0;
@@ -297,9 +297,9 @@ static PyObject *py_zstd_compress_real_mt(PyObject* self, PyObject *args)
 		if (thread_pool[i].task_done){
 
 	cSize = thread_pool[i].cSize;
-	        printdi("Chunk Compression result: %d\n", cSize);
+	printdi("Chunk Compression result: %d\n", cSize);
         if (ZSTD_isError(cSize)) {
-            printdes("debug INFO: Chunk Compression error: %s", ZSTD_getErrorName(cSize));
+            printdes("Chunk Compression error: %s", ZSTD_getErrorName(cSize));
             PyErr_Format(ZstdError, "Chunk Compression error: %s", ZSTD_getErrorName(cSize));
             Py_CLEAR(result);
             return NULL;
@@ -315,12 +315,6 @@ static PyObject *py_zstd_compress_real_mt(PyObject* self, PyObject *args)
         Py_END_ALLOW_THREADS
 
         printdi("Compression result: %d\n", cSize);
-        if (ZSTD_isError(cSize)) {
-            if (ZSTD_DEBUG_INFO) printf("debug INFO: Compression error: %s", ZSTD_getErrorName(cSize));
-            PyErr_Format(ZstdError, "Compression error: %s", ZSTD_getErrorName(cSize));
-            Py_CLEAR(result);
-            return NULL;
-        }
         Py_SET_SIZE(result, cSize);
     }
     return result;

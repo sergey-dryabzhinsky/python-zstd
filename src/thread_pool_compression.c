@@ -18,26 +18,34 @@ void *thread_compression_worker(void *param)
     printdn("Started thread #%d\n", idx);
     thread_pool[idx].exited=0;
     thread_pool[idx].started=1;
+    thread_pool[idx].task_wait_data=1;
+    thread_pool[idx].task_working=0;
 	while (true) {
 	    if (thread_pool[idx].flag_exit==1){
 		printdn("Thread #%d asked to exit\n",idx);
 		break;
 	    }
-	    msleep(10);
+	    msleep(1);// relax cpu load
 
+	    if (thread_pool[idx].task_wait_data==1){
+		continue;
+	    }
 	    if (thread_pool[idx].task_set==0){
 		continue;
 	    }
 
 	    thread_pool[idx].task_set=0; // drop flag
+	    thread_pool[idx].task_wait_data=0; // drop flag
+	    thread_pool[idx].task_working=1; // set flag
 	    /* make compression magic */
 	    Py_BEGIN_ALLOW_THREADS
-		cctx = ZSTD_createCCtx();
+	    cctx = ZSTD_createCCtx();
 	    ZSTD_CCtx_setParameter(cctx, ZSTD_c_compressionLevel, thread_pool[idx].level);
 	    ZSTD_CCtx_setParameter(cctx, ZSTD_c_nbWorkers, thread_pool[idx].threads);
 	    size_t cSize = ZSTD_compress2(cctx, thread_pool[idx].dst, (size_t)thread_pool[idx].dest_size, thread_pool[idx].src, (size_t)thread_pool[idx].chunk_size);
 	    thread_pool[idx].cSize=cSize;
 	    thread_pool[idx].task_done=1;
+	    thread_pool[idx].task_wait_data=1; // set flag again
 	    ZSTD_freeCCtx(cctx);
 	    Py_END_ALLOW_THREADS
 	}
@@ -68,7 +76,7 @@ int init_thread_pool_compression(void)
 	sprintf(thname,"Worker #%d",i);
 	/* create new thread*/
 	int res=pthread_create(&thread_pool[i].tid,&thread_pool[i].attr,thread_compression_worker,&i);
-	msleep(50);
+	msleep(5);
 	if (res==0 && thread_pool[i].started){
 		pool_status.started++;
 //		pthread_setname_np(thread_pool[i].tid,thname);
@@ -89,7 +97,7 @@ int free_thread_pool_compression(void)
     for(int i=0;i<thread_pool_size;i++){
 	thread_pool[i].flag_exit=1;
     }
-    msleep(100);
+    msleep(10);
     /* force threads to exit */
     for(int i=0;i<thread_pool_size;i++){
 	if (thread_pool[i].exited) {
