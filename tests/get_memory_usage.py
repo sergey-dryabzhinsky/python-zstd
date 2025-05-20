@@ -37,24 +37,4 @@ def get_real_memory_usage():
     _handle.seek(0)
 
 
-if __name__ == '__main__':
-  from dedupsqlfs.my_formats import format_size
-  megabyte = 1024**2
-  counter = megabyte
-  limit = megabyte * 50
-  memory = []
-  old_memory_usage = get_memory_usage()
-  assert old_memory_usage > 0
-  while counter < limit:
-    memory.append('a' * counter)
-    msg = "I've just allocated %s and get_memory_usage() returns %s (%s more, deviation is %s)"
-    new_memory_usage = get_memory_usage()
-    difference = new_memory_usage - old_memory_usage
-    deviation = max(difference, counter) - min(difference, counter)
-    assert deviation < 1024*100
-    print (msg % (format_size(counter), format_size(new_memory_usage), format_size(difference), format_size(deviation)))
-    old_memory_usage = new_memory_usage
-    counter += megabyte
-  print ("Stopped allocating new strings at %s" % format_size(limit))
-
 # vim: ts=2 sw=2 et

@@ -32,10 +32,11 @@ class TestZstdSpeed(BaseTestZSTD):
         l=len(tDATA)
         tbegin = time()
         beginMemoryUsage=get_real_memory_usage()
+        zstd.Thread_pool_init()
         while time()-tbegin<wait:
             cdata = zstd.compress_real_mt(tDATA*10,3,0)
             sum+=l
-
+        zstd.Thread_pool_free()
         endMemoryUsage=get_real_memory_usage()
         log.info("Compression MT speed average = %6.2f Mb/sec" % (1.0*sum/1024/1024/wait,))
         log.info("Compression MT memory usage = %6.2f kb" % (1.0*(endMemoryUsage-beginMemoryUsage)/1024,))
