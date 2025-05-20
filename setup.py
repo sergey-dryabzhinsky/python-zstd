@@ -50,16 +50,29 @@ def which(bin_exe):
 SUP_LEGACY="ZSTD_LEGACY" in os.environ
 if "--legacy" in sys.argv:
     # Support legacy output format functions
-    SUP_LEGACY=True
+    if SUP_LEGACY:
+        if os.environ[ZSTD_LEGACY]=='0':
+            SUP_LEGACY=False
+        else:
+            SUP_LEGACY=True
     sys.argv.remove("--legacy")
 
 SUP_WARNINGS="ZSTD_WARNINGS" in os.environ
+if SUP_WARNINGS:
+    if os.environ["ZSTD_WARNINGS"]=='0':
+        SUP_WARNINS=False
+    else:
+        SUP_WARNINGS=True
 if "--all-warnings" in sys.argv:
-    # Support legacy output format functions
     SUP_WARNINGS=True
     sys.argv.remove("--all-warnings")
 
 SUP_WERROR="ZSTD_WERRORS" in os.environ
+if SUP_WERROR:
+    if os.environ["ZSTD_WERRORS"]=='0':
+        SUP_WERROR=False
+    else:
+        SUP_WERROR=True
 if "--all-warnings-errors" in sys.argv:
     # Support legacy output format functions
     SUP_WERROR=True
@@ -80,6 +93,9 @@ if not SUP_ASM:
 SUP_THREADS="ZSTD_THREADS" in os.environ 
 if "ZSTD_THREADS" not in os.environ:
     SUP_THREADS = True
+else:
+    if os.environ['ZSTD_THREADS']=='0':
+        SUP_THREADS = False
 # threads on by default
 if "--libzstd-no-threads" in sys.argv:
     # Disable support multithreading in lizstd
@@ -103,30 +119,73 @@ if "--debug-trace" in sys.argv:
     # Support tracing for debug
     SUP_TRACE=True
     sys.argv.remove("--debug-trace")
-
-BUILD_SMALL="ZSTD_SMALL" in os.environ
-if "--small" in sys.argv:
-    # Support tracing for debug
-    BUILD_SMALL=True 
-    sys.argv.remove("--small")
-    
-BUILD_SPEED="ZSTD_SPEED" in os.environ
-if "--speed" in sys.argv:
-    # Support tracing for debug
+BUILD_SPEED0="ZSTD_SPEED0" in os.environ
+if "--speed0" in sys.argv:
     # speed or size choose only one
-    BUILD_SPEED=True 
+    if BUILD_SPEED0:
+        if os.environ["ZSTD_SPEED0"]=='0':
+            BUILD_SPEED0=False
+    BUILD_SPEED0=True
     BUILD_SMALL=False
-    sys.argv.remove("--speed")
-    
+    sys.argv.remove("--speed0")
+else:
+    BUILD_SPEED0=False
+
+BUILD_SPEED1="ZSTD_SPEED1" in os.environ
+if "--speed1" in sys.argv:
+    if BUILD_SPEED1:
+        if os.environ["ZSTD_SPEED1"]=='0':
+            BUILD_SPEED1=False
+    # speed or size choose only one
+    BUILD_SPEED1=True
+    BUILD_SMALL=False
+    sys.argv.remove("--speed1")
+else:
+    BUILD_SPEED1=False
+
+BUILD_SPEED2="ZSTD_SPEED2" in os.environ
+if "--speed2" in sys.argv:
+    if BUILD_SPEED2:
+        if os.environ["ZSTD_SPEED2"]=='0':
+            BUILD_SPEED2=False
+    # speed or size choose only one
+    BUILD_SPEED2=True
+    BUILD_SMALL=False
+    sys.argv.remove("--speed2")
+else:
+    BUILD_SPEED2=False
+
+BUILD_SPEED3="ZSTD_SPEED3" in os.environ
+if "--speed3" in sys.argv:
+    # speed or size choose only one
+    BUILD_SPEED3=True
+    BUILD_SMALL=False
+    sys.argv.remove("--speed3")
+else:
+    BUILD_SPEED3=True
+if BUILD_SPEED3:
+    if os.environ.get("ZSTD_SPEED3")=='0':
+        BUILD_SPEED3=False
+
 BUILD_SPEEDMAX="ZSTD_SPEEDMAX" in os.environ
 if "--speed-max" in sys.argv:
-    # Support tracing for debug
     # speed or size choose only one
-    BUILD_SPEED=True 
+    BUILD_SPEED3=True
     BUILD_SPEEDMAX=True 
     BUILD_SMALL=False
     sys.argv.remove("--speed-max")
-    
+
+BUILD_SMALL="ZSTD_SMALL" in os.environ
+if "--small" in sys.argv:
+    if BUILD_SMALL:
+        if os.environ["ZSTD_SMALL"]=='0':
+            BUILD_SMALL=False
+    BUILD_SMALL=True
+    BUILD_SPEED3=False
+    sys.argv.remove("--small")
+else:
+    BUILD_SMALL=False
+
 SUP_EXTERNAL="ZSTD_EXTERNAL" in os.environ
 ext_libraries=[]
 if "--external" in sys.argv:
@@ -135,19 +194,66 @@ if "--external" in sys.argv:
     sys.argv.remove("--external")
 
 SUP_DEBUG="ZSTD_DEBUG" in os.environ
+if SUP_DEBUG:
+    if os.environ["ZSTD_DEBUG"]=='0':
+        SUP_DEBUG=False
 ext_libraries=[]
 if "--debug" in sys.argv:
-    # You want use external Zstd library?
     SUP_DEBUG=True
     sys.argv.remove("--debug")
 
+SUP_DEBUG_NOTICE="ZSTD_DEBUG_NOTICE" in os.environ
+if SUP_DEBUG_NOTICE:
+    SUP_DEBUG=True
+    if os.environ["ZSTD_DEBUG_NOTICE"]=='0':
+        SUP_DEBUG_NOTICE=False
+ext_libraries=[]
+if "--debug-notice" in sys.argv:
+    SUP_DEBUG_NOTICE=True
+    SUP_DEBUG=True
+    sys.argv.remove("--debug-notice")
+
+SUP_DEBUG_INFO="ZSTD_DEBUG_INFO" in os.environ
+if SUP_DEBUG_INFO:
+    SUP_DEBUG=True
+    if os.environ["ZSTD_DEBUG_INFO"]=='0':
+        SUP_DEBUG_INFO=False
+ext_libraries=[]
+if "--debug-info" in sys.argv:
+    SUP_DEBUG_INFO=True
+    SUP_DEBUG=True
+    sys.argv.remove("--debug-info")
+
+SUP_DEBUG_ERROR="ZSTD_DEBUG_ERROR" in os.environ
+if SUP_DEBUG_ERROR:
+    SUP_DEBUG=True
+    if os.environ["ZSTD_DEBUG_ERROR"]=='0':
+        SUP_DEBUG_ERROR=False
+ext_libraries=[]
+if "--debug-error" in sys.argv:
+    SUP_DEBUG_ERROR=True
+    SUP_DEBUG=True
+    sys.argv.remove("--debug-error")
+
+#Some python builds need to disable LTO by force
+BUILD_NO_LTO="ZSTD_BUILD_NO_LTO" in os.environ
+if BUILD_NO_LTO:
+    if os.environ["ZSTD_BUILD_NO_LTO"]=='0':
+        BUILD_NO_LTO=False
+ext_libraries=[]
+if "--force-no-lto" in sys.argv:
+    BUILD_NO_LTO=True
+    sys.argv.remove("--force-no-lto")
+else:
+    BUILD_NO_LTO=True
+    
 pkgconf = which("pkg-config")
 if "--libzstd-bundled" in sys.argv:
     # Do you want use external Zstd library?
     SUP_EXTERNAL=False
     sys.argv.remove("--libzstd-bundled")
     pkgconf = False
-    
+
 #if SUP_EXTERNAL:
 if platform.system() == "Linux" and "build_ext" in sys.argv or "build" in sys.argv or "bdist_wheel" in sys.argv:
     # You should add external library by option: --libraries zstd
@@ -175,7 +281,8 @@ if platform.system() == "Linux" and "build_ext" in sys.argv or "build" in sys.ar
             # It's bytes in PY3
             VERSION_STR = VERSION_STR.decode()
         #debug
-        print("\nFound libzstd version %r" % VERSION_STR)
+        if SUP_DEBUG:
+            print("\nFound libzstd version %r" % VERSION_STR)
         if VERSION_STR and SUP_EXTERNAL:
             if VERSION_STR>="1.4.0":
                 SUP_EXTERNAL=True
@@ -192,7 +299,14 @@ if platform.system() == "Linux" and "build_ext" in sys.argv or "build" in sys.ar
         print("\n Need pkg-config to find system libzstd. Or we try bundled one.")
 
 
-
+# default standard optimization
+COPT = {
+    'msvc': ['/Ox', ],
+    'mingw32': ['-O2',],
+    'unix': ['-O2',],
+    'clang': ['-O2',],
+    'gcc': ['-O2',],
+}
 if BUILD_SMALL:
    COPT = {
        'msvc': ['/O1', ],
@@ -201,33 +315,40 @@ if BUILD_SMALL:
        'clang': ['-Os',],
        'gcc': ['-Os',],
    }
-else:
-    """
-    COPT = {
-       'msvc': ['/Ox', ],
-       'mingw32': ['-O2',],
-       'unix': ['-O2',],
-       'clang': ['-O2',],
-       'gcc': ['-O2',],
-    }
-    """
+
 # not small, but speed?
-    if BUILD_SPEED:
-       COPT = {
-           'msvc': ['/O2', ],
-           'mingw32': ['-O3',],
-           'unix': ['-O3',],
-           'clang': ['-O3',],
-           'gcc': ['-O3',],
-       }
-    else:
-        COPT = {
-            'msvc': ['/Ox', ],
-            'mingw32': ['-O2',],
-            'unix': ['-O2',],
-            'clang': ['-O2',],
-            'gcc': ['-O2',],
-       }
+if BUILD_SPEED0:
+    COPT = {
+        'msvc': ['/O0', ],
+        'mingw32': ['-O0',],
+        'unix': ['-O0',],
+        'clang': ['-O0',],
+        'gcc': ['-O0',],
+    }
+if BUILD_SPEED1:
+    COPT = {
+        'msvc': ['/O1', ],
+        'mingw32': ['-O1',],
+        'unix': ['-O1',],
+        'clang': ['-O1',],
+        'gcc': ['-O1',],
+    }
+if BUILD_SPEED2:
+    COPT = {
+        'msvc': ['/O2', ],
+        'mingw32': ['-O3',],
+        'unix': ['-O3',],
+        'clang': ['-O3',],
+        'gcc': ['-O3',],
+    }
+if BUILD_SPEED3:
+    COPT = {
+        'msvc': ['/O2', ],
+        'mingw32': ['-O3',],
+        'unix': ['-O3',],
+        'clang': ['-O3',],
+        'gcc': ['-O3',],
+    }
 ###
 # DVERSION - pass module version string
 # DDYNAMIC_BMI2 - disable BMI2 amd64 asembler code - can't build it, use CFLAGS with -march= bdver4, znver1/2/3, native
@@ -268,6 +389,41 @@ if SUP_DEBUG:
             ])
         else:
             COPT[comp].extend([ '-DZSTD_DEBUG=1','-g',
+            ])
+
+if BUILD_NO_LTO:
+    for comp in COPT:
+        if comp == 'msvc':
+            pass
+        else:
+            COPT[comp].extend([ '-fno-lto',
+            ])
+
+if SUP_DEBUG_NOTICE:
+    for comp in COPT:
+        if comp == 'msvc':
+            COPT[comp].extend([ '/DZSTD_DEBUG_NOTICE=1',
+            ])
+        else:
+            COPT[comp].extend([ '-DZSTD_DEBUG_NOTICE=1',
+            ])
+
+if SUP_DEBUG_INFO:
+    for comp in COPT:
+        if comp == 'msvc':
+            COPT[comp].extend([ '/DZSTD_DEBUG_INFO=1',
+            ])
+        else:
+            COPT[comp].extend([ '-DZSTD_DEBUG_INFO=1',
+            ])
+
+if SUP_DEBUG_ERROR:
+    for comp in COPT:
+        if comp == 'msvc':
+            COPT[comp].extend([ '/DZSTD_DEBUG_ERROR=1',
+            ])
+        else:
+            COPT[comp].extend([ '-DZSTD_DEBUG_ERROR=1',
             ])
 
 if BUILD_SPEEDMAX:
@@ -373,7 +529,10 @@ if not SUP_EXTERNAL:
             zstdFiles.append('zstd/lib/'+f)
 
 zstdFiles.append('src/debug.c')
+zstdFiles.append('src/sleep.c')
 zstdFiles.append('src/util.c')
+if SUP_THREADS:
+    zstdFiles.append('src/thread_pool_compression.c')
 zstdFiles.append('src/python-zstd.c')
 
 
@@ -392,6 +551,11 @@ def my_test_suite():
     return test_suite
 
 test_func_name = "setup.my_test_suite"
+if "test" in sys.argv:
+    from setuptools.version import __version__ as version
+    print("setuptools version %r" % version)
+    if version < '72.0':
+        test_func_name = "tests"
 
 setup(
     name='zstd',

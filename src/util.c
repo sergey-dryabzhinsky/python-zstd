@@ -145,17 +145,17 @@ int UTIL_countAvailableCores(void)
     static int numPhysicalCores = 0;
 
     if (numPhysicalCores != 0) {
-	printd("Stored static numPhysicalCores: %d\n", numPhysicalCores);
+	printdn("Stored static numPhysicalCores: %d\n", numPhysicalCores);
 	return numPhysicalCores;
     }
 
     numPhysicalCores = (int)sysconf(_SC_NPROCESSORS_ONLN);
     if (numPhysicalCores == -1) {
         /* value not queryable, fall back on 1 */
-	printd("Sysconf fail. numPhysicalCores: %d\n", numPhysicalCores);
+	printdn("Sysconf read fail. numPhysicalCores: %d\n", numPhysicalCores);
         return numPhysicalCores = 1;
     }
-	printd("Sysconf readed. numPhysicalCores: %d\n", numPhysicalCores);
+	printdn("Sysconf readed. numPhysicalCores: %d\n", numPhysicalCores);
 
     /* try to determine if there's hyperthreading */
     {   FILE* cpuinfo = fopen("/proc/cpuinfo", "r");
@@ -169,7 +169,7 @@ int UTIL_countAvailableCores(void)
 
         if (cpuinfo == NULL) {
             /* fall back on the sysconf value, fallback to 1 */
-            printd("Cpuinfo not open. numPhysicalCores: %d\n", numPhysicalCores);
+            printdn("Cpuinfo not open. numPhysicalCores: %d\n", numPhysicalCores);
             return numPhysicalCores = 1;
         }
 
@@ -185,7 +185,7 @@ int UTIL_countAvailableCores(void)
                     }
 
                     siblings = atoi(sep + 1);
-                    printd("Cpuinfo: got siblings: %d\n", siblings);
+                    printdn("Cpuinfo: got siblings: %d\n", siblings);
                 }
                 // here are stored count of physical cores
                 if (strncmp(buff, "cpu cores", 9) == 0) {
@@ -196,7 +196,7 @@ int UTIL_countAvailableCores(void)
                     }
 
                     cpu_cores = atoi(sep + 1);
-                    printd("Cpuinfo: got cpu-cores: %d\n", cpu_cores);
+                    printdn("Cpuinfo: got cpu-cores: %d\n", cpu_cores);
                 }
                 // just do stupid line counting
                 if (strncmp(buff, "processor", 9) == 0) {
@@ -218,7 +218,7 @@ int UTIL_countAvailableCores(void)
         }
         fclose(cpuinfo); cpuinfo = NULL;
         if (procs){
-            printd("Cpuinfo found processor lines: %d\n", procs);
+            printdn("Cpuinfo found processor lines: %d\n", procs);
             return numPhysicalCores = procs;
         }
 failed:
