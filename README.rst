@@ -447,6 +447,11 @@ ZSTD_min_compression_level (): int
 
   Since: 1.5.6.3
 
+ZSTD_default_compression_level (): int
+  Returns ZSTD library determined default number of compression level .
+
+  Since: 1.5.7.1
+
 ZSTD_external (): int
   Returns 0 of 1 if ZSTD library linked as external.
 
