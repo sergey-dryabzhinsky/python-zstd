@@ -24,6 +24,7 @@ typedef struct {
     size_t chunk_size;
     int level;
     int threads;
+    PyObject *res;
     char* dst;
     size_t dest_size;
     int64_t cSize;

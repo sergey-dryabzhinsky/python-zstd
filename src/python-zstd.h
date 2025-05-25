@@ -72,6 +72,10 @@
 #define ZSTDMT_NBWORKERS_MAX ((sizeof(void*)==4) /*32-bit*/ ? 64 : 256)
 #endif
 
+#ifndef MOD_VERSION
+#define MOD_VERSION "0.0.0"
+#endif
+
 /* --== Negative fast compression levels only since 1.3.4 ==-- */
 #if ZSTD_VERSION_NUMBER >= 10304
 

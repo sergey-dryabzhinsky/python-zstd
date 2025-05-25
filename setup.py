@@ -357,9 +357,9 @@ if BUILD_SPEED3:
 
 for comp in COPT:
     if comp == 'msvc':
-        COPT[comp].extend([ '/DVERSION=%s' % PKG_VERSION_STR, '/DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '/DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ]),
+        COPT[comp].extend([ '/DMOD_VERSION=%s' % PKG_VERSION_STR, '/DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '/DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ]),
     else:
-        COPT[comp].extend([ '-DVERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '-DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ]),
+        COPT[comp].extend([ '-DMOD_VERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '-DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ]),
 
 
 if not SUP_EXTERNAL:
@@ -447,7 +447,9 @@ if SUP_WARNINGS:
         if comp == 'msvc':
             COPT[comp].extend(['/Wall',])
         else:
-            COPT[comp].extend(['-Wall', '-Wextra', '-Wpedantic'])
+            COPT[comp].extend(['-Wall', '-Wextra', 
+#'-Wpedantic'
+])
 
 if SUP_WERROR:
     for comp in COPT:
@@ -475,8 +477,8 @@ for comp in COPT:
     if comp == 'msvc':
         pass
     else:
-        COPT[comp].extend(['-fvisibility=default'])
-            
+        COPT[comp].extend(['-std=c11','-fvisibility=default'])
+
 
 class ZstdBuildExt( build_ext ):
 

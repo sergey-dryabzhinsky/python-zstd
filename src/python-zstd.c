@@ -263,7 +263,7 @@ static PyObject *py_zstd_compress_real_mt(PyObject* self, PyObject *args)
 	int workers=source_size/chunk_size;
 	printd2i("Threads to start: %d, workers to use: %d",threads, workers);
 
-        init_thread_pool_compression();
+//        init_thread_pool_compression();
 	uint64_t pos=0;
 	for(int i=0;i<workers;i++){
 		thread_pool[i].src=(char*)source;
@@ -276,6 +276,7 @@ static PyObject *py_zstd_compress_real_mt(PyObject* self, PyObject *args)
 		resultT = PyBytes_FromStringAndSize(NULL, dest_size);
 		if (resultT != NULL) {
 			destT = PyBytes_AS_STRING(resultT);
+			thread_pool[i].res=resultT;
 			thread_pool[i].dst=destT;
 			thread_pool[i].task_set=1;
 			thread_pool[i].task_done=0;
@@ -292,9 +293,9 @@ static PyObject *py_zstd_compress_real_mt(PyObject* self, PyObject *args)
 			continue;
 		}
 	    }
-	    msleep(5);
+	    msleep(1);
 	}
-        free_thread_pool_compression();
+//        free_thread_pool_compression();
 	pos=0;
 	if (done==workers){
 		/* copy all done threads results into dest */
@@ -310,6 +311,7 @@ static PyObject *py_zstd_compress_real_mt(PyObject* self, PyObject *args)
             return NULL;
         }
 			memcpy(dest+pos, thread_pool[i].dst, cSize);
+			Py_CLEAR(thread_pool[i].res);
 			pos+=cSize;
 			sum+=cSize;
 			continue;
@@ -487,9 +489,9 @@ static PyObject *py_zstd_module_version(PyObject* self, PyObject *args)
     UNUSED(args);
 
 #if PY_MAJOR_VERSION >= 3
-    return PyUnicode_FromFormat("%s", xstr(VERSION));
+    return PyUnicode_FromFormat("%s", xstr(MOD_VERSION));
 #else
-    return PyString_FromFormat("%s", xstr(VERSION));
+    return PyString_FromFormat("%s", xstr(MOD_VERSION));
 #endif
 }
 
