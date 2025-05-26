@@ -183,7 +183,7 @@ LINKS
 Build from source
 -----------------
 
- You need module setuptools <72 to run tests:
+You need module setuptools <72 to run tests:
 
     >>> $ pip install -U 'setuptools<72'
 
@@ -202,6 +202,8 @@ And you need to install `libzstd` developer files at least version *1.4.0*:
     >>> $ apk add zstd-dev
 
 or do manual installation of zstd from source.
+
+And you need C11 support in compiler (gcc >= 4.8), libc >= 2.14.
 
 Note: Zstd legacy format support disabled by default.
 To build with Zstd legacy versions support - pass ``--legacy`` option to setup.py script:
