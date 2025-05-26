@@ -1,6 +1,6 @@
 # Tests
 
-from tests.base import BaseTestZSTD,tDATA,log,zstd
+from tests.base import BaseTestZSTD,tDATA,log,zstd,platform,raise_skip
 from.get_memory_usage import get_real_memory_usage
 from time import time
 
@@ -26,6 +26,8 @@ class TestZstdSpeed(BaseTestZSTD):
         log.info("Compression memory usage = %6.2f kb" % (1.0*(endMemoryUsage-beginMemoryUsage)/1024,))
 
     def test_compression_real_mt_speed(self):
+        if platform.system()=='Windows':
+            raise_skip("pthreads not available on windows")
         wait = 30
         log.info("\nWait %d seconds..." % wait)
         sum = 0
