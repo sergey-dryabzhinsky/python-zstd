@@ -36,7 +36,7 @@ extern "C" {
 
 typedef BOOL(WINAPI* LPFN_GLPI)(PSYSTEM_LOGICAL_PROCESSOR_INFORMATION, PDWORD);
 
-int UTIL_countPhysicalCores(void)
+int UTIL_countAvailableCores(void)
 {
     static int numPhysicalCores = 0;
     if (numPhysicalCores != 0) return numPhysicalCores;
@@ -234,7 +234,7 @@ failed:
 
 /* Use physical core sysctl when available
  * see: man 4 smp, man 3 sysctl */
-int UTIL_countPhysicalCores(void)
+int UTIL_countAvailableCores(void)
 {
     static int numPhysicalCores = 0; /* freebsd sysctl is native int sized */
     if (numPhysicalCores != 0) return numPhysicalCores;
@@ -263,7 +263,7 @@ int UTIL_countPhysicalCores(void)
 
 /* Use POSIX sysconf
  * see: man 3 sysconf */
-int UTIL_countPhysicalCores(void)
+int UTIL_countAvailableCores(void)
 {
     static int numPhysicalCores = 0;
 
@@ -279,7 +279,7 @@ int UTIL_countPhysicalCores(void)
 
 #else
 
-int UTIL_countPhysicalCores(void)
+int UTIL_countAvailableCores(void)
 {
     /* assume 1 */
     return 1;
