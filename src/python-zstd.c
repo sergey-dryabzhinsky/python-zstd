@@ -576,9 +576,7 @@ static PyObject *py_zstd_threads_count(PyObject* self, PyObject *args)
 {
     UNUSED(self);
     UNUSED(args);
-
     int32_t threads = UTIL_countAvailableCores();
-
     return Py_BuildValue("i", threads);
 }
 
@@ -633,9 +631,11 @@ static PyObject *py_zstd_thread_pool_init(PyObject* self, PyObject *args)
 {
     UNUSED(self);
     UNUSED(args);
-
-    int threads = init_thread_pool_compression();
-
+    int threads=0;
+#if defined(_WIN32) || defined(WIN32)
+#else
+    threads = init_thread_pool_compression();
+#endif
     return Py_BuildValue("i", threads);
 }
 /**
@@ -645,16 +645,21 @@ static PyObject *py_zstd_thread_pool_free(PyObject* self, PyObject *args)
 {
     UNUSED(self);
     UNUSED(args);
-
-    int threads = free_thread_pool_compression();
-
+    int threads=0;
+#if defined(_WIN32) || defined(WIN32)
+#else
+    threads = free_thread_pool_compression();
+#endif
     return Py_BuildValue("i", threads);
 }
 
 
 static PyMethodDef ZstdMethods[] = {
     {"ZSTD_compress",  py_zstd_compress_mt, METH_VARARGS, COMPRESS_DOCSTRING},
+    #if defined(_WIN32) || defined(WIN32)
+    #else
     {"ZSTD_compress_real_mt",  py_zstd_compress_real_mt, METH_VARARGS, COMPRESS_DOCSTRING},
+    #endif
     {"ZSTD_uncompress",  py_zstd_uncompress, METH_VARARGS, UNCOMPRESS_DOCSTRING},
     {"ZSTD_check",  py_zstd_check, METH_VARARGS, CHECK_DOCSTRING},
     {"check",  py_zstd_check, METH_VARARGS, CHECK_DOCSTRING},

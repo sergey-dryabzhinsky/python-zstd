@@ -36,7 +36,10 @@
 
 #include "Python.h"
 #include "zstd.h"
+#if defined(_WIN32) || defined(WIN32)
+#else
 #include "thread_pool_compression.h"
+#endif
 
 /*-=====  Do you need legacy old-format functions?  =====-*/
 #ifndef PYZSTD_LEGACY

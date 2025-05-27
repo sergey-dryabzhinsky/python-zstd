@@ -479,6 +479,11 @@ for comp in COPT:
     else:
         COPT[comp].extend(['-std=c11','-fvisibility=default'])
 
+# disable some msvc warnings
+for comp in COPT:
+    if comp == 'msvc':
+        COPT[comp].extend(['/wd4996'])
+
 
 class ZstdBuildExt( build_ext ):
 
