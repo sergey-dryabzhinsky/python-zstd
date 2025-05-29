@@ -536,10 +536,7 @@ if not SUP_EXTERNAL:
             zstdFiles.append('zstd/lib/'+f)
 
 zstdFiles.append('src/debug.c')
-zstdFiles.append('src/sleep.c')
 zstdFiles.append('src/util.c')
-if SUP_THREADS and platform.system()!='Windows':
-    zstdFiles.append('src/thread_pool_compression.c')
 zstdFiles.append('src/python-zstd.c')
 
 
