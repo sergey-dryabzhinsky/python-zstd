@@ -25,7 +25,7 @@ jobs:
             # pyver: "3.7"
             getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
             pypkg: python3.14-nogil
-            pypkgdev: python3.14-ddev
+            pypkgdev: python3.14-dev
             pypkgexe: python3.14t
             #pypkgadd: python3.13-distutils
             pyengine_tag: cp314-cp314t
