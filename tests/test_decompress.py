@@ -13,7 +13,7 @@ class TestZstdDecompress(BaseTestZSTD):
         self.assertRaises(zstd.Error, zstd.uncompress, zstd.compress(DATA)+b' ')
 
     def test_decompression_streamed(self):
-        log.info('debug windows cwd: %s' % os.getcwd())
+        log.info('debug cwd: %s' % os.getcwd())
         if platform.system()=='Windows':
             raise_skip("Windiws can't find tests data")
         f = open("tests/test_data/facebook.ico.zst","rb")
