@@ -114,7 +114,7 @@ failed:
 
 /* Use apple-provided syscall
  * see: man 3 sysctl */
-int UTIL_countPhysicalCores(void)
+int UTIL_countAvailableCores(void)
 {
     static int32_t numPhysicalCores = 0; /* apple specifies int32_t */
     if (numPhysicalCores != 0) return numPhysicalCores;
