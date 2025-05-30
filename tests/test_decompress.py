@@ -1,7 +1,7 @@
 # Tests
 
 import sys, os
-from tests.base import BaseTestZSTD, zstd, tDATA, log, raise_skip, plllatform
+from tests.base import BaseTestZSTD, zstd, tDATA, log, raise_skip, platform
 
 class TestZstdDecompress(BaseTestZSTD):
 
