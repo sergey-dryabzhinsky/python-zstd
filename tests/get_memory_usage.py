@@ -14,10 +14,10 @@ if os.path.isfile('/proc/%d/status' % os.getpid()):
     _handle = open('/proc/%d/status' % os.getpid())
 else:
     # simulation for maxos and windows not having /proc
-    _handle = [
-        "VmSize:0",
-        "VmRSS:0",
-    ]
+    def get_memory_usage():
+    return 0
+    def get_real_memory_usage():
+    return 0
 
 def get_memory_usage():
   global _proc_status, _units, _handle
