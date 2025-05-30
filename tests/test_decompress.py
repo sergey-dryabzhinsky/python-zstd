@@ -17,7 +17,7 @@ class TestZstdDecompress(BaseTestZSTD):
         curdir = os.path.dirname(os.path.abspath(__file__))
         log.info('curdir: %s' % curdir)
         if platform.system()=='Windows':
-            raise_skip("Windiws can't find tests data")
+            raise_skip("Windiows can't find tests data")
         f = open(curdir+"/test_data/facebook.ico.zst","rb")
         DATA = f.read()
         f.close()

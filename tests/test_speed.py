@@ -63,7 +63,12 @@ class TestZstdSpeed(BaseTestZSTD):
         sum = 0
 #        cdata = zstd.compress(tDATA)
 #        cdata = b'\x28\xb5\x2f\xfd\x00\x58\x11\x00\x00\x7b\x7d'
-        f = open("tests/test_data/facebook.ico.zst","rb")
+        log.info('debug cwd: %s' % os.getcwd())
+        curdir = os.path.dirname(os.path.abspath(__file__))
+        log.info('curdir: %s' % curdir)
+        if platform.system()=='Windows':
+            raise_skip("Windows can't find tests data")
+        f = open(curdir+"/test_data/facebook.ico.zst","rb")
         cdata = f.read()
         f.close()
         l=len(cdata*10)
