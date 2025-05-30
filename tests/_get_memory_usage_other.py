@@ -7,11 +7,10 @@ on the following entry in the Python cookbook:
 http://code.activestate.com/recipes/286222/
 """
 
-import platform
+# simulation for maxos and windows not having /proc
+def get_memory_usage():
+    return 0
 
-if platform.system()=='Linux':
-    from ._get_memory_usage_linux import get_memory_usage, get_real_memory_usage
-else:
-    from ._get_memory_usage_other import get_memory_usage, get_real_memory_usage
-
+def get_real_memory_usage():
+    return 0
 # vim: ts=2 sw=2 et
