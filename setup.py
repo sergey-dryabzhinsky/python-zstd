@@ -240,12 +240,21 @@ BUILD_NO_LTO="ZSTD_BUILD_NO_LTO" in os.environ
 if BUILD_NO_LTO:
     if os.environ["ZSTD_BUILD_NO_LTO"]=='0':
         BUILD_NO_LTO=False
-ext_libraries=[]
 if "--force-no-lto" in sys.argv:
     BUILD_NO_LTO=True
     sys.argv.remove("--force-no-lto")
 else:
     BUILD_NO_LTO=True
+
+BUILD_STRIP="ZSTD_BUILD_STRIP" in os.environ
+if BUILD_STRIP:
+    if os.environ["ZSTD_BUILD_STRIP"]=='0':
+        BUILD_STRIP=False
+if "--force-strip" in sys.argv:
+    BUILD_STRIP=True
+    sys.argv.remove("--force-strip")
+else:
+    BUILD_STRIP=True
     
 pkgconf = which("pkg-config")
 if "--libzstd-bundled" in sys.argv:
@@ -301,7 +310,7 @@ if platform.system() == "Linux" and "build_ext" in sys.argv or "build" in sys.ar
 
 # default standard optimization
 COPT = {
-    'msvc': ['/Ox', ],
+    'msvc': ['/O2', ],
     'mingw32': ['-O2',],
     'unix': ['-O2',],
     'clang': ['-O2',],
@@ -343,7 +352,7 @@ if BUILD_SPEED2:
     }
 if BUILD_SPEED3:
     COPT = {
-        'msvc': ['/O2', ],
+        'msvc': ['/O3', ],
         'mingw32': ['-O3',],
         'unix': ['-O3',],
         'clang': ['-O3',],
@@ -371,7 +380,6 @@ if not SUP_EXTERNAL:
         else:
             COPT[comp].extend([ '-DZSTD_MULTITHREAD=%d' % ENABLE_THREADS,
                 '-Izstd/lib', '-Izstd/lib/common', '-Izstd/lib/compress', '-Izstd/lib/decompress',
-                ENABLE_THREADS and '-lpthread' or ''
             ])
 else:
     for comp in COPT:
@@ -458,6 +466,13 @@ if SUP_WERROR:
         else:
             COPT[comp].extend(['-Werror'])
 
+if BUILD_STRIP:
+    for comp in COPT:
+        if comp == 'msvc':
+            pass
+        else:
+            COPT[comp].extend(['-Wl,-s'])
+
 # Force traceing support or disable
 if SUP_TRACE:
     for comp in COPT:
@@ -477,7 +492,7 @@ for comp in COPT:
     if comp == 'msvc':
         pass
     else:
-        COPT[comp].extend(['-std=c11','-fvisibility=default'])
+        COPT[comp].extend(['-std=c99','-fvisibility=default'])
 
 # disable some msvc warnings
 for comp in COPT:

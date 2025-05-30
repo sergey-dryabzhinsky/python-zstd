@@ -14,9 +14,11 @@ class TestZstdDecompress(BaseTestZSTD):
 
     def test_decompression_streamed(self):
         log.info('debug cwd: %s' % os.getcwd())
+        curdir = os.path.dirname(os.path.abspath(__file__))
+        log.info('curdir: %s' % curdir)
         if platform.system()=='Windows':
             raise_skip("Windiws can't find tests data")
-        f = open("tests/test_data/facebook.ico.zst","rb")
+        f = open(curdir+"/test_data/facebook.ico.zst","rb")
         DATA = f.read()
         f.close()
         log.info('data check, should be 2: %s' % zstd.check(DATA))
