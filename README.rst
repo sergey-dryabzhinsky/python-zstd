@@ -203,7 +203,7 @@ And you need to install `libzstd` developer files at least version *1.4.0*:
 
 or do manual installation of zstd from source.
 
-And you need C11 support in compiler (gcc >= 4.8), libc >= 2.14.
+And you need C99 support in compiler (gcc >= 4.8), libc >= 2.14.
 
 Note: Zstd legacy format support disabled by default.
 To build with Zstd legacy versions support - pass ``--legacy`` option to setup.py script:
@@ -304,6 +304,14 @@ Some python builds need to force disabing LTO, so just add ``--force-no-lto`` op
 When using a PEP 517 builder you can use ``ZSTD_BUILD_NO_LTO`` environment variable instead:
 
    >>> $ ZSTD_BUILD_NO_LTO=1 python -m build -w
+
+Some python builds need to force enabling stripping binary of the module, so just add ``--force-strip`` option
+
+   >>> $ python setup.py build_ext --force-strip clean
+
+When using a PEP 517 builder you can use ``ZSTD_BUILD_STRIP`` environment variable instead:
+
+   >>> $ ZSTD_BUILD_STRIP=1 python -m build -w
 
 If paths to header file ``zstd.h`` and libraries is uncommon - use common ``build`` params:
 --libraries --include-dirs --library-dirs.
