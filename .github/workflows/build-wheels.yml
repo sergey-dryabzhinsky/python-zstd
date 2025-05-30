@@ -82,6 +82,9 @@ jobs:
           - build: pp310-*
             group: new
             code: PyPy3.10
+          - build: pp311-*
+            group: new
+            code: PyPy3.11
         exclude:
           - os:
               matrix: windows
