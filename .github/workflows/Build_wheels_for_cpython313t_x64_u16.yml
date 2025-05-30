@@ -24,7 +24,9 @@ jobs:
             #version: 1.5.6.7
             # pyver: "3.7"
             getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
-            pypkg: python3.13t
+            pypkg: python3.13-nogil
+            pypkgdev: python3.13-dev
+            pypkgexe: python3.13t
             #pypkgadd: python3.13-distutils
             pyengine_tag: cp313-cp313t
             libc_tag: manylinux_2_14
@@ -89,11 +91,11 @@ jobs:
       - name: Pepare for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
         run: |
-           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt install -y ${{matrix.os.pypkg}}-dev gcc pkg-config ${{matrix.os.pypkgadd}}
-           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "wget ${{matrix.os.getpipurl}} -O get-pip.py && ${{matrix.os.pypkg}} get-pip.py || true"
-           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "${{matrix.os.pypkg}} -m pip install -U 'setuptools<72.0'" 
-                    
-      - name: Pepare source and build wheel for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
+           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt install -y ${{matrix.os.pypkgdev}} ${{matrix.os.pypkg}} gcc pkg-config ${{matrix.os.pypkgadd}}
+           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "wget ${{matrix.os.getpipurl}} -O get-pip.py && ${{matrix.os.pypkgexe}} get-pip.py || true"
+           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "${{matrix.os.pypkgexe}} -m pip install -U 'setuptools<72.0'" 
+
+      - name: Pepare source and build wheel for ${{matrix.os.pypkgexe}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
         run: |
           version=`cat version`
@@ -103,7 +105,7 @@ jobs:
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} pkg-config libzstd --modversion 
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} echo GCC
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} gcc -v
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version/ && ZSTD_ASM=1 ZSTD_WARNINGS=1 _ZSTD_SMALL=1 LDFLAGS='-Wl,--as-needed -Wl,-s' ZSTD_BUILD_STRIP=1 _ZSTD_SPEED=0 _ZSTD_SPEEDMAX=0 _ZSTD_ASM_BMI2=1 ZSTD_THREADS=1 _ZSTD_EXTERNAL=0 ${{matrix.os.pypkg}} setup.py bdist_wheel"
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version/ && ZSTD_ASM=1 ZSTD_WARNINGS=1 _ZSTD_SMALL=1 LDFLAGS='-Wl,--as-needed -Wl,-s' ZSTD_BUILD_STRIP=1 _ZSTD_SPEED=0 _ZSTD_SPEEDMAX=0 _ZSTD_ASM_BMI2=1 ZSTD_THREADS=1 _ZSTD_EXTERNAL=0 ${{matrix.os.pypkgexe}} setup.py bdist_wheel"
 
       - name: Test wheel for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
