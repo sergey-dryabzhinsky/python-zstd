@@ -15,9 +15,10 @@ if os.path.isfile('/proc/%d/status' % os.getpid()):
 else:
     # simulation for maxos and windows not having /proc
     def get_memory_usage():
-    return 0
+        return 0
+
     def get_real_memory_usage():
-    return 0
+        return 0
 
 def get_memory_usage():
   global _proc_status, _units, _handle
