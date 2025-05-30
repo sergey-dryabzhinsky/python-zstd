@@ -1,4 +1,4 @@
-name: Build wheels for CPython3.13 x86_64 on Ubuntu16 with GCC-5 All warnings
+name: Build wheels for CPython3.14-nogil x64 on Ubuntu16 with GCC-5 All warnings
 
 on: [push, pull_request]
 
@@ -14,7 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - name: Ubuntu 20 amd64 CPython 3.13
+          - name: Ubuntu 24+16 amd64 CPython 3.14-nogil
             runs-on: ubuntu-latest
             matrix: linux
             arch: amd64
@@ -24,9 +24,9 @@ jobs:
             #version: 1.5.6.7
             # pyver: "3.7"
             getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
-            pypkg: python3.13
+            pypkg: python3.14t
             #pypkgadd: python3.13-distutils
-            pyengine_tag: cp313-cp313
+            pyengine_tag: cp314-cp314t
             libc_tag: manylinux_2_14
     steps:
       - name: Checkout code
