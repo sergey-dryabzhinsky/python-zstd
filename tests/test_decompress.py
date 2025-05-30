@@ -1,7 +1,7 @@
 # Tests
 
 import sys, os
-from tests.base import BaseTestZSTD, zstd, tDATA, log, raise_skip
+from tests.base import BaseTestZSTD, zstd, tDATA, log, raise_skip, plllatform
 
 class TestZstdDecompress(BaseTestZSTD):
 
@@ -13,7 +13,9 @@ class TestZstdDecompress(BaseTestZSTD):
         self.assertRaises(zstd.Error, zstd.uncompress, zstd.compress(DATA)+b' ')
 
     def test_decompression_streamed(self):
-        #log.info('cwd: %s' % os.getcwd())
+        log.info('debug windows cwd: %s' % os.getcwd())
+        if platform.system()=='Windows':
+            raise_skip("Windiws can't find tests data")
         f = open("tests/test_data/facebook.ico.zst","rb")
         DATA = f.read()
         f.close()
