@@ -3,6 +3,7 @@
 from tests.base import BaseTestZSTD,tDATA,log,zstd,platform,raise_skip
 from.get_memory_usage import get_real_memory_usage
 from time import time
+import os
 
 class TestZstdSpeed(BaseTestZSTD):
 
