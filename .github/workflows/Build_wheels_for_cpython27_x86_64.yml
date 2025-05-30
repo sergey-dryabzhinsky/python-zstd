@@ -1,4 +1,4 @@
-name: Build wheels for CPython2.7 x64 on Ubuntu16 with GCC-5 with All warnings
+name: Build wheels for CPython2.7 x64 on Ubuntu18 with GCC-7 with All warnings
 
 on: [push, pull_request]
 
@@ -19,7 +19,7 @@ jobs:
             matrix: linux
             arch: amd64
             tag_arch: x86_64
-            release: xenial
+            release: bionic
             mirror: http://azure.archive.ubuntu.com/ubuntu
             #version: 1.5.6.7
             #pyver: "2.7"
@@ -102,9 +102,9 @@ jobs:
           sudo tar -xvf dist/zstd-$version.tar.gz -C ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/
           false && sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} env 
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} pkg-config libzstd --modversion
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} echo GCC-5
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} gcc-5 -v
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version && CC=gcc-5 ZSTD_ASM=1 _ZSTD_SMALL=1 ZSTD_WARNINGS=1 _ZSTD_WERRORS=1 _ZSTD_ASM_BMI2=1 ZSTD_THREADS=1 _ZSTD_EXTERNAL=1 ${{matrix.os.pypkg}} setup.py bdist_wheel"
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} echo GCC-7
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} gcc-7 -v
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version && CC=gcc-7 ZSTD_ASM=1 _ZSTD_SMALL=1 ZSTD_WARNINGS=1 _ZSTD_WERRORS=1 _ZSTD_ASM_BMI2=1 ZSTD_THREADS=1 _ZSTD_EXTERNAL=1 ${{matrix.os.pypkg}} setup.py bdist_wheel"
 
       - name: Test wheel for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
