@@ -26,7 +26,7 @@ class TestZstdSpeed(BaseTestZSTD):
         endMemoryUsage=get_real_memory_usage()
         log.info("end Compression memory usage = %6.2f kb" % (1.0*endMemoryUsage/1024,))
         log.info("Compression speed average = %6.2f Mb/sec" % (1.0*sum/1024/1024/wait,))
-        log.info("diffCompression memory usage = %6.2f kb" % (1.0*(endMemoryUsage-beginMemoryUsage)/1024,))
+        log.info("diff Compression memory usage = %6.2f kb" % (1.0*(endMemoryUsage-beginMemoryUsage)/1024,))
 
     def test_compression_one_thread_speed(self):
         wait = 30
@@ -64,11 +64,11 @@ class TestZstdSpeed(BaseTestZSTD):
         sum = 0
 #        cdata = zstd.compress(tDATA)
 #        cdata = b'\x28\xb5\x2f\xfd\x00\x58\x11\x00\x00\x7b\x7d'
-        log.info('debug cwd: %s' % os.getcwd())
+#        log.info('debug cwd: %s' % os.getcwd())
         curdir = os.path.dirname(os.path.abspath(__file__))
-        log.info('curdir: %s' % curdir)
-        if platform.system()=='Windows':
-            raise_skip("Windows can't find tests data")
+#        log.info('curdir: %s' % curdir)
+#        if platform.system()=='Windows':
+#            raise_skip("Windows can't find tests data")
         f = open(curdir+"/test_data/facebook.ico.zst","rb")
         cdata = f.read()
         f.close()
