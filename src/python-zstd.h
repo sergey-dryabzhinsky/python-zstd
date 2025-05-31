@@ -37,7 +37,6 @@
 #include "Python.h"
 #include "zstd.h"
 
-
 /*-=====  Do you need legacy old-format functions?  =====-*/
 #ifndef PYZSTD_LEGACY
 #define PYZSTD_LEGACY 0
@@ -59,10 +58,6 @@
 #define ZSTD_LEGACY_SUPPORT 0
 #endif
 
-#ifndef ZSTD_DEBUG
-#define ZSTD_DEBUG 0
-#endif
-
 /*-=====  Pre-defined compression levels  =====-*/
 #ifndef ZSTD_CLEVEL_DEFAULT
 #define ZSTD_CLEVEL_DEFAULT 3
@@ -74,6 +69,10 @@
 
 #ifndef ZSTDMT_NBWORKERS_MAX
 #define ZSTDMT_NBWORKERS_MAX ((sizeof(void*)==4) /*32-bit*/ ? 64 : 256)
+#endif
+
+#ifndef MOD_VERSION
+#define MOD_VERSION "0.0.0"
 #endif
 
 /* --== Negative fast compression levels only since 1.3.4 ==-- */

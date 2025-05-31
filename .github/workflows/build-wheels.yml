@@ -82,6 +82,9 @@ jobs:
           - build: pp310-*
             group: new
             code: PyPy3.10
+          - build: pp311-*
+            group: new
+            code: PyPy3.11
         exclude:
           - os:
               matrix: windows
@@ -147,7 +150,7 @@ jobs:
           output-dir: dist
         env:
           CIBW_BUILD: ${{ matrix.cibw.build }}
-          CIBW_BUILD_VERBOSITY_LINUX: 1
+          CIBW_BUILD_VERBOSITY: 2
           # Skip 32-bit builds // NO
           # CIBW_SKIP: '*-win32 *_i686'
           CIBW_MANYLINUX_I686_IMAGE: manylinux1
@@ -166,7 +169,6 @@ jobs:
           CIBW_BEFORE_ALL_MACOS: >
             python -m pip install --upgrade pip
           # CIBW_ENVIRONMENT_MACOS: MACOSX_DEPLOYMENT_TARGET=11.7
-          CIBW_BUILD_VERBOSITY_MACOS: 0
           CIBW_BEFORE_ALL_WINDOWS: >
             python -m pip install --upgrade pip
           CIBW_TEST_COMMAND: >
@@ -179,7 +181,7 @@ jobs:
           output-dir: dist
         env:
           CIBW_BUILD: ${{ matrix.cibw.build }}
-          CIBW_BUILD_VERBOSITY_LINUX: 1
+          CIBW_BUILD_VERBOSITY: 2
           # Skip 32-bit builds // NO
           # CIBW_SKIP: '*-win32 *_i686'
           CIBW_MANYLINUX_I686_IMAGE: manylinux_2_24
@@ -199,7 +201,6 @@ jobs:
           CIBW_BEFORE_ALL_MACOS: >
             python -m pip install --upgrade pip
           # CIBW_ENVIRONMENT_MACOS: MACOSX_DEPLOYMENT_TARGET=11.7
-          CIBW_BUILD_VERBOSITY_MACOS: 0
           CIBW_BEFORE_ALL_WINDOWS: >
             python -m pip install --upgrade pip
           CIBW_TEST_COMMAND: >
