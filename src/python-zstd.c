@@ -432,7 +432,8 @@ static PyObject *py_zstd_min_compression_level(PyObject* self, PyObject *args)
     UNUSED(self);
     UNUSED(args);
 
-    return Py_BuildValue("i", ZSTD_minCLevel());
+//    return Py_BuildValue("i", ZSTD_minCLevel());
+    return Py_BuildValue("i", ZSTD_MIN_CLEVEL);
 }
 
 /**

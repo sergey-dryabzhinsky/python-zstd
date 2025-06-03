@@ -20,6 +20,15 @@ class TestZstdCompress(BaseTestZSTD):
     def test_compression_default_level(self):
         BaseTestZSTD.helper_compression_default_level(self)
 
+    def test_compression_level_default_is_3(self):
+        self.assertEqual(3, zstd.ZSTD_default_compression_level())
+
+    def test_compression_level_max_is_22(self):
+        self.assertEqual(22, zstd.ZSTD_max_compression_level())
+
+    def test_compression_level_min_is_m100(self):
+        self.assertEqual(-100, zstd.ZSTD_min_compression_level())
+
     def test_compression_default_level_zero(self):
         BaseTestZSTD.helper_compression_default_level_zero(self)
 
