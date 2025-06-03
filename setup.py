@@ -576,11 +576,15 @@ if "test" in sys.argv:
     if version < '72.0':
         test_func_name = "tests"
 
+f=open('README.rst', 'r')
+ld=f.read()
+f.close()
+
 setup(
     name='zstd',
     version=PKG_VERSION_STR,
     description="ZSTD Bindings for Python",
-    long_description=open('README.rst', 'r').read(),
+    long_description=ld,
     author='Sergey Dryabzhinsky, Anton Stuk',
     author_email='sergey.dryabzhinsky@gmail.com',
     maintainer='Sergey Dryabzhinsky',
