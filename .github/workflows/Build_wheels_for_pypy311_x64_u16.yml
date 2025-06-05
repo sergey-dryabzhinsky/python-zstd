@@ -24,7 +24,7 @@ jobs:
             getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
             pypkg: pypy3.11
             pypkgdev: pypy3.11-bin-dev
-            pyengine_tag: pp311-pypy311
+            pyengine_tag: pp311-pypy311_pp73
             libc_tag: manylinux_2_14
     steps:
       - name: Checkout code
@@ -77,8 +77,7 @@ jobs:
           false && sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt dist-upgrade -y
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt -fy install
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt upgrade -y
-           
-           
+
       - name: Pepare dev files
         if: matrix.os.matrix == 'linux'
         run: |
