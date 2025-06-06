@@ -24,7 +24,7 @@ jobs:
             getpipurl: https://bootstrap.pypa.io/pip/2.7/get-pip.py
             pypkg: pypy2.7
             pypkgdev: pypy2.7-bin-dev
-            pyengine_tag: pp27-pypy27_pp73
+            pyengine_tag: pp27-pypy27_73
             libc_tag: manylinux_2_14
     steps:
       - name: Checkout code
