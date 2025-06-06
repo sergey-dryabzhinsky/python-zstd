@@ -1,7 +1,7 @@
 # Tests
 
 import sys, os
-from tests.base import BaseTestZSTD, zstd, tDATA, log, raise_skip
+from tests.base import BaseTestZSTD, zstd, tDATA, log, raise_skip, platform
 
 class TestZstdDecompress(BaseTestZSTD):
 
@@ -13,8 +13,12 @@ class TestZstdDecompress(BaseTestZSTD):
         self.assertRaises(zstd.Error, zstd.uncompress, zstd.compress(DATA)+b' ')
 
     def test_decompression_streamed(self):
-        #log.info('cwd: %s' % os.getcwd())
-        f = open("tests/test_data/facebook.ico.zst","rb")
+        log.info('debug cwd: %s' % os.getcwd())
+        curdir = os.path.dirname(os.path.abspath(__file__))
+        log.info('curdir: %s' % curdir)
+        if platform.system()=='Windows':
+            raise_skip("Windiows can't find tests data")
+        f = open(curdir+"/test_data/facebook.ico.zst","rb")
         DATA = f.read()
         f.close()
         log.info('data check, should be 2: %s' % zstd.check(DATA))
@@ -48,6 +52,6 @@ class TestZstdDecompress(BaseTestZSTD):
         
     def test_check_uncompressed(self):
         cdata = b''
-        log.info("zstd uncompressed data check:%r" % zstd.check(cdata))
+        log.info("zstd uncompressed data check, must be (0):%r" % zstd.check(cdata))
         self.assertEqual(0, zstd.check(cdata))
         

@@ -183,6 +183,10 @@ LINKS
 Build from source
 -----------------
 
+You need module setuptools <72 to run tests:
+
+    >>> $ pip install -U 'setuptools<72'
+
    >>> $ git clone https://github.com/sergey-dryabzhinsky/python-zstd
    >>> $ git submodule update --init
    >>> $ apt-get install python-dev python3-dev python-setuptools python3-setuptools
@@ -198,6 +202,8 @@ And you need to install `libzstd` developer files at least version *1.4.0*:
     >>> $ apk add zstd-dev
 
 or do manual installation of zstd from source.
+
+And you need C99 support in compiler (gcc >= 4.8), libc >= 2.14.
 
 Note: Zstd legacy format support disabled by default.
 To build with Zstd legacy versions support - pass ``--legacy`` option to setup.py script:
@@ -243,15 +249,15 @@ When using a PEP 517 builder you can use ``ZSTD_SMALL`` environment variable ins
 
    >>> $ ZSTD_SMALL=1 python -m build -w
 
-If you want to build faster module try to use option `--speed`.
+If you want to build faster module try to use options `--speed3`, `--speed1`, `--speed2`, which corresponds with gcc options `-O3, -O1, -O2`.
 
-   >>> $ python setup.py build_ext --speed clean
+   >>> $ python setup.py build_ext --speed1 clean
 
-When using a PEP 517 builder you can use ``ZSTD_SPEED`` environment variable instead:
+When using a PEP 517 builder you can use ``ZSTD_SPEED3`` (default), `ZSTD_SPEED1`, `ZSTD_SPEED2` environment variables instead:
 
-   >>> $ ZSTD_SPEED=1 python -m build -w
+   >>> $ ZSTD_SPEED2=1 python -m build -w
 
-If you want to build even faster module try to use option `--speed-max`, but it will be optimized to your procesor only.
+If you want to build even faster module try to use option `--speed-max`, but it will be optimized to your procesor only, similar to gcc options `-O3 -march=native`.
 
    >>> $ python setup.py build_ext --speed-max clean
 
@@ -267,13 +273,45 @@ When using a PEP 517 builder you can use ``ZSTD_EXTERNAL`` environment variable 
 
    >>> $ ZSTD_EXTERNAL=1 python -m build -w
 
-If you want to build with a lot of debug output just add ``--debug`` option
+If you want to build with a lot of debug output to stderr just add ``--debug`` option
 
    >>> $ python setup.py build_ext --debug clean
 
 When using a PEP 517 builder you can use ``ZSTD_DEBUG`` environment variable instead:
 
    >>> $ ZSTD_DEBUG=1 python -m build -w
+
+If you want to build with a lot more of debug output to stderr just add ``--debug-notice`` option
+
+   >>> $ python setup.py build_ext --debug-notice clean
+
+When using a PEP 517 builder you can use ``ZSTD_DEBUG_NOTICE`` environment variable instead:
+
+   >>> $ ZSTD_DEBUG_NOTICE=1 python -m build -w
+
+If you want to build with a lot more of debug output to stderr just add ``--debug-info`` option
+
+   >>> $ python setup.py build_ext --debug-info clean
+
+When using a PEP 517 builder you can use ``ZSTD_DEBUG_INFO`` environment variable instead:
+
+   >>> $ ZSTD_DEBUG_INFO=1 python -m build -w
+
+Some python builds need to force disabing LTO, so just add ``--force-no-lto`` option
+
+   >>> $ python setup.py build_ext --force-no-lto clean
+
+When using a PEP 517 builder you can use ``ZSTD_BUILD_NO_LTO`` environment variable instead:
+
+   >>> $ ZSTD_BUILD_NO_LTO=1 python -m build -w
+
+Some python builds need to force enabling stripping binary of the module, so just add ``--force-strip`` option
+
+   >>> $ python setup.py build_ext --force-strip clean
+
+When using a PEP 517 builder you can use ``ZSTD_BUILD_STRIP`` environment variable instead:
+
+   >>> $ ZSTD_BUILD_STRIP=1 python -m build -w
 
 If paths to header file ``zstd.h`` and libraries is uncommon - use common ``build`` params:
 --libraries --include-dirs --library-dirs.
@@ -419,6 +457,11 @@ ZSTD_min_compression_level (): int
 
   Since: 1.5.6.3
 
+ZSTD_default_compression_level (): int
+  Returns ZSTD library determined default number of compression level .
+
+  Since: 1.5.7.1
+
 ZSTD_external (): int
   Returns 0 of 1 if ZSTD library linked as external.
 
@@ -435,9 +478,29 @@ ZSTD_with_threads (): int
   Since: 1.5.6.2
 
 ZSTD_with_asm (): int
-  Returns 0 of 1 if bundled ZSTD library build with asm optimization s.
+  Returns 0 of 1 if bundled ZSTD library build with asm optimizations.
 
   Since: 1.5.6.2
+
+ZSTD_is_debug_enable (): int
+  Returns 0 of 1 if module built with debug output.
+
+  Since: 1.5.7.1
+
+ZSTD_is_debug_notice_enable (): int
+  Returns 0 of 1 if module built with debug output - notice level.
+
+  Since: 1.5.7.1
+
+ZSTD_is_debug_info_enable (): int
+  Returns 0 of 1 if module built with debug output - info level.
+
+  Since: 1.5.7.1
+
+ZSTD_is_debug_error_enable (): int
+  Returns 0 of 1 if module built with debug output - error level.
+
+  Since: 1.5.7.1
 
 
 Removed

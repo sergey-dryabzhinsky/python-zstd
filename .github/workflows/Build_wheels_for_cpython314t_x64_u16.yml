@@ -1,4 +1,4 @@
-name: Build wheels for CPython2.7 x64 on Ubuntu18 with GCC-7 with All warnings
+name: Build wheels for CPython3.14-nogil x64 on Ubuntu16 with GCC-5 All warnings
 
 on: [push, pull_request]
 
@@ -14,19 +14,22 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - name: Ubuntu 24+16 amd64 CPython 2.7
+          - name: Ubuntu 24+16 amd64 CPython 3.14-nogil
             runs-on: ubuntu-latest
             matrix: linux
             arch: amd64
             tag_arch: x86_64
-            release: bionic
+            release: xenial
             mirror: http://azure.archive.ubuntu.com/ubuntu
             #version: 1.5.6.7
-            #pyver: "2.7"
-            getpipurl: https://bootstrap.pypa.io/pip/2.7/get-pip.py
-            pypkg: python2.7
-            pyengine_tag: cp27-cp27mu
-            libc_tag: manylinux_2_4
+            # pyver: "3.7"
+            getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
+            pypkg: python3.14-nogil
+            pypkgdev: python3.14-dev
+            pypkgexe: python3.14t
+            #pypkgadd: python3.13-distutils
+            pyengine_tag: cp314-cp314t
+            libc_tag: manylinux_2_14
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -47,7 +50,7 @@ jobs:
       - name: Build source distribution with Ubuntu
         if: matrix.os.matrix == 'linux'
         run: |
-          sudo apt install -y  debootstrap qemu-user;
+          sudo apt install -y debootstrap qemu-user;
           pip install build;
           python -m build --sdist --outdir dist .
          
@@ -66,9 +69,7 @@ jobs:
           echo " deb [trusted=yes] http://packages.rusoft.ru/ppa/rusoft/python ubuntu-${{matrix.os.release}} main" > rusoft-python.list
           echo " deb [trusted=yes] http://packages.rusoft.ru/ppa/rusoft/backports ubuntu-${{matrix.os.release}} main" > rusoft-backports.list
           echo " deb [trusted=yes] http://packages.rusoft.ru/ppa/rusoft/packages ubuntu-${{matrix.os.release}} main" > rusoft-packages.list
-          echo " deb [trusted=yes] http://packages.rusoft.ru/ppa/rusoft/toolchain ubuntu-${{matrix.os.release}} main" > rusoft-toolchain.list
-          echo "# deb [trusted=yes] http://apt.llvm.org/${{matrix.os.release}}/ llvm-toolchain-${{matrix.os.release}}-16 main " > clang.list
-          echo "# deb [trusted=yes] http://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu ${{matrix.os.release}} main" > deadsnakes.list
+          echo " deb [trusted=yes] http://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu ${{matrix.os.release}} main" > deadsnakes.list
           false && sudo find ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} -iname apt
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt update
           sudo cp -v ./*.list ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/etc/apt/sources.list.d
@@ -85,35 +86,36 @@ jobs:
       - name: Pepare dev files
         if: matrix.os.matrix == 'linux'
         run: |
-           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt install -y libzstd-dev
+           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt install -y libzstd-dev file
 
       - name: Pepare for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
         run: |
-           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt install -y ${{matrix.os.pypkg}}-dev gcc pkg-config ${{matrix.os.pypkgadd}}
-           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "wget ${{matrix.os.getpipurl}} -O get-pip.py && ${{matrix.os.pypkg}} get-pip.py || true"
-           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "${{matrix.os.pypkg}} -m pip install -U 'setuptools'" 
-                    
+           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt install -y ${{matrix.os.pypkgdev}} ${{matrix.os.pypkg}} gcc pkg-config ${{matrix.os.pypkgadd}}
+           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "wget ${{matrix.os.getpipurl}} -O get-pip.py && ${{matrix.os.pypkgexe}} get-pip.py || true"
+           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "${{matrix.os.pypkgexe}} -m pip install -U 'setuptools<72.0'"
+
       - name: Pepare source and build wheel for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
         run: |
-          sudo mkdir -p ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/
           version=`cat version`
+          sudo mkdir -p ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/
           sudo tar -xvf dist/zstd-$version.tar.gz -C ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/
-          false && sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} env 
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} pkg-config libzstd --modversion
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} echo GCC-7
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} gcc-7 -v
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version && CC=gcc-7 ZSTD_ASM=1 _ZSTD_SMALL=1 ZSTD_WARNINGS=1 _ZSTD_WERRORS=1 _ZSTD_ASM_BMI2=1 ZSTD_THREADS=1 _ZSTD_EXTERNAL=1 ${{matrix.os.pypkg}} setup.py bdist_wheel"
+          false && sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} env
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} pkg-config libzstd --modversion 
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} echo GCC
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} gcc -v
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version/ && ZSTD_ASM=1 ZSTD_WARNINGS=1 _ZSTD_SMALL=1 LDFLAGS='-Wl,--as-needed -Wl,-s' ZSTD_BUILD_STRIP=1 _ZSTD_SPEED=0 _ZSTD_SPEEDMAX=0 _ZSTD_ASM_BMI2=1 ZSTD_THREADS=1 _ZSTD_EXTERNAL=0 ${{matrix.os.pypkgexe}} setup.py bdist_wheel"
 
       - name: Test wheel for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
         run: |
-          false && sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} find /build_wheel/
           version=`cat version`
+          false && sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} find /build_wheel/
           sudo cp -v glibc-check.sh ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/zstd-$version/
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version/ && ls -lh build/*/zstd.so; ldd build/*/zstd.so ; file build/*/zstd.so; bash ./glibc-check.sh build/*/zstd.so"
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version && ${{matrix.os.pypkg}} setup.py test"
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version/ && echo LLH; ls -lh build/lib*/zstd.*.so; ldd build/lib*/zstd.*.so ; file build/lib*/zstd.*.so; bash ./glibc-check.sh build/lib*/zstd.*.so"
+          
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version/ && ${{matrix.os.pypkg}} setup.py test"
 
       - name: Pepare wheel for upload
         if: matrix.os.matrix == 'linux'
@@ -122,14 +124,7 @@ jobs:
            sudo cp -v ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/zstd-$version/dist/* ./dist
            sudo ls -lh ./dist/* 
            sudo mv -v ./dist/"zstd-$version-${{matrix.os.pyengine_tag}}-linux_${{matrix.os.tag_arch}}.whl" ./dist/"zstd-$version-${{matrix.os.pyengine_tag}}-${{matrix.os.libc_tag}}_${{matrix.os.tag_arch}}.whl"
-           
 
-#      - name: Upload artifacts
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: wheels
-#.         path: ./dist
-#          compression-level: 0
           
       - name: Test for secrets access
         id: check_secrets
@@ -176,3 +171,4 @@ jobs:
           TWINE_NON_INTERACTIVE: 1
           TWINE_PASSWORD: "${{ secrets.test_pypi_password }}"
         run: twine upload --non-interactive --skip-existing --verbose 'dist/*'
+        
