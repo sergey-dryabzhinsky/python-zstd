@@ -101,6 +101,10 @@ static PyObject *py_zstd_library_version_int(PyObject* self, PyObject *args);
 static PyObject *py_zstd_library_external(PyObject* self, PyObject *args);
 static PyObject *py_zstd_with_threads(PyObject* self, PyObject *args);
 static PyObject *py_zstd_with_asm(PyObject* self, PyObject *args);
+static PyObject *py_zstd_is_debug_enabled(PyObject* self, PyObject *args);
+static PyObject *py_zstd_is_debug_notice_enabled(PyObject* self, PyObject *args);
+static PyObject *py_zstd_is_debug_info_enabled(PyObject* self, PyObject *args);
+static PyObject *py_zstd_is_debug_error_enabled(PyObject* self, PyObject *args);
 
 #if PY_MAJOR_VERSION < 3
 PyMODINIT_FUNC initzstd(void);

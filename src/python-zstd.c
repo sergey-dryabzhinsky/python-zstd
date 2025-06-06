@@ -390,7 +390,7 @@ static PyObject *py_zstd_with_threads(PyObject* self, PyObject *args)
 
 
 /**
- * Returns 0 or 1 if ZSTD library build with threads
+ * Returns 0 or 1 if ZSTD library build with assembler inlines
  */
 static PyObject *py_zstd_with_asm(PyObject* self, PyObject *args)
 {
@@ -400,7 +400,49 @@ static PyObject *py_zstd_with_asm(PyObject* self, PyObject *args)
     return Py_BuildValue("i", ! ZSTD_DISABLE_ASM);
 }
 
+/**
+ * Returns 0 or 1 if module built with debug output enabled
+ */
+static PyObject *py_zstd_is_debug_enabled(PyObject* self, PyObject *args)
+{
+    UNUSED(self);
+    UNUSED(args);
 
+    return Py_BuildValue("i", ZSTD_DEBUG);
+}
+
+/**
+ * Returns 0 or 1 if module built with debug notice level output enabled
+ */
+static PyObject *py_zstd_is_debug_notice_enabled(PyObject* self, PyObject *args)
+{
+    UNUSED(self);
+    UNUSED(args);
+
+    return Py_BuildValue("i", ZSTD_DEBUG_NOTICE);
+}
+
+/**
+ * Returns 0 or 1 if module built with debug info level output enabled
+ */
+static PyObject *py_zstd_is_debug_info_enabled(PyObject* self, PyObject *args)
+{
+    UNUSED(self);
+    UNUSED(args);
+
+    return Py_BuildValue("i", ZSTD_DEBUG_INFO);
+}
+
+/**
+ * Returns 0 or 1 if module built with debug error level output enabled
+ */
+static PyObject *py_zstd_is_debug_error_enabled(PyObject* self, PyObject *args)
+{
+    UNUSED(self);
+    UNUSED(args);
+
+    return Py_BuildValue("i", ZSTD_DEBUG_ERROR);
+}
 
 /**
  * Returns ZSTD determined threads count, int
@@ -486,6 +528,11 @@ static PyMethodDef ZstdMethods[] = {
     {"ZSTD_legacy_support",  py_zstd_library_legacy_format_support, METH_NOARGS, ZSTD_LEGACY_DOCSTRING},
     {"ZSTD_with_threads",  py_zstd_with_threads, METH_NOARGS, ZSTD_WITH_THREADS_DOCSTRING},
     {"ZSTD_with_asm",  py_zstd_with_asm, METH_NOARGS, ZSTD_WITH_ASM_DOCSTRING},
+
+    {"ZSTD_is_debug_enabled",  py_zstd_is_debug_enabled, METH_NOARGS, NULL},
+    {"ZSTD_is_debug_notice_enabled",  py_zstd_is_debug_notice_enabled, METH_NOARGS, NULL},
+    {"ZSTD_is_debug_info_enabled",  py_zstd_is_debug_info_enabled, METH_NOARGS, NULL},
+    {"ZSTD_is_debug_error_enabled",  py_zstd_is_debug_error_enabled, METH_NOARGS, NULL},
 
     {NULL, NULL, 0, NULL}
 };

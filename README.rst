@@ -478,9 +478,29 @@ ZSTD_with_threads (): int
   Since: 1.5.6.2
 
 ZSTD_with_asm (): int
-  Returns 0 of 1 if bundled ZSTD library build with asm optimization s.
+  Returns 0 of 1 if bundled ZSTD library build with asm optimizations.
 
   Since: 1.5.6.2
+
+ZSTD_is_debug_enable (): int
+  Returns 0 of 1 if module built with debug output.
+
+  Since: 1.5.7.1
+
+ZSTD_is_debug_notice_enable (): int
+  Returns 0 of 1 if module built with debug output - notice level.
+
+  Since: 1.5.7.1
+
+ZSTD_is_debug_info_enable (): int
+  Returns 0 of 1 if module built with debug output - info level.
+
+  Since: 1.5.7.1
+
+ZSTD_is_debug_error_enable (): int
+  Returns 0 of 1 if module built with debug output - error level.
+
+  Since: 1.5.7.1
 
 
 Removed
