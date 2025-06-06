@@ -125,7 +125,7 @@ jobs:
         if: matrix.os.matrix == 'linux'
         run: |
            version=`cat version`
-           sudo cp -v ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/zstd-${version/dist/* ./dist
+           sudo cp -v ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/zstd-${version}/dist/* ./dist
            sudo ls -lh ./dist/* 
            sudo mv -v ./dist/"zstd-$version-${{matrix.os.pyengine_tag}}-linux_${{matrix.os.tag_arch}}.whl" ./dist/"zstd-$version-${{matrix.os.pyengine_tag}}-${{matrix.os.libc_tag}}_${{matrix.os.tag_arch}}.whl"
  
