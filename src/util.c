@@ -21,6 +21,7 @@ extern "C" {
 #include <errno.h>
 #include <string.h>
 #include <stdio.h>
+#include <time.h>
 
 #if defined(_MSC_VER) || defined(__MINGW32__) || defined (__MSVCRT__)
 #include <direct.h>     /* needed for _mkdir in windows */
@@ -38,8 +39,12 @@ typedef BOOL(WINAPI* LPFN_GLPI)(PSYSTEM_LOGICAL_PROCESSOR_INFORMATION, PDWORD);
 
 int UTIL_countAvailableCores(void)
 {
-    static int numPhysicalCores = 0;
-    if (numPhysicalCores != 0) return numPhysicalCores;
+    static int numLogicalCores = 0;
+    static time_t lastTimeCached = 0;
+    time_t currTime = time(NULL);
+    int cachettl = 60;
+    if (lastTimeCached && currTime-lastTimeCached>cachettl) numLogicalCores = 0;
+    if (numLogicalCores != 0) return numLogicalCores;
 
     {   LPFN_GLPI glpi;
         BOOL done = FALSE;
@@ -86,7 +91,7 @@ int UTIL_countAvailableCores(void)
         while (byteOffset + sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION) <= returnLength) {
 
             if (ptr->Relationship == RelationProcessorCore) {
-                numPhysicalCores++;
+                numLogicalCores++;
             }
 
             ptr++;
@@ -94,18 +99,19 @@ int UTIL_countAvailableCores(void)
         }
 
         free(buffer);
-
-        return numPhysicalCores;
+        lastTimeCached = time(NULL);
+        return numLogicalCores;
     }
 
 failed:
     /* try to fall back on GetSystemInfo */
     {   SYSTEM_INFO sysinfo;
         GetSystemInfo(&sysinfo);
-        numPhysicalCores = sysinfo.dwNumberOfProcessors;
-        if (numPhysicalCores == 0) numPhysicalCores = 1; /* just in case */
+        numLogicalCores = sysinfo.dwNumberOfProcessors;
+        if (numLogicalCores == 0) numLogicalCores = 1; /* just in case */
     }
-    return numPhysicalCores;
+    lastTimeCached = time(NULL);
+    return numLogicalCores;
 }
 
 #elif defined(__APPLE__)
@@ -116,22 +122,27 @@ failed:
  * see: man 3 sysctl */
 int UTIL_countAvailableCores(void)
 {
-    static int32_t numPhysicalCores = 0; /* apple specifies int32_t */
-    if (numPhysicalCores != 0) return numPhysicalCores;
+    static int32_t numLogicalCores = 0; /* apple specifies int32_t */
+    static time_t lastTimeCached = 0;
+    time_t currTime = time(NULL);
+    int cachettl = 60;
+    if (lastTimeCached && currTime-lastTimeCached>cachettl) numLogicalCores = 0;
+    if (numLogicalCores != 0) return numLogicalCores;
 
     {   size_t size = sizeof(int32_t);
-        int const ret = sysctlbyname("hw.physicalcpu", &numPhysicalCores, &size, NULL, 0);
+        int const ret = sysctlbyname("hw.physicalcpu", &numLogicalCores, &size, NULL, 0);
         if (ret != 0) {
             if (errno == ENOENT) {
                 /* entry not present, fall back on 1 */
-                numPhysicalCores = 1;
+                numLogicalCores = 1;
             } else {
                 perror("zstd: can't get number of physical cpus");
                 exit(1);
             }
         }
 
-        return numPhysicalCores;
+        lastTimeCached = time(NULL);
+        return numLogicalCores;
     }
 }
 
@@ -142,20 +153,25 @@ int UTIL_countAvailableCores(void)
  * otherwise fall back on sysconf */
 int UTIL_countAvailableCores(void)
 {
-    static int numPhysicalCores = 0;
+    static int numLogicalCores = 0;
+    static time_t lastTimeCached = 0;
+    time_t currTime = time(NULL);
+    int cachettl = 60;
+    if (lastTimeCached && currTime-lastTimeCached>cachettl) numLogicalCores = 0;
 
-    if (numPhysicalCores != 0) {
-	printdn("Stored static numPhysicalCores: %d\n", numPhysicalCores);
-	return numPhysicalCores;
+    if (numLogicalCores != 0) {
+        printdn("Stored static numLogicalCores: %d\n", numLogicalCores);
+        return numLogicalCores;
     }
 
-    numPhysicalCores = (int)sysconf(_SC_NPROCESSORS_ONLN);
-    if (numPhysicalCores == -1) {
+    numLogicalCores = (int)sysconf(_SC_NPROCESSORS_ONLN);
+    if (numLogicalCores == -1) {
         /* value not queryable, fall back on 1 */
-	printdn("Sysconf read fail. numPhysicalCores: %d\n", numPhysicalCores);
-        return numPhysicalCores = 1;
+        printdn("Sysconf read fail. numLogicalCores: %d\n", numLogicalCores);
+        lastTimeCached = time(NULL);
+        return numLogicalCores = 1;
     }
-	printdn("Sysconf readed. numPhysicalCores: %d\n", numPhysicalCores);
+	printdn("Sysconf readed. numLogicalCores: %d\n", numLogicalCores);
 
     /* try to determine if there's hyperthreading */
     {   FILE* cpuinfo = fopen("/proc/cpuinfo", "r");
@@ -169,8 +185,9 @@ int UTIL_countAvailableCores(void)
 
         if (cpuinfo == NULL) {
             /* fall back on the sysconf value, fallback to 1 */
-            printdn("Cpuinfo not open. numPhysicalCores: %d\n", numPhysicalCores);
-            return numPhysicalCores = 1;
+            printdn("Cpuinfo not open. numLogicalCores: %d\n", numLogicalCores);
+            lastTimeCached = time(NULL);
+            return numLogicalCores = 1;
         }
 
         /* assume the cpu cores/siblings values will be constant across all
@@ -186,6 +203,7 @@ int UTIL_countAvailableCores(void)
 
                     siblings = atoi(sep + 1);
                     printdn("Cpuinfo: got siblings: %d\n", siblings);
+                    break; // first found - go away
                 }
                 // here are stored count of physical cores
                 if (strncmp(buff, "cpu cores", 9) == 0) {
@@ -197,6 +215,7 @@ int UTIL_countAvailableCores(void)
 
                     cpu_cores = atoi(sep + 1);
                     printdn("Cpuinfo: got cpu-cores: %d\n", cpu_cores);
+                    break; // first found - go away
                 }
                 // just do stupid line counting
                 if (strncmp(buff, "processor", 9) == 0) {
@@ -219,11 +238,13 @@ int UTIL_countAvailableCores(void)
         fclose(cpuinfo); cpuinfo = NULL;
         if (procs){
             printdn("Cpuinfo found processor lines: %d\n", procs);
-            return numPhysicalCores = procs;
+            lastTimeCached = time(NULL);
+            return numLogicalCores = procs;
         }
 failed:
         if (cpuinfo){ fclose(cpuinfo); cpuinfo = NULL;}
-        return numPhysicalCores = numPhysicalCores / ratio;
+        lastTimeCached = time(NULL);
+        return numLogicalCores = numLogicalCores / ratio;
     }
 }
 
@@ -236,27 +257,33 @@ failed:
  * see: man 4 smp, man 3 sysctl */
 int UTIL_countAvailableCores(void)
 {
-    static int numPhysicalCores = 0; /* freebsd sysctl is native int sized */
-    if (numPhysicalCores != 0) return numPhysicalCores;
+    static int numLogicalCores = 0; /* freebsd sysctl is native int sized */
+    static time_t lastTimeCached = 0;
+    time_t currTime = time(NULL);
+    int cachettl = 60;
+    if (lastTimeCached && currTime-lastTimeCached>cachettl) numLogicalCores = 0;
+
+    if (numLogicalCores != 0) return numLogicalCores;
 
 #if __FreeBSD_version >= 1300008
-    {   size_t size = sizeof(numPhysicalCores);
-        int ret = sysctlbyname("kern.smp.cores", &numPhysicalCores, &size, NULL, 0);
-        if (ret == 0) return numPhysicalCores;
+    {   size_t size = sizeof(numLogicalCores);
+        int ret = sysctlbyname("kern.smp.cores", &numLogicalCores, &size, NULL, 0);
+        if (ret == 0) return numLogicalCores;
         if (errno != ENOENT) {
-            perror("zstd: can't get number of physical cpus");
+            perror("zstd: can't get number of Logical cpus");
             exit(1);
         }
         /* sysctl not present, fall through to older sysconf method */
     }
 #endif
 
-    numPhysicalCores = (int)sysconf(_SC_NPROCESSORS_ONLN);
-    if (numPhysicalCores == -1) {
+    numLogicalCores = (int)sysconf(_SC_NPROCESSORS_ONLN);
+    if (numLogicalCores == -1) {
         /* value not queryable, fall back on 1 */
-        numPhysicalCores = 1;
+        numLogicalCores = 1;
     }
-    return numPhysicalCores;
+    lastTimeCached = time(NULL);
+    return numLogicalCores;
 }
 
 #elif defined(__NetBSD__) || defined(__OpenBSD__) || defined(__DragonFly__)
@@ -265,16 +292,21 @@ int UTIL_countAvailableCores(void)
  * see: man 3 sysconf */
 int UTIL_countAvailableCores(void)
 {
-    static int numPhysicalCores = 0;
+    static int numLogicalCores = 0;
+    static time_t lastTimeCached = 0;
+    time_t currTime = time(NULL);
+    int cachettl = 60;
+    if (lastTimeCached && currTime-lastTimeCached>cachettl) numLogicalCores = 0;
 
-    if (numPhysicalCores != 0) return numPhysicalCores;
+    if (numLogicalCores != 0) return numLogicalCores;
 
-    numPhysicalCores = (int)sysconf(_SC_NPROCESSORS_ONLN);
-    if (numPhysicalCores == -1) {
+    numLogicalCores = (int)sysconf(_SC_NPROCESSORS_ONLN);
+    if (numLogicalCores == -1) {
         /* value not queryable, fall back on 1 */
-        return numPhysicalCores = 1;
+        return numLogicalCores = 1;
     }
-    return numPhysicalCores;
+    lastTimeCached = time(NULL);
+    return numLogicalCores;
 }
 
 #else
