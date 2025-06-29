@@ -2,7 +2,14 @@
 python-zstd
 =============
 
-[![Downloads](https://static.pepy.tech/badge/zstd)](https://pepy.tech/project/zstd) [![Downloads](https://static.pepy.tech/badge/zstd/month)](https://pepy.tech/project/zstd) [![Downloads](https://static.pepy.tech/badge/zstd/week)](https://pepy.tech/project/zstd)
+.. |Downloads| image:: https://static.pepy.tech/badge/zstd
+	:target: (https://pepy.tech/project/zstd) 
+
+.. |monthly| image:: https://static.pepy.tech/badge/zstd/month
+	:target: https://pepy.tech/project/zstd) 
+
+.. |weekly| image:: https://static.pepy.tech/badge/zstd/week
+	:target: https://pepy.tech/project/zstd
 
 .. |releaseW| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg?tag=v1.5.7.1
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml
@@ -78,6 +85,8 @@ python-zstd
 
 .. |cpython314x64u20| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython314_x86_64_u24.yml/badge.svg
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython314_x86_64_u24.yml
+
+|Downloads| |monthly| |weekly|
 
 +----------------------+---------------------+
 | wheels for:          |      status         |
