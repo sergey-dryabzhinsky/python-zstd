@@ -2,6 +2,8 @@
 python-zstd
 =============
 
+[![Downloads](https://static.pepy.tech/badge/zstd)](https://pepy.tech/project/zstd) [![Downloads](https://static.pepy.tech/badge/zstd/month)](https://pepy.tech/project/zstd) [![Downloads](https://static.pepy.tech/badge/zstd/week)](https://pepy.tech/project/zstd)
+
 .. |releaseW| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg?tag=v1.5.7.1
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml
 
