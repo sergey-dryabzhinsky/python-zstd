@@ -471,6 +471,7 @@ static PyObject *py_zstd_set_cpu_cores_cache_ttl(PyObject* self, PyObject *args)
 	if (cacheTTL==0) cacheTTL=60;
 
 	UTIL_setCpuCoresCacheTTL(cacheTTL);
+	return Py_BuildValue("i", 0);
 }
 
 /**
