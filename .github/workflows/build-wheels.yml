@@ -145,7 +145,7 @@ jobs:
         if: matrix.os.matrix == 'linux'
         run: |
           echo OS-RELEASE; cat /etc/os-release;
-          echo CPU-FLAGS; grep flags /proc/cpuinfo || grep Features /proc/cpuinfo;
+          echo CPU-FLAGS; lscpu | grep Flags:;
           sudo apt purge -y firefox snapd;
           false && sudo apt update; apt list --upgradable; false && sudo apt upgrade -y;
           sudo apt install -y libzstd-dev;
