@@ -98,6 +98,22 @@ class TestZstdSpeed(BaseTestZSTD):
         log.info("end Check memory usage = %6.2f kb" % (1.0*endMemoryUsage/1024,))
         log.info("Check speed average = %6.2f Mb/sec" % (1.0*sum/1024/1024/wait,))
         log.info("diff Check memory usage = %6.2f kb" % (1.0*(endMemoryUsage-beginMemoryUsage)/1024,))
+
+    def test_cpu_cores_cache_60_speed(self):
+        wait = 70
+        log.info("\nWait %d seconds..." % wait)
+        ops = 0
+        tbegin = time()
+        beginMemoryUsage=get_real_memory_usage()
+        log.info("begin Check cpu cores cache Memory usage= %6.2f kb" % (1.0*beginMemoryUsage/1024,))
+        while time()-tbegin<wait:
+            cores = zstd.ZSTD_threads_count()
+            ops+=l
+
+        endMemoryUsage=get_real_memory_usage()
+        log.info("end Check memory usage = %6.2f kb" % (1.0*endMemoryUsage/1024,))
+        log.info("Check speed average = %6.2f Ops/sec" % (1.0*ops/wait,))
+        log.info("diff Check memory usage = %6.2f kb" % (1.0*(endMemoryUsage-beginMemoryUsage)/1024,))
     
 if __name__ == '__main__':
     unittest.main()
