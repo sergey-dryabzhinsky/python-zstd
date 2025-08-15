@@ -552,7 +552,7 @@ static PyMethodDef ZstdMethods[] = {
     {"ZSTD_is_debug_info_enabled",  py_zstd_is_debug_info_enabled, METH_NOARGS, NULL},
     {"ZSTD_is_debug_error_enabled",  py_zstd_is_debug_error_enabled, METH_NOARGS, NULL},
 	
-	{"ZSTD_setCpuCoresCacheTTL",  py_zstd_set_cpu_cores_cache_ttl, METH_NOARGS, NULL},
+	{"ZSTD_setCpuCoresCacheTTL",  py_zstd_set_cpu_cores_cache_ttl,METH_VARARGS, NULL},
    
     {NULL, NULL, 0, NULL}
 };
