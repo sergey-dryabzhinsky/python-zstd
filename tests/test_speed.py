@@ -108,7 +108,7 @@ class TestZstdSpeed(BaseTestZSTD):
         log.info("begin Check cpu cores cache(60) Memory usage= %6.2f kb" % (1.0*beginMemoryUsage/1024,))
         while time()-tbegin<wait:
             cores = zstd.ZSTD_threads_count()
-            ops+=l
+            ops+=1
 
         endMemoryUsage=get_real_memory_usage()
         log.info("end Check memory usage = %6.2f kb" % (1.0*endMemoryUsage/1024,))
@@ -125,7 +125,7 @@ class TestZstdSpeed(BaseTestZSTD):
         log.info("begin Check cpu cores cache(1) Memory usage= %6.2f kb" % (1.0*beginMemoryUsage/1024,))
         while time()-tbegin<wait:
             cores = zstd.ZSTD_threads_count()
-            ops+=l
+            ops+=1
 
         endMemoryUsage=get_real_memory_usage()
         log.info("end Check memory usage = %6.2f kb" % (1.0*endMemoryUsage/1024,))
