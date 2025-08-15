@@ -317,12 +317,12 @@ int UTIL_countAvailableCores(void)
     return 1;
 }
 
+#endif
+
 int UTIL_setCpuCoresCacheTTL(int cacheTTL){
 	util_cpuCoresCacheTTL = cacheTTL;
 	return 0;
 }
-
-#endif
 
 #if defined (__cplusplus)
 }
