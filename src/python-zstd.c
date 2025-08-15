@@ -455,6 +455,25 @@ static PyObject *py_zstd_threads_count(PyObject* self, PyObject *args)
     return Py_BuildValue("i", threads);
 }
 
+static PyObject *py_zstd_set_cpu_cores_cache_ttl(PyObject* self, PyObject *args)
+{
+    UNUSED(self);
+
+    int32_t cacheTTL = 0;
+
+#if PY_MAJOR_VERSION >= 3
+    if (!PyArg_ParseTuple(args, "i", &cacheTTL))
+        return NULL;
+#else
+    if (!PyArg_ParseTuple(args, "i", &cacheTTL))
+        return NULL;
+#endif
+	if (cacheTTL==0) cacheTTL=60;
+
+	UTIL_setCpuCoresCacheTTL(cacheTTL);
+	return Py_BuildValue("i", 0);
+}
+
 /**
  * Returns ZSTD determined max threads count, int
  */
@@ -533,7 +552,9 @@ static PyMethodDef ZstdMethods[] = {
     {"ZSTD_is_debug_notice_enabled",  py_zstd_is_debug_notice_enabled, METH_NOARGS, NULL},
     {"ZSTD_is_debug_info_enabled",  py_zstd_is_debug_info_enabled, METH_NOARGS, NULL},
     {"ZSTD_is_debug_error_enabled",  py_zstd_is_debug_error_enabled, METH_NOARGS, NULL},
-
+	
+	{"ZSTD_setCpuCoresCacheTTL",  py_zstd_set_cpu_cores_cache_ttl,METH_VARARGS, NULL},
+   
     {NULL, NULL, 0, NULL}
 };
 
