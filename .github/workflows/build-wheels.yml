@@ -8,7 +8,7 @@ concurrency:
 
 jobs:
   build_wheels:
-    name: Build wheel - ${{ matrix.cibw.build }} ${{ matrix.os.name }} ${{ matrix.arch.name }}
+    name: Build wheel - ${{ matrix.os.name }} ${{ matrix.arch.name }} ${{ matrix.cibw.build }}
     runs-on: ${{ matrix.os.runs-on[matrix.arch.matrix] }}
     strategy:
       fail-fast: false
@@ -195,9 +195,9 @@ jobs:
           CIBW_BUILD_VERBOSITY: 2
           # Skip 32-bit builds // NO
           # CIBW_SKIP: '*-win32 *_i686'
-          CIBW_MANYLINUX_I686_IMAGE: manylinux_2_24
-          CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_24
-          CIBW_MANYLINUX_AARCH64_IMAGE: manylinux_2_24
+          CIBW_MANYLINUX_I686_IMAGE: manylinux_2_28
+          CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
+          CIBW_MANYLINUX_AARCH64_IMAGE: manylinux_2_28
           CIBW_MUSLLINUX_I686_IMAGE: musllinux_1_2
           CIBW_MUSLLINUX_X86_64_IMAGE: musllinux_1_2
           CIBW_ARCHS_LINUX: ${{ matrix.os.cibw-archs[matrix.arch.matrix] }}
