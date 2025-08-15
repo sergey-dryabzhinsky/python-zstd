@@ -184,7 +184,7 @@ jobs:
           CIBW_BUILD_VERBOSITY: 2
           # Skip 32-bit builds // NO
           # CIBW_SKIP: '*-win32 *_i686'
-          CIBW_MANYLINUX_I686_IMAGE: manylinux_2_28
+          CIBW_MANYLINUX_I686_IMAGE: manylinux_2_24
           CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
           CIBW_MANYLINUX_AARCH64_IMAGE: manylinux_2_28
           CIBW_MUSLLINUX_I686_IMAGE: musllinux_1_2
