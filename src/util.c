@@ -156,8 +156,8 @@ int UTIL_countAvailableCores(void)
     static int numLogicalCores = 0;
     static time_t lastTimeCached = 0;
     time_t currTime = time(NULL);
-    int cachettl = 60;
-    if (lastTimeCached && currTime-lastTimeCached>cachettl) numLogicalCores = 0;
+ //   int cachettl = 60;
+    if (lastTimeCached && currTime-lastTimeCached>/*cachettl*/util_cpuCoresCacheTTL) numLogicalCores = 0;
 
     if (numLogicalCores != 0) {
         printdn("Stored static numLogicalCores: %d\n", numLogicalCores);
@@ -260,8 +260,8 @@ int UTIL_countAvailableCores(void)
     static int numLogicalCores = 0; /* freebsd sysctl is native int sized */
     static time_t lastTimeCached = 0;
     time_t currTime = time(NULL);
-    int cachettl = 60;
-    if (lastTimeCached && currTime-lastTimeCached>cachettl) numLogicalCores = 0;
+ //   int cachettl = 60;
+    if (lastTimeCached && currTime-lastTimeCached>/*cachettl*/util_cpuCoresCacheTTL) numLogicalCores = 0;
 
     if (numLogicalCores != 0) return numLogicalCores;
 
@@ -295,8 +295,8 @@ int UTIL_countAvailableCores(void)
     static int numLogicalCores = 0;
     static time_t lastTimeCached = 0;
     time_t currTime = time(NULL);
-    int cachettl = 60;
-    if (lastTimeCached && currTime-lastTimeCached>cachettl) numLogicalCores = 0;
+//    int cachettl = 60;
+    if (lastTimeCached && currTime-lastTimeCached>/*cachettl*/util_cpuCoresCacheTTL) numLogicalCores = 0;
 
     if (numLogicalCores != 0) return numLogicalCores;
 
@@ -318,6 +318,11 @@ int UTIL_countAvailableCores(void)
 }
 
 #endif
+
+int UTIL_setCpuCoresCacheTTL(int cacheTTL){
+	util_cpuCoresCacheTTL = cacheTTL;
+	return 0;
+}
 
 #if defined (__cplusplus)
 }
