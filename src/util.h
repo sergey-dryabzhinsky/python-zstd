@@ -69,6 +69,8 @@ extern "C" {
 static int util_cpuCoresCacheTTL = 60;
 int UTIL_countAvailableCores(void);
 int UTIL_setCpuCoresCacheTTL(int cacheTTL);
+int UTIL_stopCpuCoresCache(void);
+
 
 #if defined (__cplusplus)
 }
