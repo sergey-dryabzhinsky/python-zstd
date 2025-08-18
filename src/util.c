@@ -324,6 +324,11 @@ int UTIL_setCpuCoresCacheTTL(int cacheTTL){
 	return 0;
 }
 
+int UTIL_stopCpuCoresCache(void){
+	util_cpuCoresCacheTTL = 0;
+	return 0;
+}
+
 #if defined (__cplusplus)
 }
 #endif
