@@ -1,0 +1,36 @@
+name: Build wheels for CPython3.13 x86 on Ubuntu16 with GCC-5 All warnings
+
+on: [push, pull_request]
+
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}-${{ github.event_name }}-${{ github.ref == format('refs/heads/{0}', github.event.repository.default_branch) && github.sha || '' }}
+  cancel-in-progress: true
+
+jobs:
+  build_wheels:
+    name: Build wheel - ${{ matrix.os.name }}
+    runs-on: ${{ matrix.os.runs-on }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - name: Ubuntu 20 x86 CPython 3.13
+            runs-on: ubuntu-latest
+            matrix: linux
+            arch: i386
+            tag_arch: x86_64
+            release: xenial
+            mirror: http://azure.archive.ubuntu.com/ubuntu
+            #version: 1.5.6.7
+            # pyver: "3.7"
+            getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
+            pypkg: python3.13
+            #pypkgadd: python3.13-distutils
+            pyengine_tag: cp313-cp313
+            libc_tag: manylinux_2_14
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+
