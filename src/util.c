@@ -40,8 +40,7 @@ typedef BOOL(WINAPI* LPFN_GLPI)(PSYSTEM_LOGICAL_PROCESSOR_INFORMATION, PDWORD);
 int UTIL_countAvailableCores(void)
 {
     time_t currTime = time(NULL);
-    int cachettl = 60;
-    if (lastTimeCached && currTime-lastTimeCached>cachettl) numLogicalCores = 0;
+    if (lastTimeCached && currTime-lastTimeCached>util_cpuCoresCacheTTL) numLogicalCores = 0;
     if (numLogicalCores != 0) return numLogicalCores;
 
     {   LPFN_GLPI glpi;
@@ -121,8 +120,7 @@ failed:
 int UTIL_countAvailableCores(void)
 {
     time_t currTime = time(NULL);
-    int cachettl = 60;
-    if (lastTimeCached && currTime-lastTimeCached>cachettl) numLogicalCores = 0;
+    if (lastTimeCached && currTime-lastTimeCached>util_cpuCoresCacheTTL) numLogicalCores = 0;
     if (numLogicalCores != 0) return numLogicalCores;
 
     {   size_t size = sizeof(int32_t);
@@ -150,8 +148,7 @@ int UTIL_countAvailableCores(void)
 int UTIL_countAvailableCores(void)
 {
     time_t currTime = time(NULL);
- //   int cachettl = 60;
-    if (lastTimeCached && currTime-lastTimeCached>/*cachettl*/util_cpuCoresCacheTTL) numLogicalCores = 0;
+    if (lastTimeCached && currTime-lastTimeCached>util_cpuCoresCacheTTL) numLogicalCores = 0;
 
     if (numLogicalCores != 0) {
         printdn("Stored static numLogicalCores: %d\n", numLogicalCores);
@@ -252,8 +249,7 @@ failed:
 int UTIL_countAvailableCores(void)
 {
     time_t currTime = time(NULL);
- //   int cachettl = 60;
-    if (lastTimeCached && currTime-lastTimeCached>/*cachettl*/util_cpuCoresCacheTTL) numLogicalCores = 0;
+    if (lastTimeCached && currTime-lastTimeCached>util_cpuCoresCacheTTL) numLogicalCores = 0;
 
     if (numLogicalCores != 0) return numLogicalCores;
 
@@ -285,15 +281,14 @@ int UTIL_countAvailableCores(void)
 int UTIL_countAvailableCores(void)
 {
     time_t currTime = time(NULL);
-//    int cachettl = 60;
-    if (lastTimeCached && currTime-lastTimeCached>/*cachettl*/util_cpuCoresCacheTTL) numLogicalCores = 0;
+    if (lastTimeCached && currTime-lastTimeCached>util_cpuCoresCacheTTL) numLogicalCores = 0;
 
     if (numLogicalCores != 0) return numLogicalCores;
 
     numLogicalCores = (int)sysconf(_SC_NPROCESSORS_ONLN);
     if (numLogicalCores == -1) {
         /* value not queryable, fall back on 1 */
-        return numLogicalCores = 1;
+        numLogicalCores = 1;
     }
     lastTimeCached = time(NULL);
     return numLogicalCores;
