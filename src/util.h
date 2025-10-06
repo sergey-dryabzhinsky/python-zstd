@@ -66,6 +66,8 @@ extern "C" {
     typedef struct stat stat_t;
 #endif
 
+static int numLogicalCores = 1;
+static time_t lastTimeCached = 0;
 static int util_cpuCoresCacheTTL = 60;
 int UTIL_countAvailableCores(void);
 int UTIL_setCpuCoresCacheTTL(int cacheTTL);
