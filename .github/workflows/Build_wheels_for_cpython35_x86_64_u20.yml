@@ -154,7 +154,7 @@ jobs:
             python -m unittest discover -v -s {package}
 
       - name: Build ${{ matrix.os.name }} wheels and test (new)
-        uses: joerick/cibuildwheel@v2.22.0
+        uses: joerick/cibuildwheel@v2.23.3
         if: matrix.cibw.group == 'new'
         with:
           output-dir: dist
