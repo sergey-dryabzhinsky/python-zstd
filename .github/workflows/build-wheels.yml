@@ -26,6 +26,9 @@ jobs:
           - name: Windows
             runs-on: windows-latest
             matrix: windows
+          - name: Windows (arm64)
+            runs-on: windows-11-arm
+            matrix: windows-arm
         cibw:
           # build just supported python versions at May 2023
           - build: cp27-*
@@ -193,6 +196,54 @@ jobs:
               matrix: windows
             cibw:
               build: pp27-*
+          - os:
+              matrix: windows-arm
+            cibw:
+              build: pp27-*
+          - os:
+              matrix: windows-arm
+            cibw:
+              build: cp27-*
+          - os:
+              matrix: windows-arm
+            cibw:
+              build: cp35-*
+          - os:
+              matrix: windows-arm
+            cibw:
+              build: cp36-*
+          - os:
+              matrix: windows-arm
+            cibw:
+              build: pp36-*
+          - os:
+              matrix: windows-arm
+            cibw:
+              build: cp37-*
+          - os:
+              matrix: windows-arm
+            cibw:
+              build: pp37-*
+          - os:
+              matrix: windows-arm
+            cibw:
+              build: cp38-*
+          - os:
+              matrix: windows-arm
+            cibw:
+              build: pp38-*
+          - os:
+              matrix: windows-arm
+            cibw:
+              build: pp39-*
+          - os:
+              matrix: windows-arm
+            cibw:
+              build: pp310-*
+          - os:
+              matrix: windows-arm
+            cibw:
+              build: pp311-*
 
     steps:
       - name: Checkout code
@@ -252,7 +303,7 @@ jobs:
           # Building two wheels for MacOS and skipping Universal
           CIBW_ARCHS_MACOS: ${{ matrix.cibw.archs.macos }}
           # Skip testing Apple Silicon until there are GH runners
-          CIBW_TEST_SKIP: '*_arm64 *_universal2:arm64'
+          CIBW_TEST_SKIP: '*macosx_arm64 *_universal2:arm64'
           CIBW_BEFORE_ALL_MACOS: >
             python -m pip install --upgrade pip
           # CIBW_ENVIRONMENT_MACOS: MACOSX_DEPLOYMENT_TARGET=11.7
@@ -284,7 +335,7 @@ jobs:
           # Building two wheels for MacOS and skipping Universal
           CIBW_ARCHS_MACOS: ${{ matrix.cibw.archs.macos }}
           # Skip testing Apple Silicon until there are GH runners
-          CIBW_TEST_SKIP: '*_arm64 *_universal2:arm64'
+          CIBW_TEST_SKIP: '*macosx_arm64 *_universal2:arm64'
           CIBW_BEFORE_ALL_MACOS: >
             python -m pip install --upgrade pip
           # CIBW_ENVIRONMENT_MACOS: MACOSX_DEPLOYMENT_TARGET=11.7
