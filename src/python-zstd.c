@@ -458,6 +458,7 @@ static PyObject *py_zstd_threads_count(PyObject* self, PyObject *args)
 static PyObject *py_zstd_set_cpu_cores_cache_ttl(PyObject* self, PyObject *args)
 {
     UNUSED(self);
+	UNUSED(args);
 
     int32_t cacheTTL = 0;
 
@@ -477,6 +478,7 @@ static PyObject *py_zstd_set_cpu_cores_cache_ttl(PyObject* self, PyObject *args)
 static PyObject *py_zstd_stop_cpu_cores_cache(PyObject* self, PyObject *args)
 {
     UNUSED(self);
+	UNUSED(args);
 
 	UTIL_stopCpuCoresCache();
 	return Py_BuildValue("i", 0);
