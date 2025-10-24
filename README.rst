@@ -86,6 +86,9 @@ python-zstd
 .. |cpython314x64u20| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython314_x86_64_u24.yml/badge.svg
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython314_x86_64_u24.yml
 
+.. |cpython315x64u16| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython315_x86_64_u16.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython315_x86_64_u16.yml
+
 |Downloads| |monthly| |weekly|
 
 +----------------------+---------------------+
@@ -136,6 +139,8 @@ python-zstd
 | cpython 3.13 x64 u16 | |cpython313x64u20|  |
 +----------------------+---------------------+
 | cpython 3.14 x64 u16 | |cpython314x64u20|  |
++----------------------+---------------------+
+| cpython 3.15 x64 u16 | |cpython315x64u16|  |
 +----------------------+---------------------+
 | Release              | |releaseW|          |
 | 1.5.7.1              |                     |
