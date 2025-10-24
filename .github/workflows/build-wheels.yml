@@ -127,6 +127,14 @@ jobs:
             archs:
               linux: x86_64 aarch64
               macos: x86_64 arm64
+          - build: cp314-*
+            group: new
+            code: CPython3.13
+            manylinux: manylinux_2_28
+            musllinux: musllinux_1_2
+            archs:
+              linux: x86_64 aarch64
+              macos: x86_64 arm64
           - build: pp27-*
             group: old
             code: PyPy2.7
