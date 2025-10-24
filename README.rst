@@ -357,14 +357,17 @@ When using a PEP 517 builder you can use ``ZSTD_WARNINGS`` environment variable 
 
    >>> $ ZSTD_WARNINGS=1 python -m build -w
 
-If you want to treat all warnings as errors just add ``--
-all-warnings-errors`` option
+If you want to treat all warnings as errors just add ``--all-warnings-errors`` option
 
    >>> $ python setup.py build_ext --all-warnings-errors clean
 
 When using a PEP 517 builder you can use ``ZSTD_WERRORS`` environment variable instead:
 
    >>> $ ZSTD_WERRORS=1 python -m build -w
+
+When using a PEP 517 builder you can use ``ZSTD_FULLTIME_TESTS`` environment variable, to run tests with fulltime length:
+
+   >>> $ ZSTD_FULLTIME_TESTS=1 python setup.py test
 
 Install from pypi
 -----------------

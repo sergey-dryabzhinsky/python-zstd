@@ -12,7 +12,9 @@ class TestZstdSpeed(BaseTestZSTD):
         log.info("Bundled libzstd uses threads? :%r" % zstd.ZSTD_with_threads())
 
     def test_compression_speed(self):
-        wait = 30
+        wait = 10
+        if "ZSTD_FULLTIME_TESTS" in os.environ:
+            wait = 30
         log.info("\nWait %d seconds..." % wait)
         sum = 0
         l=len(tDATA)
@@ -28,8 +30,30 @@ class TestZstdSpeed(BaseTestZSTD):
         log.info("Compression speed average = %6.2f Mb/sec" % (1.0*sum/1024/1024/wait,))
         log.info("diff Compression memory usage = %6.2f kb" % (1.0*(endMemoryUsage-beginMemoryUsage)/1024,))
 
+    def test_compression_speed_no_cpu_cores_cache(self):
+        wait = 10
+        if "ZSTD_FULLTIME_TESTS" in os.environ:
+            wait = 30
+        log.info("\nWait %d seconds..." % wait)
+        sum = 0
+        l=len(tDATA)
+        tbegin = time()
+        beginMemoryUsage=get_real_memory_usage()
+        log.info("begin Compression memory usage = %6.2f kb" % (1.0*beginMemoryUsage/1024,))
+        zstd.ZSTD_stopCpuCoresCache()
+        while time()-tbegin<wait:
+            cdata = zstd.compress(tDATA,3,0)
+            sum+=l
+
+        endMemoryUsage=get_real_memory_usage()
+        log.info("end Compression memory usage = %6.2f kb" % (1.0*endMemoryUsage/1024,))
+        log.info("Compression speed average = %6.2f Mb/sec" % (1.0*sum/1024/1024/wait,))
+        log.info("diff Compression memory usage = %6.2f kb" % (1.0*(endMemoryUsage-beginMemoryUsage)/1024,))
+
     def test_compression_one_thread_speed(self):
-        wait = 30
+        wait = 10
+        if "ZSTD_FULLTIME_TESTS" in os.environ:
+            wait = 30
         log.info("\nWait %d seconds..." % wait)
         sum = 0
         l=len(tDATA)
@@ -46,7 +70,9 @@ class TestZstdSpeed(BaseTestZSTD):
         log.info("diff Compression with one thread memory usage = %6.2f kb" % (1.0*(endMemoryUsage-beginMemoryUsage)/1024,))
 
     def test_decompression_block_speed(self):
-        wait = 30
+        wait = 10
+        if "ZSTD_FULLTIME_TESTS" in os.environ:
+            wait = 30
         log.info("\nWait %d seconds..." % wait)
         sum = 0
         cdata = zstd.compress(tDATA)
@@ -59,7 +85,9 @@ class TestZstdSpeed(BaseTestZSTD):
         log.info("Decompression of block data speed average = %6.2f Mb/sec" % (1.0*sum/1024/1024/wait,))
 
     def test_decompression_stream_speed(self):
-        wait = 30
+        wait = 10
+        if "ZSTD_FULLTIME_TESTS" in os.environ:
+            wait = 30
         log.info("\nWait %d seconds..." % wait)
         sum = 0
 #        cdata = zstd.compress(tDATA)
@@ -82,7 +110,9 @@ class TestZstdSpeed(BaseTestZSTD):
 
 
     def test_check_speed(self):
-        wait = 30
+        wait = 10
+        if "ZSTD_FULLTIME_TESTS" in os.environ:
+            wait = 30
         log.info("\nWait %d seconds..." % wait)
         sum = 0
         cdata = zstd.compress(tDATA)
@@ -100,7 +130,9 @@ class TestZstdSpeed(BaseTestZSTD):
         log.info("diff Check memory usage = %6.2f kb" % (1.0*(endMemoryUsage-beginMemoryUsage)/1024,))
 
     def test_cpu_cores_cache_default_speed(self):
-        wait = 70
+        wait = 10
+        if "ZSTD_FULLTIME_TESTS" in os.environ:
+            wait = 70
         log.info("\nWait %d seconds..." % wait)
         ops = 0
         tbegin = time()
@@ -116,7 +148,9 @@ class TestZstdSpeed(BaseTestZSTD):
         log.info("diff Check memory usage = %6.2f kb" % (1.0*(endMemoryUsage-beginMemoryUsage)/1024,))
 
     def test_cpu_cores_cache_none_speed(self):
-        wait = 70
+        wait = 10
+        if "ZSTD_FULLTIME_TESTS" in os.environ:
+            wait = 70
         log.info("\nWait %d seconds..." % wait)
         ops = 0
         tbegin = time()
@@ -133,7 +167,9 @@ class TestZstdSpeed(BaseTestZSTD):
         log.info("diff Check memory usage = %6.2f kb" % (1.0*(endMemoryUsage-beginMemoryUsage)/1024,))
     
     def test_cpu_cores_cache_60_speed(self):
-        wait = 70
+        wait = 10
+        if "ZSTD_FULLTIME_TESTS" in os.environ:
+            wait = 70
         log.info("\nWait %d seconds..." % wait)
         ops = 0
         tbegin = time()
@@ -149,7 +185,9 @@ class TestZstdSpeed(BaseTestZSTD):
         log.info("diff Check memory usage = %6.2f kb" % (1.0*(endMemoryUsage-beginMemoryUsage)/1024,))
         
     def test_cpu_cores_cache_01_speed(self):
-        wait = 70
+        wait = 10
+        if "ZSTD_FULLTIME_TESTS" in os.environ:
+            wait = 70
         log.info("\nWait %d seconds..." % wait)
         ops = 0
         tbegin = time()
@@ -166,7 +204,9 @@ class TestZstdSpeed(BaseTestZSTD):
         log.info("diff Check memory usage = %6.2f kb" % (1.0*(endMemoryUsage-beginMemoryUsage)/1024,))
 
     def test_cpu_cores_cache_05_speed(self):
-        wait = 70
+        wait = 10
+        if "ZSTD_FULLTIME_TESTS" in os.environ:
+            wait = 70
         log.info("\nWait %d seconds..." % wait)
         ops = 0
         tbegin = time()
@@ -183,7 +223,9 @@ class TestZstdSpeed(BaseTestZSTD):
         log.info("diff Check memory usage = %6.2f kb" % (1.0*(endMemoryUsage-beginMemoryUsage)/1024,))
 
     def test_cpu_cores_cache_10_speed(self):
-        wait = 70
+        wait = 10
+        if "ZSTD_FULLTIME_TESTS" in os.environ:
+            wait = 70
         log.info("\nWait %d seconds..." % wait)
         ops = 0
         tbegin = time()
