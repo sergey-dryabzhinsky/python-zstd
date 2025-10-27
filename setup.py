@@ -352,7 +352,7 @@ if BUILD_SPEED2:
     }
 if BUILD_SPEED3:
     COPT = {
-        'msvc': ['/O3', ],
+        'msvc': ['/Ox', ],
         'mingw32': ['-O3',],
         'unix': ['-O3',],
         'clang': ['-O3',],
