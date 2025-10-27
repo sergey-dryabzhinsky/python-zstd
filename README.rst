@@ -11,7 +11,7 @@ python-zstd
 .. |weekly| image:: https://static.pepy.tech/badge/zstd/week
 	:target: https://pepy.tech/project/zstd
 
-.. |releaseW| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg?tag=v1.5.7.1
+.. |releaseW| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg?tag=v1.5.7.2
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml
 
 .. |masterW| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg
@@ -86,6 +86,9 @@ python-zstd
 .. |cpython314x64u20| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython314_x86_64_u24.yml/badge.svg
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython314_x86_64_u24.yml
 
+.. |cpython314tx64u16| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython314t_x86_64_u16.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython314t_x86_64_u16.yml
+
 .. |cpython314x86u16| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython314_x86_u16.yml/badge.svg
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython314_x86_u16.yml
 
@@ -142,6 +145,8 @@ python-zstd
 | cpython 3.13 x64 u16 | |cpython313x64u20|  |
 +----------------------+---------------------+
 | cpython 3.14 x64 u16 | |cpython314x64u20|  |
++----------------------+---------------------+
+| cpython 3.14 noGIL x64 u16 | |cpython314tx64u16|  |
 +----------------------+---------------------+
 | cpython 3.14 x86 u16 | |cpython314x86u16|  |
 +----------------------+---------------------+
