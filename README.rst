@@ -11,7 +11,7 @@ python-zstd
 .. |weekly| image:: https://static.pepy.tech/badge/zstd/week
 	:target: https://pepy.tech/project/zstd
 
-.. |releaseW| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg?tag=v1.5.7.2
+.. |releaseW| image:: http⁷s://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg?tag=v1.5.7.2
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml
 
 .. |masterW| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg
@@ -109,9 +109,9 @@ python-zstd
 +----------------------------+----------------------+
 | wheels for:                |      status          |
 +============================+======================+
-| cpython 2.7 x86 u16        | |cpython27x86|       |
+| cpython 2.7 x86 u18        | |cpython27x86|       |
 +----------------------------+----------------------+
-| cpython 2.7 x64 u16        | |cpython27x64|       |
+| cpython 2.7 x64 u18        | |cpython27x64|       |
 +----------------------------+----------------------+
 | cpython 2.7 armhf u18      | |cpython27armhf|     |
 +----------------------------+----------------------+
