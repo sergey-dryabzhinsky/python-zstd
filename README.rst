@@ -83,6 +83,9 @@ python-zstd
 .. |cpython313x64u20| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython313_x86_64_u24.yml/badge.svg
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython313_x86_64_u24.yml
 
+.. |cpython313x86u16| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython313_x86_u16.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython313_x86_u16.yml
+
 .. |cpython313tx64u16| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython313t_x64_u16.yml/badge.svg
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython313t_x64_u16.yml
 
@@ -146,6 +149,8 @@ python-zstd
 | cpython 3.12 x64 u16       | |cpython312x64u20|   |
 +----------------------------+----------------------+
 | cpython 3.13 x64 u16       | |cpython313x64u20|   |
++----------------------------+----------------------+
+| cpython 3.13 x86 u16       | |cpython313x86u16|   |
 +----------------------------+----------------------+
 | cpython 3.13 noGIL x64 u16 | |cpython313tx64u16|  |
 +----------------------------+----------------------+
