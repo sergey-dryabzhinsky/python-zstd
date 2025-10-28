@@ -129,7 +129,7 @@ jobs:
               macos: x86_64 arm64
           - build: cp314-*
             group: new
-            code: CPython3.13
+            code: CPython3.14
             manylinux: manylinux_2_28
             musllinux: musllinux_1_2
             archs:
