@@ -1,4 +1,4 @@
-name: Build wheels for CPython2.7 armhf
+name: Build wheels for CPython2.7 armhf on Ubuntu18
 
 on: [push, pull_request]
 
@@ -19,7 +19,7 @@ jobs:
             matrix: linux
             arch: armhf
             tag_arch: armhf
-            release: xenial
+            release: bionic
             mirror: http://ports.ubuntu.com/ubuntu-ports
             version: 1.5.6.4
            # pyver: "2.7"
