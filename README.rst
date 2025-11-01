@@ -89,11 +89,17 @@ python-zstd
 .. |cpython313tx64u16| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython313t_x64_u16.yml/badge.svg
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython313t_x64_u16.yml
 
+.. |cpython313tx86u16| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython313t_x86_u16.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython313t_x86_u16.yml
+
 .. |cpython314x64u20| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython314_x86_64_u24.yml/badge.svg
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython314_x86_64_u24.yml
 
 .. |cpython314tx64u16| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython314t_x64_u16.yml/badge.svg
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython314t_x64_u16.yml
+
+.. |cpython314tx86u16| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython314t_x86_u16.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython314t_x86_u16.yml
 
 .. |cpython314x86u16| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython314_x86_u16.yml/badge.svg
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython314_x86_u16.yml
@@ -101,8 +107,14 @@ python-zstd
 .. |cpython315x64u16| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython315_x86_64_u16.yml/badge.svg
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython315_x86_64_u16.yml
 
+.. |cpython315x86u16| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython315_x86_u16.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython315_x86_u16.yml
+
 .. |cpython315tx64u16| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython315t_x64_u16.yml/badge.svg
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython315t_x64_u16.yml
+
+.. |cpython315tx86u16| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython315t_x86_u16.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython315t_x86_u16.yml
 
 |Downloads| |monthly| |weekly|
 
@@ -125,7 +137,7 @@ python-zstd
 +----------------------------+----------------------+
 | cpython 3.6 x86 u16        | |cpython36x86|       |
 +----------------------------+----------------------+
-| cpython 3.6 x64 u16        | |cpython36x64|       |
+| cpython 3.6 x64 u20        | |cpython36x64|       |
 +----------------------------+----------------------+
 | cpython 3.7 x86 u16        | |cpython37x86|       |
 +----------------------------+----------------------+
@@ -157,15 +169,23 @@ python-zstd
 +----------------------------+----------------------+
 | cpython 3.13 noGIL x64 u16 | |cpython313tx64u16|  |
 +----------------------------+----------------------+
+| cpython 3.13 noGIL x86 u16 | |cpython313tx86u16|  |
++----------------------------+----------------------+
 | cpython 3.14 x64 u16       | |cpython314x64u20|   |
 +----------------------------+----------------------+
 | cpython 3.14 noGIL x64 u16 | |cpython314tx64u16|  |
++----------------------------+----------------------+
+| cpython 3.14 noGIL x86 u16 | |cpython314tx86u16|  |
 +----------------------------+----------------------+
 | cpython 3.14 x86 u16       | |cpython314x86u16|   |
 +----------------------------+----------------------+
 | cpython 3.15 x64 u16       | |cpython315x64u16|   |
 +----------------------------+----------------------+
+| cpython 3.15 x86 u16       | |cpython315x86u16|   |
++----------------------------+----------------------+
 | cpython 3.15 noGIL x64 u16 | |cpython315tx64u16|  |
++----------------------------+----------------------+
+| cpython 3.15 noGIL x86 u16 | |cpython315tx86u16|  |
 +----------------------------+----------------------+
 | Release                    | |releaseW|           |
 | 1.5.7.2                    |                      |
