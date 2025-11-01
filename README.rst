@@ -11,7 +11,7 @@ python-zstd
 .. |weekly| image:: https://static.pepy.tech/badge/zstd/week
 	:target: https://pepy.tech/project/zstd
 
-.. |releaseW| image:: http⁷s://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg?tag=v1.5.7.2
+.. |releaseW| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg?tag=v1.5.7.2
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml
 
 .. |masterW| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/build-wheels.yml/badge.svg
