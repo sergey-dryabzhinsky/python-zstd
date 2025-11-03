@@ -181,7 +181,7 @@ jobs:
             manylinux: manylinux_2_24
             musllinux: musllinux_1_2
             archs:
-              linux: i686 x86_64 aarch64
+              linux: x86_64 aarch64
               macos: x86_64 arm64
         exclude:
           - os:
