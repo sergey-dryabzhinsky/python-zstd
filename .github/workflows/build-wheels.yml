@@ -170,7 +170,7 @@ jobs:
           - build: pp310-*
             group: new
             code: PyPy3.10
-            manylinux: manylinux_2_24
+            manylinux: manylinux_2_28
             musllinux: musllinux_1_2
             archs:
               linux: i686 x86_64 aarch64
