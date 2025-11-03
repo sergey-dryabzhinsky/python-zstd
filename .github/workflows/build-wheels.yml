@@ -338,6 +338,11 @@ jobs:
           # Only build on x86 and arm64 for linux
           CIBW_ARCHS_LINUX: ${{ matrix.cibw.archs.linux }}
           CIBW_BEFORE_ALL_LINUX: >
+            if command -v manylinux-interpreters
+            then
+              MITAG=$(manylinux-interpreters list | grep '^${CIBW_BUILD::-2}-' | tail -n 1)
+              manylinux-interpreters ensure "${MITAG}"
+            fi
             python -m pip install --upgrade pip
           # CIBW_ARCHS_MACOS: x86_64 arm64 universal2
           # Building two wheels for MacOS and skipping Universal
