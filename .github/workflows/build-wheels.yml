@@ -295,6 +295,7 @@ jobs:
         with:
           output-dir: dist
         env:
+          CIBW_ENABLE: pypy pypy-eol
           CIBW_BUILD: ${{ matrix.cibw.build }}
           CIBW_BUILD_VERBOSITY: 2
           # Skip 32-bit builds // NO
@@ -326,7 +327,7 @@ jobs:
         with:
           output-dir: dist
         env:
-          CIBW_ENABLE: pypy, pypy-eol
+          CIBW_ENABLE: pypy pypy-eol
           CIBW_BUILD: ${{ matrix.cibw.build }}
           CIBW_BUILD_VERBOSITY: 2
           # Skip 32-bit builds // NO
