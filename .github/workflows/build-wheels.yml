@@ -168,12 +168,12 @@ jobs:
               linux: i686 x86_64 aarch64
               macos: x86_64 arm64
           - build: pp310-*
-            version: v2
+            version: v3
             code: PyPy3.10
             manylinux: manylinux_2_28
             musllinux: musllinux_1_2
             archs:
-              linux: x86_64 aarch64
+              linux: i686 x86_64 aarch64
               macos: x86_64 arm64
           - build: pp311-*
             version: v2
