@@ -15,7 +15,7 @@ jobs:
       matrix:
         os:
           - name: macOS old
-            runs-on: macos-13 # x86
+            runs-on: macos-15-intel # x86
             matrix: macos
           - name: macOS Latest
             runs-on: macos-latest # arm
@@ -32,7 +32,7 @@ jobs:
         cibw:
           # build just supported python versions at May 2023
           - build: cp27-*
-            group: old
+            version: v1
             code: CPython2.7
             manylinux: manylinux1
             musllinux: musllinux_1_2
@@ -40,7 +40,7 @@ jobs:
               linux: i686 x86_64 aarch64
               macos: x86_64
           - build: cp35-*
-            group: old
+            version: v1
             code: CPython3.5
             manylinux: manylinux1
             musllinux: musllinux_1_2
@@ -48,7 +48,7 @@ jobs:
               linux: i686 x86_64 aarch64
               macos: x86_64
           - build: cp36-*
-            group: old
+            version: v1
             code: CPython3.6
             manylinux: manylinux1
             musllinux: musllinux_1_2
@@ -56,7 +56,7 @@ jobs:
               linux: i686 x86_64 aarch64
               macos: x86_64
           - build: pp27-*
-            group: old
+            version: v1
             code: PyPy2.7
             manylinux: manylinux1
             musllinux: musllinux_1_2
@@ -64,7 +64,7 @@ jobs:
               linux: i686 x86_64 aarch64
               macos: x86_64
           - build: pp36-*
-            group: old
+            version: v1
             code: PyPy3.6
             manylinux: manylinux1
             musllinux: musllinux_1_2
@@ -72,7 +72,7 @@ jobs:
               linux: i686 x86_64 aarch64
               macos: x86_64
           - build: cp37-*
-            group: new
+            version: v2
             code: CPython3.7
             manylinux: manylinux_2_24
             musllinux: musllinux_1_2
@@ -80,7 +80,7 @@ jobs:
               linux: i686 x86_64 aarch64
               macos: x86_64 arm64
           - build: cp38-*
-            group: new
+            version: v2
             code: CPython3.8
             manylinux: manylinux_2_24
             musllinux: musllinux_1_2
@@ -88,7 +88,7 @@ jobs:
               linux: i686 x86_64 aarch64
               macos: x86_64 arm64
           - build: cp39-*
-            group: new
+            version: v2
             code: CPython3.9
             manylinux: manylinux_2_24
             musllinux: musllinux_1_2
@@ -96,7 +96,7 @@ jobs:
               linux: i686 x86_64 aarch64
               macos: x86_64 arm64
           - build: cp310-*
-            group: new
+            version: v2
             code: CPython3.10
             manylinux: manylinux_2_24
             musllinux: musllinux_1_2
@@ -104,7 +104,7 @@ jobs:
               linux: i686 x86_64 aarch64
               macos: x86_64 arm64
           - build: cp311-*
-            group: new
+            version: v2
             code: CPython3.11
             manylinux: manylinux_2_24
             musllinux: musllinux_1_2
@@ -112,7 +112,7 @@ jobs:
               linux: i686 x86_64 aarch64
               macos: x86_64 arm64
           - build: cp312-*
-            group: new
+            version: v2
             code: CPython3.12
             manylinux: manylinux_2_28
             musllinux: musllinux_1_2
@@ -120,7 +120,7 @@ jobs:
               linux: x86_64 aarch64
               macos: x86_64 arm64
           - build: cp313-*
-            group: new
+            version: v2
             code: CPython3.13
             manylinux: manylinux_2_28
             musllinux: musllinux_1_2
@@ -128,7 +128,7 @@ jobs:
               linux: x86_64 aarch64
               macos: x86_64 arm64
           - build: cp314-*
-            group: new
+            version: v3
             code: CPython3.14
             manylinux: manylinux_2_28
             musllinux: musllinux_1_2
@@ -136,7 +136,7 @@ jobs:
               linux: x86_64 aarch64
               macos: x86_64 arm64
           - build: pp27-*
-            group: old
+            version: v1
             code: PyPy2.7
             manylinux: manylinux1
             musllinux: musllinux_1_2
@@ -144,7 +144,7 @@ jobs:
               linux: i686 x86_64 aarch64
               macos: x86_64
           - build: pp37-*
-            group: new
+            version: v2
             code: PyPy3.7
             manylinux: manylinux_2_24
             musllinux: musllinux_1_2
@@ -152,7 +152,7 @@ jobs:
               linux: i686 x86_64 aarch64
               macos: x86_64 arm64
           - build: pp38-*
-            group: new
+            version: v2
             code: PyPy3.8
             manylinux: manylinux_2_24
             musllinux: musllinux_1_2
@@ -160,7 +160,7 @@ jobs:
               linux: i686 x86_64 aarch64
               macos: x86_64 arm64
           - build: pp39-*
-            group: new
+            version: v2
             code: PyPy3.9
             manylinux: manylinux_2_24
             musllinux: musllinux_1_2
@@ -168,7 +168,7 @@ jobs:
               linux: i686 x86_64 aarch64
               macos: x86_64 arm64
           - build: pp310-*
-            group: new
+            version: v2
             code: PyPy3.10
             manylinux: manylinux_2_28
             musllinux: musllinux_1_2
@@ -176,7 +176,7 @@ jobs:
               linux: x86_64 aarch64
               macos: x86_64 arm64
           - build: pp311-*
-            group: new
+            version: v2
             code: PyPy3.11
             manylinux: manylinux_2_24
             musllinux: musllinux_1_2
@@ -289,9 +289,9 @@ jobs:
           pip install build;
           python -m build --sdist --outdir dist .
 
-      - name: Build ${{ matrix.os.name }} wheels and test (old)
+      - name: Build ${{ matrix.os.name }} wheels and test (v1)
         uses: pypa/cibuildwheel@v1.12.0
-        if: matrix.cibw.group == 'old'
+        if: matrix.cibw.version == 'v1'
         with:
           output-dir: dist
         env:
@@ -320,9 +320,41 @@ jobs:
           CIBW_TEST_COMMAND: >
             python -m unittest discover -v -s {package}
 
-      - name: Build ${{ matrix.os.name }} wheels and test (new)
+      - name: Build ${{ matrix.os.name }} wheels and test (v2)
         uses: joerick/cibuildwheel@v2.23.3
-        if: matrix.cibw.group == 'new'
+        if: matrix.cibw.version == 'v2'
+        with:
+          output-dir: dist
+        env:
+          CIBW_BUILD: ${{ matrix.cibw.build }}
+          CIBW_BUILD_VERBOSITY: 2
+          # Skip 32-bit builds // NO
+          # CIBW_SKIP: '*-win32 *_i686'
+          CIBW_MANYLINUX_I686_IMAGE: ${{ matrix.cibw.manylinux }}
+          CIBW_MANYLINUX_X86_64_IMAGE: ${{ matrix.cibw.manylinux }}
+          CIBW_MANYLINUX_AARCH64_IMAGE: ${{ matrix.cibw.manylinux }}
+          CIBW_MUSLLINUX_I686_IMAGE:  ${{ matrix.cibw.musllinux }}
+          CIBW_MUSLLINUX_X86_64_IMAGE:  ${{ matrix.cibw.musllinux }}
+          # Only build on x86 and arm64 for linux
+          CIBW_ARCHS_LINUX: ${{ matrix.cibw.archs.linux }}
+          CIBW_BEFORE_ALL_LINUX: >
+            python -m pip install --upgrade pip
+          # CIBW_ARCHS_MACOS: x86_64 arm64 universal2
+          # Building two wheels for MacOS and skipping Universal
+          CIBW_ARCHS_MACOS: ${{ matrix.cibw.archs.macos }}
+          # Skip testing Apple Silicon until there are GH runners
+          CIBW_TEST_SKIP: '*macosx_arm64 *_universal2:arm64'
+          CIBW_BEFORE_ALL_MACOS: >
+            python -m pip install --upgrade pip
+          # CIBW_ENVIRONMENT_MACOS: MACOSX_DEPLOYMENT_TARGET=11.7
+          CIBW_BEFORE_ALL_WINDOWS: >
+            python -m pip install --upgrade pip
+          CIBW_TEST_COMMAND: >
+            python -m unittest discover -v -s {package}
+
+      - name: Build ${{ matrix.os.name }} wheels and test (v3)
+        uses: joerick/cibuildwheel@v3.2.1
+        if: matrix.cibw.version == 'v3'
         with:
           output-dir: dist
         env:
@@ -355,7 +387,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: wheels-v4-${{matrix.os.matrix}}-${{matrix.cibw.code}}-${{matrix.cibw.group}}
+          name: wheels-v4-${{matrix.os.matrix}}-${{matrix.cibw.code}}-${{matrix.cibw.version}}
           path: ./dist
           overwrite: true
 
