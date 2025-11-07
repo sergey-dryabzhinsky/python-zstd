@@ -263,7 +263,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: wheels-v4-${{matrix.os.matrix}}-${{matrix.cibw.code}}-${{matrix.cibw.version}}
+          name: wheels-v4-${{matrix.os.matrix}}-${{matrix.cibw.code}}-${{matrix.cibw.version}}-${{matrix.repeat}}
           path: ./dist
           overwrite: true
 
