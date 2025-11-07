@@ -1,4 +1,4 @@
-name: Build wheels for CPython3.10 x86_64 on Ubuntu16
+name: Build wheels for CPython3.10 x86_64 on Ubuntu16 withb GCC-13
 
 on: [push, pull_request]
 
@@ -22,7 +22,6 @@ jobs:
             release: xenial 
             mirror: http://azure.archive.ubuntu.com/ubuntu
             #version: 1.5.6.7
-            
             getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
             pypkg: python3.10
             pypkgadd: python3.10-distutils
@@ -84,7 +83,7 @@ jobs:
       - name: Pepare dev files
         if: matrix.os.matrix == 'linux'
         run: |
-           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt install -y libzstd-dev file
+           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt install -y libzstd-dev file gcc-13
 
       - name: Pepare for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
