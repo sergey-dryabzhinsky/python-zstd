@@ -168,17 +168,17 @@ jobs:
               linux: i686 x86_64 aarch64
               macos: x86_64 arm64
           - build: pp310-*
-            version: v2
+            version: v3
             code: PyPy3.10
-            manylinux: manylinux_2_24
+            manylinux: manylinux_2_28
             musllinux: musllinux_1_2
             archs:
               linux: i686 x86_64 aarch64
               macos: x86_64 arm64
           - build: pp311-*
-            version: v2
+            version: v3
             code: PyPy3.11
-            manylinux: manylinux_2_24
+            manylinux: manylinux_2_28
             musllinux: musllinux_1_2
             archs:
               linux: i686 x86_64 aarch64
@@ -326,6 +326,7 @@ jobs:
         with:
           output-dir: dist
         env:
+          CIBW_ENABLE: pypy
           CIBW_BUILD: ${{ matrix.cibw.build }}
           CIBW_BUILD_VERBOSITY: 2
           # Skip 32-bit builds // NO
@@ -358,6 +359,7 @@ jobs:
         with:
           output-dir: dist
         env:
+          CIBW_ENABLE: pypy pypy-eol
           CIBW_BUILD: ${{ matrix.cibw.build }}
           CIBW_BUILD_VERBOSITY: 2
           # Skip 32-bit builds // NO
