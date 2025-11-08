@@ -8,37 +8,16 @@ concurrency:
 
 jobs:
   build_wheels:
-    name: Build wheel - ${{ matrix.cibw.build }} ${{ matrix.os.name }}
+    name: Build wheel - ${{ matrix.cibw.build }} (#${{ matrix.repeat }})
     runs-on: ${{ matrix.os.runs-on }}
     strategy:
       fail-fast: false
       matrix:
         os:
-          - name: macOS old
-            runs-on: macos-15-intel # x86
-            matrix: macos
-          - name: macOS Latest
-            runs-on: macos-latest # arm
-            matrix: macos
-          - name: Ubuntu 24.04
-            runs-on: ubuntu-latest
-            matrix: linux
           - name: Windows
             runs-on: windows-latest
             matrix: windows
-          - name: Windows (arm64)
-            runs-on: windows-11-arm
-            matrix: windows-arm
         cibw:
-          # build just supported python versions at May 2023
-          - build: cp27-*
-            version: v1
-            code: CPython2.7
-            manylinux: manylinux1
-            musllinux: musllinux_1_2
-            archs:
-              linux: i686 x86_64 aarch64
-              macos: x86_64
           - build: cp35-*
             version: v1
             code: CPython3.5
@@ -50,22 +29,6 @@ jobs:
           - build: cp36-*
             version: v1
             code: CPython3.6
-            manylinux: manylinux1
-            musllinux: musllinux_1_2
-            archs:
-              linux: i686 x86_64 aarch64
-              macos: x86_64
-          - build: pp27-*
-            version: v1
-            code: PyPy2.7
-            manylinux: manylinux1
-            musllinux: musllinux_1_2
-            archs:
-              linux: i686 x86_64 aarch64
-              macos: x86_64
-          - build: pp36-*
-            version: v1
-            code: PyPy3.6
             manylinux: manylinux1
             musllinux: musllinux_1_2
             archs:
@@ -95,94 +58,7 @@ jobs:
             archs:
               linux: i686 x86_64 aarch64
               macos: x86_64 arm64
-          - build: cp310-*
-            version: v2
-            code: CPython3.10
-            manylinux: manylinux_2_24
-            musllinux: musllinux_1_2
-            archs:
-              linux: i686 x86_64 aarch64
-              macos: x86_64 arm64
-          - build: cp311-*
-            version: v2
-            code: CPython3.11
-            manylinux: manylinux_2_24
-            musllinux: musllinux_1_2
-            archs:
-              linux: i686 x86_64 aarch64
-              macos: x86_64 arm64
-          - build: cp312-*
-            version: v2
-            code: CPython3.12
-            manylinux: manylinux_2_28
-            musllinux: musllinux_1_2
-            archs:
-              linux: x86_64 aarch64
-              macos: x86_64 arm64
-          - build: cp313-*
-            version: v2
-            code: CPython3.13
-            manylinux: manylinux_2_28
-            musllinux: musllinux_1_2
-            archs:
-              linux: x86_64 aarch64
-              macos: x86_64 arm64
-          - build: cp314-*
-            version: v3
-            code: CPython3.14
-            manylinux: manylinux_2_28
-            musllinux: musllinux_1_2
-            archs:
-              linux: x86_64 aarch64
-              macos: x86_64 arm64
-          - build: pp27-*
-            version: v1
-            code: PyPy2.7
-            manylinux: manylinux1
-            musllinux: musllinux_1_2
-            archs:
-              linux: i686 x86_64 aarch64
-              macos: x86_64
-          - build: pp37-*
-            version: v2
-            code: PyPy3.7
-            manylinux: manylinux_2_24
-            musllinux: musllinux_1_2
-            archs:
-              linux: i686 x86_64 aarch64
-              macos: x86_64 arm64
-          - build: pp38-*
-            version: v2
-            code: PyPy3.8
-            manylinux: manylinux_2_24
-            musllinux: musllinux_1_2
-            archs:
-              linux: i686 x86_64 aarch64
-              macos: x86_64 arm64
-          - build: pp39-*
-            version: v2
-            code: PyPy3.9
-            manylinux: manylinux_2_24
-            musllinux: musllinux_1_2
-            archs:
-              linux: i686 x86_64 aarch64
-              macos: x86_64 arm64
-          - build: pp310-*
-            version: v3
-            code: PyPy3.10
-            manylinux: manylinux_2_28
-            musllinux: musllinux_1_2
-            archs:
-              linux: i686 x86_64 aarch64
-              macos: x86_64 arm64
-          - build: pp311-*
-            version: v3
-            code: PyPy3.11
-            manylinux: manylinux_2_28
-            musllinux: musllinux_1_2
-            archs:
-              linux: i686 x86_64 aarch64
-              macos: x86_64 arm64
+        repeat: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
         exclude:
           - os:
               matrix: windows
@@ -389,7 +265,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: wheels-v4-${{matrix.os.matrix}}-${{matrix.cibw.code}}-${{matrix.cibw.version}}
+          name: wheels-v4-${{matrix.os.matrix}}-${{matrix.cibw.code}}-${{matrix.cibw.version}}-${{matrix.repeat}}
           path: ./dist
           overwrite: true
 
