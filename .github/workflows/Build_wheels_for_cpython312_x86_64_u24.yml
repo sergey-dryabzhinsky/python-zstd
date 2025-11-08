@@ -1,4 +1,4 @@
-name: Build wheels for CPython3.12 x64 on Ubuntu16 with GCC-5 All warnings
+name: Build wheels for CPython3.12 x64 on Ubuntu16 with GCC-14 All warnings
 
 on: [push, pull_request]
 
@@ -21,8 +21,6 @@ jobs:
             tag_arch: x86_64
             release: xenial
             mirror: http://azure.archive.ubuntu.com/ubuntu
-            #version: 1.5.6.7
-            # pyver: "3.7"
             getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
             pypkg: python3.12
             #pypkgadd: 
@@ -87,7 +85,7 @@ jobs:
       - name: Pepare dev files
         if: matrix.os.matrix == 'linux'
         run: |
-           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt install -y libzstd-dev file
+           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt install -y libzstd-dev file gcc-14 g++-14
 
       - name: Pepare for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
@@ -108,8 +106,8 @@ jobs:
           sudo tar -xvf dist/zstd-$version.tar.gz -C ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/
           false && sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} env 
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} pkg-config libzstd --modversion 
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} echo GCC-5
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} gcc-5 -v
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} echo GCC-14
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} gcc-14.3 -v
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version/ && _CC=gcc-5 _ZSTD_ASM=1 ZSTD_WARNINGS=1 _ZSTD_ASM_BMI2=1 _ZSTD_THREADS=1 _ZSTD_EXTERNAL=0 ${{matrix.os.pypkg}} setup.py bdist_wheel"
 
       - name: Test wheel for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
