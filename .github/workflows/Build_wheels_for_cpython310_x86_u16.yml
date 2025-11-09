@@ -1,4 +1,4 @@
-name: Build wheels for CPython3.10 x86 on Ubuntu16 with GCC-13
+name: Build wheels for CPython3.10 x86 on Ubuntu16 with GCC-14
 
 on: [push, pull_request]
 
