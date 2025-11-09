@@ -259,11 +259,11 @@ jobs:
       CIBW_BUILD_VERBOSITY: 2
       # Skip 32-bit builds // NO
       # CIBW_SKIP: '*-win32 *_i686'
-      CIBW_MANYLINUX_I686_IMAGE: ${{ matrix.cibw.manylinux }}
-      CIBW_MANYLINUX_X86_64_IMAGE: ${{ matrix.cibw.manylinux }}
-      CIBW_MANYLINUX_AARCH64_IMAGE: ${{ matrix.cibw.manylinux }}
-      CIBW_MUSLLINUX_I686_IMAGE:  ${{ matrix.cibw.musllinux }}
-      CIBW_MUSLLINUX_X86_64_IMAGE:  ${{ matrix.cibw.musllinux }}
+      CIBW_MANYLINUX_I686_IMAGE: quay.io/pypa/${{ matrix.cibw.manylinux }}_i686
+      CIBW_MANYLINUX_X86_64_IMAGE: quay.io/pypa/${{ matrix.cibw.manylinux }}_x86_64
+      CIBW_MANYLINUX_AARCH64_IMAGE: quay.io/pypa/${{ matrix.cibw.manylinux }}_aarch64
+      CIBW_MUSLLINUX_I686_IMAGE:  quay.io/pypa/${{ matrix.cibw.musllinux }}_i686
+      CIBW_MUSLLINUX_X86_64_IMAGE:  quay.io/pypa/${{ matrix.cibw.musllinux }}_x86_64
       # Only build on x86 and arm64 for linux
       CIBW_ARCHS_LINUX: ${{ matrix.cibw.archs.linux }}
       CIBW_BEFORE_ALL_LINUX: >
