@@ -92,7 +92,10 @@
 
 static PyObject *ZstdError;
 
+static ZSTD_CCtx* m_cctx;
+
 static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args);
+static PyObject *py_zstd_compress_mt2(PyObject* self, PyObject *args);
 static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args);
 static PyObject *py_zstd_check(PyObject* self, PyObject *args);
 static PyObject *py_zstd_module_version(PyObject* self, PyObject *args);
