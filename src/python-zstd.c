@@ -48,7 +48,8 @@
 #include "python-zstd.h"
 
 /**
- * New function for multi-threaded compression.
+ * @deprecated, use *mt2 instead.
+ * Old function for multi-threaded compression.
  * Uses origin zstd header, nothing more.
  * Simple version: not for streaming, no dict support, full block compression.
  * Uses new API with context object.
@@ -661,14 +662,13 @@ static PyObject *py_zstd_max_compression_level(PyObject* self, PyObject *args)
 
 
 static PyMethodDef ZstdMethods[] = {
-    {"ZSTD_compress",  py_zstd_compress_mt, METH_VARARGS, COMPRESS_DOCSTRING},
+    {"ZSTD_compress",  py_zstd_compress_mt2, METH_VARARGS, COMPRESS_DOCSTRING},
     {"ZSTD_uncompress",  py_zstd_uncompress, METH_VARARGS, UNCOMPRESS_DOCSTRING},
     {"ZSTD_check",  py_zstd_check, METH_VARARGS, CHECK_DOCSTRING},
     {"check",  py_zstd_check, METH_VARARGS, CHECK_DOCSTRING},
     {"verify",  py_zstd_check, METH_VARARGS, CHECK_DOCSTRING},
-    {"compress",  py_zstd_compress_mt, METH_VARARGS, COMPRESS_DOCSTRING},
+    {"compress",  py_zstd_compress_mt2, METH_VARARGS, COMPRESS_DOCSTRING},
     {"compress_real_mt",  py_zstd_compress_mt, METH_VARARGS, COMPRESS_DOCSTRING},
-    {"compress2",  py_zstd_compress_mt2, METH_VARARGS, COMPRESS_DOCSTRING},
     {"uncompress",  py_zstd_uncompress, METH_VARARGS, UNCOMPRESS_DOCSTRING},
     {"encode",  py_zstd_compress_mt, METH_VARARGS, COMPRESS_DOCSTRING},
     {"decode",  py_zstd_uncompress, METH_VARARGS, UNCOMPRESS_DOCSTRING},
