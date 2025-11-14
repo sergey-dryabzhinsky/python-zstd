@@ -32,6 +32,41 @@
 #ifndef _PYTHON_ZSTD_H_
 #define _PYTHON_ZSTD_H_
 
+/**************************************
+*  Basic Types : need as sooner as possible
+**************************************/
+#if defined (__STDC_VERSION__) && __STDC_VERSION__ >= 199901L   /* C99 */
+# include <stdint.h>
+typedef uint8_t  BYTE;
+typedef uint16_t U16;
+typedef uint32_t U32;
+typedef  int32_t S32;
+typedef  int64_t S64;
+typedef uint64_t U64;
+#else
+typedef unsigned char       BYTE;
+typedef unsigned short      U16;
+typedef unsigned int        U32;
+typedef   signed int        S32;
+typedef   signed long long  S64;
+typedef unsigned long long  U64;
+#endif
+
+#if defined(_WIN32) && defined(_MSC_VER)
+# define inline __inline
+# if _MSC_VER >= 1600
+#  include <stdint.h>
+# else /* _MSC_VER >= 1600 */
+   typedef signed char        int8_t;
+   typedef signed short       int16_t;
+   typedef signed int         int32_t;
+   typedef signed long long   int64_t;
+   typedef unsigned char      uint8_t;
+   typedef unsigned short     uint16_t;
+   typedef unsigned int       uint32_t;
+   typedef unsigned long long uint64_t;
+# endif /* _MSC_VER >= 1600 */
+#endif
 #define UNUSED(x)  (void)(x)
 
 #include "Python.h"
@@ -153,41 +188,6 @@ Raises a zstd.Error exception if any error occurs."
 #define UNCOMPRESS_OLD_DOCSTRING    "decompress_old("PY_BYTESTR_TYPE"): string -- Decompress string, old version, returning the uncompressed data.\n\nUses custom format from `compress_old` fucntion.\nNot compatible with streaming or origin compression tools.\n\nRaises a zstd.Error exception if any error occurs.\n\n@deprecated"
 #endif
 
-/**************************************
-*  Basic Types
-**************************************/
-#if defined (__STDC_VERSION__) && __STDC_VERSION__ >= 199901L   /* C99 */
-# include <stdint.h>
-typedef uint8_t  BYTE;
-typedef uint16_t U16;
-typedef uint32_t U32;
-typedef  int32_t S32;
-typedef  int64_t S64;
-typedef uint64_t U64;
-#else
-typedef unsigned char       BYTE;
-typedef unsigned short      U16;
-typedef unsigned int        U32;
-typedef   signed int        S32;
-typedef   signed long long  S64;
-typedef unsigned long long  U64;
-#endif
-
-#if defined(_WIN32) && defined(_MSC_VER)
-# define inline __inline
-# if _MSC_VER >= 1600
-#  include <stdint.h>
-# else /* _MSC_VER >= 1600 */
-   typedef signed char        int8_t;
-   typedef signed short       int16_t;
-   typedef signed int         int32_t;
-   typedef signed long long   int64_t;
-   typedef unsigned char      uint8_t;
-   typedef unsigned short     uint16_t;
-   typedef unsigned int       uint32_t;
-   typedef unsigned long long uint64_t;
-# endif /* _MSC_VER >= 1600 */
-#endif
 
 #if defined(__SUNPRO_C) || defined(__hpux) || defined(_AIX)
 #define inline
