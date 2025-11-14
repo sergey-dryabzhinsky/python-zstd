@@ -202,7 +202,6 @@ static PyObject *py_zstd_compress_mt2(PyObject* self, PyObject *args)
 	static int32_t lastLevel =0;
     int32_t threads = 0;
     int32_t strict = 0;
-    ZSTD_CCtx* cctx = NULL;
 
 #if PY_MAJOR_VERSION >= 3
     if (!PyArg_ParseTuple(args, "y#|iii", &source, &source_size, &level, &threads, &strict))

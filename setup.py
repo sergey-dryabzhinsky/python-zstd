@@ -23,7 +23,9 @@ PKG_VERSION = VERSION
 # Minor revision 
 PKG_VERSION += ("2",)
 PKG_VERSION_STR = ".".join([str(x) for x in PKG_VERSION])
-
+f = open("./version","r" )
+PKG_VERSION_STR = f.read()
+f.close()
 
 def which(bin_exe):
     """
@@ -60,7 +62,7 @@ if "--legacy" in sys.argv:
 SUP_WARNINGS="ZSTD_WARNINGS" in os.environ
 if SUP_WARNINGS:
     if os.environ["ZSTD_WARNINGS"]=='0':
-        SUP_WARNINS=False
+        SUP_WARNINGS=False
     else:
         SUP_WARNINGS=True
 if "--all-warnings" in sys.argv:
@@ -119,6 +121,7 @@ if "--debug-trace" in sys.argv:
     # Support tracing for debug
     SUP_TRACE=True
     sys.argv.remove("--debug-trace")
+
 BUILD_SPEED0="ZSTD_SPEED0" in os.environ
 if "--speed0" in sys.argv:
     # speed or size choose only one
@@ -455,9 +458,7 @@ if SUP_WARNINGS:
         if comp == 'msvc':
             COPT[comp].extend(['/Wall',])
         else:
-            COPT[comp].extend(['-Wall', '-Wextra', 
-#'-Wpedantic'
-])
+            COPT[comp].extend(['-Wall', '-Wextra', '-Wpedantic'])
 
 if SUP_WERROR:
     for comp in COPT:

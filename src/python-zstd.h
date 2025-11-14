@@ -94,6 +94,10 @@ static PyObject *ZstdError;
 
 static ZSTD_CCtx* m_cctx;
 
+void free_cContext();
+void reset_cContext(int32_t threads, int32_t level);
+void init_cContext( int32_t threads, int32_t level);
+
 static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args);
 static PyObject *py_zstd_compress_mt2(PyObject* self, PyObject *args);
 static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args);
