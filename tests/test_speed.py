@@ -30,6 +30,25 @@ class TestZstdSpeed(BaseTestZSTD):
         log.info("Compression speed average = %6.2f Mb/sec" % (1.0*sum/1024/1024/wait,))
         log.info("diff Compression memory usage = %6.2f kb" % (1.0*(endMemoryUsage-beginMemoryUsage)/1024,))
 
+    def test_compression2_speed_init_context_once(self):
+        wait = 10
+        if "ZSTD_FULLTIME_TESTS" in os.environ:
+            wait = 30
+        log.info("\nWait %d seconds..." % wait)
+        sum = 0
+        l=len(tDATA)
+        tbegin = time()
+        beginMemoryUsage=get_real_memory_usage()
+        log.info("begin Compression2 memory usage = %6.2f kb" % (1.0*beginMemoryUsage/1024,))
+        while time()-tbegin<wait:
+            cdata = zstd.compress2(tDATA,3,0)
+            sum+=l
+
+        endMemoryUsage=get_real_memory_usage()
+        log.info("end Compression2 memory usage = %6.2f kb" % (1.0*endMemoryUsage/1024,))
+        log.info("Compression2 speed average = %6.2f Mb/sec" % (1.0*sum/1024/1024/wait,))
+        log.info("diff Compression2 memory usage = %6.2f kb" % (1.0*(endMemoryUsage-beginMemoryUsage)/1024,))
+
     def test_compression_speed_no_cpu_cores_cache(self):
         wait = 10
         if "ZSTD_FULLTIME_TESTS" in os.environ:

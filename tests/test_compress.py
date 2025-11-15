@@ -54,17 +54,22 @@ class TestZstdCompress(BaseTestZSTD):
         cdata2 = zstd.compress_real_mt(tDATA, 14)
         self.assertEqual(cdata1, cdata2)
 
+    def test_compression_oldMT_and_new2(self):
+        cdata1 = zstd.compress(tDATA, 14)
+        cdata2 = zstd.compress_real_mt(tDATA, 14)
+        self.assertEqual(cdata1, cdata2)
+
     def test_compression_MT_and_raw(self):
         cdata2 = zstd.compress_real_mt(tDATA, 14)
         data2 = zstd.decompress(cdata2)
         self.assertEqual(tDATA, data2)
 
-    def test_compression_equal_low_level(self):
+    def test_compression_equal_too_low_level(self):
         cdata1 = zstd.compress(tDATA, -100)
         cdata2 = zstd.compress(tDATA, -1000)
         self.assertEqual(cdata1, cdata2)
 
-    def test_compression_equal_high_threads(self):
+    def test_compression_equal_too_high_threads(self):
         cdata1 = zstd.compress(tDATA, 22, 256)
         cdata2 = zstd.compress(tDATA, 22, 2560)
         self.assertEqual(cdata1, cdata2)
