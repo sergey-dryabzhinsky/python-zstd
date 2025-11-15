@@ -21,9 +21,13 @@ VERSION_STR = ".".join([str(x) for x in VERSION])
 # Package version, even external 
 PKG_VERSION = VERSION
 # Minor revision 
-PKG_VERSION += ("2",)
+PKG_VERSION += (2,)
 PKG_VERSION_STR = ".".join([str(x) for x in PKG_VERSION])
-f = open("./version","r" )
+vpath="./version"
+if not os.path.exists(vpath):
+	vdn=os.path.dirname( os.path.abspath(sys.argv[0]))
+	vpath=os.path.join(vdn,vpath)
+f = open(vpath,"r" )
 PKG_VERSION_STR = f.read()
 f.close()
 
