@@ -27,7 +27,9 @@ vpath="./version"
 if not os.path.exists(vpath):
 	vdn=os.path.dirname( os.path.abspath(sys.argv[0]))
 	vpath=os.path.join(vdn,vpath)
-f = open(vpath,"r" )
+if os.path.exists(vpath):
+	print("use 3xisting %s file" % vpath)
+	f = open(vpath,"r" )
 PKG_VERSION_STR = f.read()
 f.close()
 
