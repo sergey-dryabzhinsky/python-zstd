@@ -30,7 +30,7 @@ if not os.path.exists(vpath):
 if os.path.exists(vpath):
 	print("use 3xisting %s file" % vpath)
 	f = open(vpath,"r" )
-PKG_VERSION_STR = f.read()
+PKG_VERSION_STR = f.read().strip()
 f.close()
 
 def which(bin_exe):
