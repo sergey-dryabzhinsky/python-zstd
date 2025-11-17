@@ -167,7 +167,7 @@ void init_cContext( int32_t threads, int32_t level)
     ZSTD_CCtx_setParameter(m_cctx, ZSTD_c_nbWorkers, threads);
 }
 
-void free_cContext()
+void free_cContext(void)
 {
     ZSTD_freeCCtx(m_cctx);
 }

@@ -129,7 +129,7 @@ static PyObject *ZstdError;
 
 static ZSTD_CCtx* m_cctx;
 
-void free_cContext();
+void free_cContext(void);
 void reset_cContext(int32_t threads, int32_t level);
 void init_cContext( int32_t threads, int32_t level);
 
