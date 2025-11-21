@@ -6,5 +6,6 @@ graft zstd/lib/legacy
 graft tests
 include LICENSE
 include README.rst
+include version
 include zstd/lib/zstd.h
 include zstd/lib/zstd_errors.h
