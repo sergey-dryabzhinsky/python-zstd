@@ -253,6 +253,34 @@ jobs:
             cibw:
               build: pp311-*
 
+    env:
+      CIBW_ENABLE: ${{ matrix.cibw.version != 'v1' && 'pypy' || ''}} ${{ matrix.cibw.version == 'v3' && 'pypy-eol' || ''}}
+      CIBW_BUILD: ${{ matrix.cibw.build }}
+      CIBW_BUILD_VERBOSITY: 2
+      # Skip 32-bit builds // NO
+      # CIBW_SKIP: '*-win32 *_i686'
+      CIBW_MANYLINUX_I686_IMAGE: quay.io/pypa/${{ matrix.cibw.manylinux }}_i686
+      CIBW_MANYLINUX_X86_64_IMAGE: quay.io/pypa/${{ matrix.cibw.manylinux }}_x86_64
+      CIBW_MANYLINUX_AARCH64_IMAGE: quay.io/pypa/${{ matrix.cibw.manylinux }}_aarch64
+      CIBW_MUSLLINUX_I686_IMAGE:  quay.io/pypa/${{ matrix.cibw.musllinux }}_i686
+      CIBW_MUSLLINUX_X86_64_IMAGE:  quay.io/pypa/${{ matrix.cibw.musllinux }}_x86_64
+      # Only build on x86 and arm64 for linux
+      CIBW_ARCHS_LINUX: ${{ matrix.cibw.archs.linux }}
+      CIBW_BEFORE_ALL_LINUX: >
+        python -m pip install --upgrade pip
+      # CIBW_ARCHS_MACOS: x86_64 arm64 universal2
+      # Building two wheels for MacOS and skipping Universal
+      CIBW_ARCHS_MACOS: ${{ matrix.cibw.archs.macos }}
+      # Skip testing Apple Silicon until there are GH runners
+      CIBW_TEST_SKIP: '*macosx_arm64 *_universal2:arm64'
+      CIBW_BEFORE_ALL_MACOS: >
+        python -m pip install --upgrade pip
+      # CIBW_ENVIRONMENT_MACOS: MACOSX_DEPLOYMENT_TARGET=11.7
+      CIBW_BEFORE_ALL_WINDOWS: >
+        python -m pip install --upgrade pip
+      CIBW_TEST_COMMAND: >
+        python -m unittest discover -v -s {package}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -294,97 +322,18 @@ jobs:
         if: matrix.cibw.version == 'v1'
         with:
           output-dir: dist
-        env:
-          CIBW_BUILD: ${{ matrix.cibw.build }}
-          CIBW_BUILD_VERBOSITY: 2
-          # Skip 32-bit builds // NO
-          # CIBW_SKIP: '*-win32 *_i686'
-          CIBW_MANYLINUX_I686_IMAGE: ${{ matrix.cibw.manylinux }}
-          CIBW_MANYLINUX_X86_64_IMAGE: ${{ matrix.cibw.manylinux }}
-          CIBW_MUSLLINUX_I686_IMAGE: ${{ matrix.cibw.musllinux }}
-          CIBW_MUSLLINUX_X86_64_IMAGE: ${{ matrix.cibw.musllinux }}
-          # Only build on x86 and arm64 for linux
-          CIBW_ARCHS_LINUX: ${{ matrix.cibw.archs.linux }}
-          CIBW_BEFORE_ALL_LINUX: >
-            python -m pip install --upgrade pip;
-          # CIBW_ARCHS_MACOS: x86_64 arm64 universal2
-          # Building two wheels for MacOS and skipping Universal
-          CIBW_ARCHS_MACOS: ${{ matrix.cibw.archs.macos }}
-          # Skip testing Apple Silicon until there are GH runners
-          CIBW_TEST_SKIP: '*macosx_arm64 *_universal2:arm64'
-          CIBW_BEFORE_ALL_MACOS: >
-            python -m pip install --upgrade pip
-          # CIBW_ENVIRONMENT_MACOS: MACOSX_DEPLOYMENT_TARGET=11.7
-          CIBW_BEFORE_ALL_WINDOWS: >
-            python -m pip install --upgrade pip
-          CIBW_TEST_COMMAND: >
-            python -m unittest discover -v -s {package}
 
       - name: Build ${{ matrix.os.name }} wheels and test (v2)
         uses: joerick/cibuildwheel@v2.23.3
         if: matrix.cibw.version == 'v2'
         with:
           output-dir: dist
-        env:
-          CIBW_ENABLE: pypy
-          CIBW_BUILD: ${{ matrix.cibw.build }}
-          CIBW_BUILD_VERBOSITY: 2
-          # Skip 32-bit builds // NO
-          # CIBW_SKIP: '*-win32 *_i686'
-          CIBW_MANYLINUX_I686_IMAGE: ${{ matrix.cibw.manylinux }}
-          CIBW_MANYLINUX_X86_64_IMAGE: ${{ matrix.cibw.manylinux }}
-          CIBW_MANYLINUX_AARCH64_IMAGE: ${{ matrix.cibw.manylinux }}
-          CIBW_MUSLLINUX_I686_IMAGE:  ${{ matrix.cibw.musllinux }}
-          CIBW_MUSLLINUX_X86_64_IMAGE:  ${{ matrix.cibw.musllinux }}
-          # Only build on x86 and arm64 for linux
-          CIBW_ARCHS_LINUX: ${{ matrix.cibw.archs.linux }}
-          CIBW_BEFORE_ALL_LINUX: >
-            python -m pip install --upgrade pip
-          # CIBW_ARCHS_MACOS: x86_64 arm64 universal2
-          # Building two wheels for MacOS and skipping Universal
-          CIBW_ARCHS_MACOS: ${{ matrix.cibw.archs.macos }}
-          # Skip testing Apple Silicon until there are GH runners
-          CIBW_TEST_SKIP: '*macosx_arm64 *_universal2:arm64'
-          CIBW_BEFORE_ALL_MACOS: >
-            python -m pip install --upgrade pip
-          # CIBW_ENVIRONMENT_MACOS: MACOSX_DEPLOYMENT_TARGET=11.7
-          CIBW_BEFORE_ALL_WINDOWS: >
-            python -m pip install --upgrade pip
-          CIBW_TEST_COMMAND: >
-            python -m unittest discover -v -s {package}
 
       - name: Build ${{ matrix.os.name }} wheels and test (v3)
         uses: joerick/cibuildwheel@v3.2.1
         if: matrix.cibw.version == 'v3'
         with:
           output-dir: dist
-        env:
-          CIBW_ENABLE: pypy pypy-eol
-          CIBW_BUILD: ${{ matrix.cibw.build }}
-          CIBW_BUILD_VERBOSITY: 2
-          # Skip 32-bit builds // NO
-          # CIBW_SKIP: '*-win32 *_i686'
-          CIBW_MANYLINUX_I686_IMAGE: ${{ matrix.cibw.manylinux }}
-          CIBW_MANYLINUX_X86_64_IMAGE: ${{ matrix.cibw.manylinux }}
-          CIBW_MANYLINUX_AARCH64_IMAGE: ${{ matrix.cibw.manylinux }}
-          CIBW_MUSLLINUX_I686_IMAGE:  ${{ matrix.cibw.musllinux }}
-          CIBW_MUSLLINUX_X86_64_IMAGE:  ${{ matrix.cibw.musllinux }}
-          # Only build on x86 and arm64 for linux
-          CIBW_ARCHS_LINUX: ${{ matrix.cibw.archs.linux }}
-          CIBW_BEFORE_ALL_LINUX: >
-            python -m pip install --upgrade pip
-          # CIBW_ARCHS_MACOS: x86_64 arm64 universal2
-          # Building two wheels for MacOS and skipping Universal
-          CIBW_ARCHS_MACOS: ${{ matrix.cibw.archs.macos }}
-          # Skip testing Apple Silicon until there are GH runners
-          CIBW_TEST_SKIP: '*macosx_arm64 *_universal2:arm64'
-          CIBW_BEFORE_ALL_MACOS: >
-            python -m pip install --upgrade pip
-          # CIBW_ENVIRONMENT_MACOS: MACOSX_DEPLOYMENT_TARGET=11.7
-          CIBW_BEFORE_ALL_WINDOWS: >
-            python -m pip install --upgrade pip
-          CIBW_TEST_COMMAND: >
-            python -m unittest discover -v -s {package}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
