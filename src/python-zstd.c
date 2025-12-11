@@ -459,9 +459,24 @@ static PyObject *py_zstd_module_version(PyObject* self, PyObject *args)
 }
 
 /**
- * Returns ZSTD library version as string
+ * Returns ZSTD library version as string - compiled with
  */
-static PyObject *py_zstd_library_version(PyObject* self, PyObject *args)
+static PyObject *py_zstd_library_version_compiled(PyObject* self, PyObject *args)
+{
+     UNUSED(self);
+     UNUSED(args);
+	
+#if PY_MAJOR_VERSION >= 3
+    return PyUnicode_FromFormat("%s", ZSTD_VERSION_STRING);
+#else
+    return PyString_FromFormat("%s", ZSTD_VERSION_STRING);
+#endif
+}
+
+/**
+ * Returns ZSTD library version as string - loaded with
+ */
+static PyObject *py_zstd_library_version_loaded(PyObject* self, PyObject *args)
 {
      UNUSED(self);
      UNUSED(args);
@@ -677,7 +692,9 @@ static PyMethodDef ZstdMethods[] = {
     {"dumps",  py_zstd_compress_mt, METH_VARARGS, COMPRESS_DOCSTRING},
     {"loads",  py_zstd_uncompress, METH_VARARGS, UNCOMPRESS_DOCSTRING},
     {"version",  py_zstd_module_version, METH_NOARGS, VERSION_DOCSTRING},
-    {"ZSTD_version",  py_zstd_library_version, METH_NOARGS, ZSTD_VERSION_DOCSTRING},
+    {"ZSTD_version",  py_zstd_library_version_compiled, METH_NOARGS, ZSTD_VERSION_DOCSTRING},
+    {"ZSTD_version_compiled",  py_zstd_library_version_compiled, METH_NOARGS, NULL},
+    {"ZSTD_version_loaded",  py_zstd_library_version_loaded, METH_NOARGS, NULL},
     {"ZSTD_version_number",  py_zstd_library_version_int, METH_NOARGS, ZSTD_INT_VERSION_DOCSTRING},
     {"ZSTD_threads_count",  py_zstd_threads_count, METH_NOARGS, ZSTD_THREADS_COUNT_DOCSTRING},
     {"ZSTD_max_threads_count",  py_zstd_max_threads_count, METH_NOARGS, ZSTD_MAX_THREADS_COUNT_DOCSTRING},
