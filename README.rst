@@ -503,7 +503,7 @@ ZSTD_version_number (): int
 
 ZSTD_threads_count (): int
   Returns ZSTD determined CPU cores count.
-
+   Better to get this nuber as early as possible befor compression starts.
   Since: 1.5.4.1
 
 ZSTD_max_threads_count (): int
