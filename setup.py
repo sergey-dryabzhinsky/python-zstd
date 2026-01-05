@@ -273,7 +273,7 @@ if "--libzstd-bundled" in sys.argv:
     pkgconf = False
 
 #if SUP_EXTERNAL:
-if platform.system() == "Linux" and "build_ext" in sys.argv or "build" in sys.argv or "bdist_wheel" in sys.argv:
+if platform.system() == "Linux" and "build_ext" in sys.argv or "build" in sys.argv or "bdist_wheel" in sys.argv or "test" in sys.argv:
     # You should add external library by option: --libraries zstd
     # And probably include paths by option: --include-dirs /usr/include/zstd
     # And probably library paths by option: --library-dirs /usr/lib/i386-linux-gnu
@@ -528,7 +528,7 @@ if not SUP_EXTERNAL:
             'compress/zstd_preSplit.c',
             'compress/zstdmt_compress.c',
             'compress/zstd_fast.c',
-            'compress/zstd_double_fast.c',
+#            'compress/zstd_double_fast.c',
             'compress/zstd_lazy.c',
             'compress/zstd_opt.c',
             'compress/zstd_ldm.c',
@@ -557,10 +557,16 @@ if not SUP_EXTERNAL:
             ]:
             zstdFiles.append('zstd/lib/'+f)
 
+# files needed always, even for external
 zstdFiles.append('src/debug.c')
 zstdFiles.append('src/util.c')
 zstdFiles.append('src/python-zstd.c')
 
+#for f in [
+#        'decompress/zstd_decompress.c',
+#        'decompress/zstd_ddict.c',
+#    ]:
+#    zstdFiles.append('zstd/lib/'+f)
 
 # Another dirty hack
 def my_test_suite():
@@ -587,6 +593,8 @@ f=open('README.rst', 'r')
 ld=f.read()
 f.close()
 
+if SUP_DEBUG:
+	print("debug: ext_libraries:%r" % (ext_libraries))
 setup(
     name='zstd',
     version=PKG_VERSION_STR,

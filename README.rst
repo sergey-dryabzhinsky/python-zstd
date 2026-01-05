@@ -23,6 +23,9 @@ python-zstd
 .. |cpython27x86| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython27_x86.yml/badge.svg
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython27_x86.yml
 
+.. |cpython27x86ext| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython27_x86_ext.yml/badge.svg
+    :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython27_x86_ext.yml
+
 .. |cpython27armhf| image:: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython27_armhf.yml/badge.svg
     :target: https://github.com/sergey-dryabzhinsky/python-zstd/actions/workflows/Build_wheels_for_cpython27_armhf.yml
 
@@ -122,6 +125,8 @@ python-zstd
 | wheels for:                |      status          |
 +============================+======================+
 | cpython 2.7 x86 u18        | |cpython27x86|       |
++----------------------------+----------------------+
+| cpython 2.7 x86 u18 ext    | |cpython27x86ext|    |
 +----------------------------+----------------------+
 | cpython 2.7 x64 u18        | |cpython27x64|       |
 +----------------------------+----------------------+
@@ -495,6 +500,16 @@ ZSTD_version (): string|bytes
   Returns ZSTD library doted version string.
 
   Since: 1.3.4.3
+
+ZSTD_version_compiled (): string|bytes
+  Returns ZSTD library doted version string, wi which are compiled.
+
+  Since: 1.5.7.3
+
+ZSTD_version_loaded (): string|bytes
+  Returns ZSTD library doted version string, with which currently loaded.
+
+  Since: 1.5.7.3
 
 ZSTD_version_number (): int
   Returns ZSTD library version in format: MAJOR*100*100 + MINOR*100 + RELEASE.
