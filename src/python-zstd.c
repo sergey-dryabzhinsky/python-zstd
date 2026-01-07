@@ -735,6 +735,7 @@ static int init_py_zstd(PyObject *module) {
     Py_INCREF(ZstdError);
     PyModule_AddObject(module, "Error", ZstdError);
 
+	int32_t threads = UTIL_countAvailableCores();
 	init_cContext(1, 3);
     return 0;
 }
