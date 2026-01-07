@@ -28,7 +28,7 @@ if not os.path.exists(vpath):
 	vdn=os.path.dirname( os.path.abspath(sys.argv[0]))
 	vpath=os.path.join(vdn,vpath)
 if os.path.exists(vpath):
-	print("use 3xisting %s file" % vpath)
+	print("use existing %s file" % vpath)
 	f = open(vpath,"r" )
 PKG_VERSION_STR = f.read().strip()
 f.close()
@@ -368,17 +368,12 @@ if BUILD_SPEED3:
         'gcc': ['-O3',],
     }
 ###
-# DVERSION - pass module version string
-# DDYNAMIC_BMI2 - disable BMI2 amd64 asembler code - can't build it, use CFLAGS with -march= bdver4, znver1/2/3, native
-# DZSTD_DISABLE_ASM=1 - disable ASM inlines
-
 
 for comp in COPT:
     if comp == 'msvc':
         COPT[comp].extend([ '/DMOD_VERSION=%s' % PKG_VERSION_STR, '/DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '/DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ]),
     else:
         COPT[comp].extend([ '-DMOD_VERSION=%s' % PKG_VERSION_STR, '-DDYNAMIC_BMI2=%d' % ENABLE_ASM_BMI2, '-DZSTD_DISABLE_ASM=%d' % DISABLE_ASM ]),
-
 
 if not SUP_EXTERNAL:
     for comp in COPT:
@@ -528,7 +523,7 @@ if not SUP_EXTERNAL:
             'compress/zstd_preSplit.c',
             'compress/zstdmt_compress.c',
             'compress/zstd_fast.c',
-#            'compress/zstd_double_fast.c',
+            'compress/zstd_double_fast.c',
             'compress/zstd_lazy.c',
             'compress/zstd_opt.c',
             'compress/zstd_ldm.c',
@@ -562,11 +557,6 @@ zstdFiles.append('src/debug.c')
 zstdFiles.append('src/util.c')
 zstdFiles.append('src/python-zstd.c')
 
-#for f in [
-#        'decompress/zstd_decompress.c',
-#        'decompress/zstd_ddict.c',
-#    ]:
-#    zstdFiles.append('zstd/lib/'+f)
 
 # Another dirty hack
 def my_test_suite():
