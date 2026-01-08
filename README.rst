@@ -497,14 +497,12 @@ version (): string|bytes
   Since: 1.3.4.3
 
 ZSTD_version (): string|bytes
-  Returns ZSTD library doted version string.
+  Returns ZSTD library doted version string, with which are compiled.
 
   Since: 1.3.4.3
 
-ZSTD_version_compiled (): string|bytes
-  Returns ZSTD library doted version string, wi which are compiled.
-
-  Since: 1.5.7.3
+Aliases:
+	- ZSTD_version_compiled (): string|bytes  Since: 1.5.7.3
 
 ZSTD_version_loaded (): string|bytes
   Returns ZSTD library doted version string, with which currently loaded.
@@ -512,13 +510,14 @@ ZSTD_version_loaded (): string|bytes
   Since: 1.5.7.3
 
 ZSTD_version_number (): int
-  Returns ZSTD library version in format: MAJOR*100*100 + MINOR*100 + RELEASE.
+  Returns ZSTD library version, compiled with, in format: MAJOR*100*100 + MINOR*100 + RELEASE.
 
   Since: 1.3.4.3
 
 ZSTD_threads_count (): int
   Returns ZSTD determined CPU cores count.
-   Better to get this nuber as early as possible befor compression starts.
+  Better to get this nuber as early as possible befor compression starts.
+
   Since: 1.5.4.1
 
 ZSTD_max_threads_count (): int
