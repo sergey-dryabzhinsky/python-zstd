@@ -167,6 +167,10 @@ int UTIL_countAvailableCores_posix_sysconf(void)
 /* Only parse /proc/cpuinfo
  * siblings / cpu cores should give hyperthreading ratio
  * otherwise fall back to 1 */
+// Simulate old version
+int UTIL_countAvailableCores(void) {
+	return UTIL_countAvailableCores_posix_sysconf();
+}
 int UTIL_countAvailableCores_parse_cpuinfo(void)
 {
     time_t currTime = time(NULL);
