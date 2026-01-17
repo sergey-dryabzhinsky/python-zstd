@@ -718,7 +718,7 @@ static PyMethodDef ZstdMethods[] = {
     {"ZSTD_version_compiled",  py_zstd_library_version_compiled, METH_NOARGS, NULL},
     {"ZSTD_version_loaded",  py_zstd_library_version_loaded, METH_NOARGS, NULL},
     {"ZSTD_version_number",  py_zstd_library_version_int, METH_NOARGS, ZSTD_INT_VERSION_DOCSTRING},
-    {"ZSTD_threads_count",  py_zstd_threads_count, METH_NOARGS, ZSTD_THREADS_COUNT_DOCSTRING},
+    {"ZSTD_threads_count",  py_zstd_cpu_count_sysconf, METH_NOARGS, ZSTD_THREADS_COUNT_DOCSTRING},
     {"ZSTD_cpu_count_sysconf",  py_zstd_cpu_count_sysconf, METH_NOARGS, ZSTD_THREADS_COUNT_DOCSTRING},
     {"ZSTD_cpu_count_cpuinfo",  py_zstd_cpu_count_cpuinfo, METH_NOARGS, ZSTD_THREADS_COUNT_DOCSTRING},
     {"ZSTD_max_threads_count",  py_zstd_max_threads_count, METH_NOARGS, ZSTD_MAX_THREADS_COUNT_DOCSTRING},

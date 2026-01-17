@@ -163,6 +163,8 @@ int UTIL_countAvailableCores_posix_sysconf(void)
         return numLogicalCores;
     }
 	printdn("Sysconf readed. numLogicalCores: %d\n", numLogicalCores);
+	lastTimeCached = time(NULL);
+	return numLogicalCores;
 }
 /* Only parse /proc/cpuinfo
  * siblings / cpu cores should give hyperthreading ratio
