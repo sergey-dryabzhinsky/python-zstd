@@ -75,7 +75,12 @@ __attribute__((unused)) static int numLogicalCores = 1;
 __attribute__((unused)) static time_t lastTimeCached = 0;
 __attribute__((unused)) static int util_cpuCoresCacheTTL = 60;
 #endif
+#if defined(__linux__)
+int UTIL_countAvailableCores_posix_sysconf(void);
+int UTIL_countAvailableCores_prse_cpuinfo(void);
+#else
 int UTIL_countAvailableCores(void);
+#endif
 int UTIL_setCpuCoresCacheTTL(int cacheTTL);
 int UTIL_stopCpuCoresCache(void);
 

@@ -261,6 +261,45 @@ class TestZstdSpeed(BaseTestZSTD):
         log.info("Check cache use speed(0) average = %6.2f Ops/sec" % (1.0*ops/wait,))
         log.info("diff Check memory usage = %6.2f kb" % (1.0*(endMemoryUsage-beginMemoryUsage)/1024,))
     
+    def test_cpu_cores_cache_none_sysconf_speed(self):
+        wait = 10
+        if "ZSTD_FULLTIME_TESTS" in os.environ:
+            wait = 70
+        log.info("\nWait %d seconds..." % wait)
+        ops = 0
+        tbegin = time()
+        beginMemoryUsage=get_real_memory_usage()
+        zstd.ZSTD_stopCpuCoresCache()
+        log.info("begin Check memory usage= %6.2f kb" % (1.0*beginMemoryUsage/1024,))
+        while time()-tbegin<wait:
+            cores = zstd.ZSTD_cpu_count_sysconf()
+            ops+=1
+
+        endMemoryUsage=get_real_memory_usage()
+        log.info("end Check memory usage = %6.2f kb" % (1.0*endMemoryUsage/1024,))
+        log.info("Check cache use speed(0) average = %6.2f Ops/sec" % (1.0*ops/wait,))
+        log.info("diff Check memory usage = %6.2f kb" % (1.0*(endMemoryUsage-beginMemoryUsage)/1024,))
+    
+
+    def test_cpu_cores_cache_none_cpuinfo_speed(self):
+        wait = 10
+        if "ZSTD_FULLTIME_TESTS" in os.environ:
+            wait = 70
+        log.info("\nWait %d seconds..." % wait)
+        ops = 0
+        tbegin = time()
+        beginMemoryUsage=get_real_memory_usage()
+        zstd.ZSTD_stopCpuCoresCache()
+        log.info("begin Check memory usage= %6.2f kb" % (1.0*beginMemoryUsage/1024,))
+        while time()-tbegin<wait:
+            cores = zstd.ZSTD_cpu_count_cpuinfo()
+            ops+=1
+
+        endMemoryUsage=get_real_memory_usage()
+        log.info("end Check memory usage = %6.2f kb" % (1.0*endMemoryUsage/1024,))
+        log.info("Check cache use speed(0) average = %6.2f Ops/sec" % (1.0*ops/wait,))
+        log.info("diff Check memory usage = %6.2f kb" % (1.0*(endMemoryUsage-beginMemoryUsage)/1024,))
+    
     def test_cpu_cores_cache_60_speed(self):
         wait = 10
         if "ZSTD_FULLTIME_TESTS" in os.environ:
