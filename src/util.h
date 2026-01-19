@@ -78,7 +78,7 @@ __attribute__((unused)) static int util_cpuCoresCacheTTL = 60;
 #if defined(__linux__)
 int UTIL_countAvailableCores(void);
 int UTIL_countAvailableCores_posix_sysconf(void);
-int UTIL_countAvailableCores_prse_cpuinfo(void);
+int UTIL_countAvailableCores_parse_cpuinfo(void);
 #else
 int UTIL_countAvailableCores(void);
 #endif
