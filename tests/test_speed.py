@@ -4,6 +4,7 @@ from tests.base import BaseTestZSTD,tDATA,log,zstd,platform,raise_skip
 from.get_memory_usage import get_real_memory_usage
 from time import time
 import os
+import platform
 
 class TestZstdSpeed(BaseTestZSTD):
 
@@ -239,7 +240,7 @@ class TestZstdSpeed(BaseTestZSTD):
 
         endMemoryUsage=get_real_memory_usage()
         log.info("end Check memory usage = %6.2f kb" % (1.0*endMemoryUsage/1024,))
-        log.info("Check cache use speed(default) average = %6.2f Ops/sec" % (1.0*ops/wait,))
+        log.info("Check cpu cores number cache use ttl(default) average = %6.2f Ops/sec" % (1.0*ops/wait,))
         log.info("diff Check memory usage = %6.2f kb" % (1.0*(endMemoryUsage-beginMemoryUsage)/1024,))
 
     def test_cpu_cores_cache_none_speed(self):
@@ -258,10 +259,12 @@ class TestZstdSpeed(BaseTestZSTD):
 
         endMemoryUsage=get_real_memory_usage()
         log.info("end Check memory usage = %6.2f kb" % (1.0*endMemoryUsage/1024,))
-        log.info("Check cache use cache(0) and DEFAULT average = %6.2f Ops/sec" % (1.0*ops/wait,))
+        log.info("Check cpu cores number cache not use cache and DEFAULT average = %6.2f Ops/sec" % (1.0*ops/wait,))
         log.info("diff Check memory usage = %6.2f kb" % (1.0*(endMemoryUsage-beginMemoryUsage)/1024,))
-    
+
     def test_cpu_cores_cache_none_sysconf_speed(self):
+        if platform.system()!='Linux':
+            raise_skip("non Linux platfom not supported")
         wait = 10
         if "ZSTD_FULLTIME_TESTS" in os.environ:
             wait = 70
@@ -277,11 +280,12 @@ class TestZstdSpeed(BaseTestZSTD):
 
         endMemoryUsage=get_real_memory_usage()
         log.info("end Check memory usage = %6.2f kb" % (1.0*endMemoryUsage/1024,))
-        log.info("Check cache use cache(0) and call SYSCONF average = %6.2f Ops/sec" % (1.0*ops/wait,))
+        log.info("Check cpu cores number cache not use cache and call SYSCONF average = %6.2f Ops/sec" % (1.0*ops/wait,))
         log.info("diff Check memory usage = %6.2f kb" % (1.0*(endMemoryUsage-beginMemoryUsage)/1024,))
-    
 
     def test_cpu_cores_cache_none_cpuinfo_speed(self):
+        if platform.system()!='Linux':
+            raise_skip("non Linux platfom not supported")
         wait = 10
         if "ZSTD_FULLTIME_TESTS" in os.environ:
             wait = 70
@@ -297,7 +301,7 @@ class TestZstdSpeed(BaseTestZSTD):
 
         endMemoryUsage=get_real_memory_usage()
         log.info("end Check memory usage = %6.2f kb" % (1.0*endMemoryUsage/1024,))
-        log.info("Check cache use cache(0) and parse CPUINFO average = %6.2f Ops/sec" % (1.0*ops/wait,))
+        log.info("Check cpu cores numbercache not use cache and parse CPUINFO average = %6.2f Ops/sec" % (1.0*ops/wait,))
         log.info("diff Check memory usage = %6.2f kb" % (1.0*(endMemoryUsage-beginMemoryUsage)/1024,))
     
     def test_cpu_cores_cache_60_speed(self):
@@ -315,7 +319,7 @@ class TestZstdSpeed(BaseTestZSTD):
 
         endMemoryUsage=get_real_memory_usage()
         log.info("end Check memory usage = %6.2f kb" % (1.0*endMemoryUsage/1024,))
-        log.info("Check cache use speed(60) average = %6.2f Ops/sec" % (1.0*ops/wait,))
+        log.info("Check cpu cores number cache use ttl(60 sec) average = %6.2f Ops/sec" % (1.0*ops/wait,))
         log.info("diff Check memory usage = %6.2f kb" % (1.0*(endMemoryUsage-beginMemoryUsage)/1024,))
         
     def test_cpu_cores_cache_01_speed(self):
@@ -334,7 +338,7 @@ class TestZstdSpeed(BaseTestZSTD):
 
         endMemoryUsage=get_real_memory_usage()
         log.info("end Check memory usage = %6.2f kb" % (1.0*endMemoryUsage/1024,))
-        log.info("Check cache use speed(1) average = %6.2f Ops/sec" % (1.0*ops/wait,))
+        log.info("Check cpu cores number cache use ttl(1 sec) average = %6.2f Ops/sec" % (1.0*ops/wait,))
         log.info("diff Check memory usage = %6.2f kb" % (1.0*(endMemoryUsage-beginMemoryUsage)/1024,))
 
     def test_cpu_cores_cache_05_speed(self):
@@ -353,7 +357,7 @@ class TestZstdSpeed(BaseTestZSTD):
 
         endMemoryUsage=get_real_memory_usage()
         log.info("end Check memory usage = %6.2f kb" % (1.0*endMemoryUsage/1024,))
-        log.info("Check cache use speed(5) average = %6.2f Ops/sec" % (1.0*ops/wait,))
+        log.info("Check cpu cores number cache use ttl(5 sec) average = %6.2f Ops/sec" % (1.0*ops/wait,))
         log.info("diff Check memory usage = %6.2f kb" % (1.0*(endMemoryUsage-beginMemoryUsage)/1024,))
 
     def test_cpu_cores_cache_10_speed(self):
@@ -372,7 +376,7 @@ class TestZstdSpeed(BaseTestZSTD):
 
         endMemoryUsage=get_real_memory_usage()
         log.info("end Check memory usage = %6.2f kb" % (1.0*endMemoryUsage/1024,))
-        log.info("Check cache use speed(10) average = %6.2f Ops/sec" % (1.0*ops/wait,))
+        log.info("Check cpu cores number cache use ttl(10 sec) average = %6.2f Ops/sec" % (1.0*ops/wait,))
         log.info("diff Check memory usage = %6.2f kb" % (1.0*(endMemoryUsage-beginMemoryUsage)/1024,))
     
 if __name__ == '__main__':
