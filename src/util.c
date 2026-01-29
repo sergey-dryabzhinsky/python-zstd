@@ -131,7 +131,7 @@ int UTIL_countAvailableCores(void)
                 numLogicalCores = 1;
             } else {
                 perror("zstd: can't get number of physical cpus");
-                exit(1);
+                return 1;
             }
         }
 
@@ -142,10 +142,9 @@ int UTIL_countAvailableCores(void)
 
 #elif defined(__linux__)
 
-/* parse /proc/cpuinfo
- * siblings / cpu cores should give hyperthreading ratio
- * otherwise fall back on sysconf */
-int UTIL_countAvailableCores(void)
+/*
+ * Use only posix sysconf */
+int UTIL_countAvailableCores_posix_sysconf(void)
 {
     time_t currTime = time(NULL);
     if (lastTimeCached && currTime-lastTimeCached>util_cpuCoresCacheTTL) numLogicalCores = 0;
@@ -158,11 +157,32 @@ int UTIL_countAvailableCores(void)
     numLogicalCores = (int)sysconf(_SC_NPROCESSORS_ONLN);
     if (numLogicalCores == -1) {
         /* value not queryable, fall back on 1 */
+        numLogicalCores = 1;
         printdn("Sysconf read fail. numLogicalCores: %d\n", numLogicalCores);
         lastTimeCached = time(NULL);
-        return numLogicalCores = 1;
+        return numLogicalCores;
     }
 	printdn("Sysconf readed. numLogicalCores: %d\n", numLogicalCores);
+	lastTimeCached = time(NULL);
+	return numLogicalCores;
+}
+// Simulate old version
+int UTIL_countAvailableCores(void) {
+	return UTIL_countAvailableCores_posix_sysconf();
+}
+
+/* Only parse /proc/cpuinfo
+ * siblings / cpu cores should give hyperthreading ratio
+ * otherwise fall back to 1 */
+int UTIL_countAvailableCores_parse_cpuinfo(void)
+{
+    time_t currTime = time(NULL);
+    if (lastTimeCached && currTime-lastTimeCached>util_cpuCoresCacheTTL) numLogicalCores = 0;
+
+    if (numLogicalCores != 0) {
+        printdn("Stored static numLogicalCores: %d\n", numLogicalCores);
+        return numLogicalCores;
+    }
 
     /* try to determine if there's hyperthreading */
     {   FILE* cpuinfo = fopen("/proc/cpuinfo", "r");
@@ -259,7 +279,8 @@ int UTIL_countAvailableCores(void)
         if (ret == 0) return numLogicalCores;
         if (errno != ENOENT) {
             perror("zstd: can't get number of Logical cpus");
-            exit(1);
+            /* value not queryable, fall back on 1 */
+            numLogicalCores = 1;
         }
         /* sysctl not present, fall through to older sysconf method */
     }
@@ -298,7 +319,7 @@ int UTIL_countAvailableCores(void)
 
 int UTIL_countAvailableCores(void)
 {
-    /* assume 1 */
+    /* assume fail-safe 1 */
     return 1;
 }
 

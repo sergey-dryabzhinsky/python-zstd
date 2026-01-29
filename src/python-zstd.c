@@ -600,6 +600,29 @@ static PyObject *py_zstd_threads_count(PyObject* self, PyObject *args)
     return Py_BuildValue("i", threads);
 }
 
+#if defined(__linux__)
+/**
+ * Returns ZSTD determined cpu count, int
+ */
+static PyObject *py_zstd_cpu_count_sysconf(PyObject* self, PyObject *args)
+{
+    UNUSED(self);
+    UNUSED(args);
+    int32_t threads = UTIL_countAvailableCores_posix_sysconf();
+    return Py_BuildValue("i", threads);
+}
+
+/**
+ * Returns ZSTD determined cpu count, int
+ */
+static PyObject *py_zstd_cpu_count_cpuinfo(PyObject* self, PyObject *args)
+{
+    UNUSED(self);
+    UNUSED(args);
+    int32_t threads = UTIL_countAvailableCores_parse_cpuinfo();
+    return Py_BuildValue("i", threads);
+}
+#endif //linux?
 static PyObject *py_zstd_set_cpu_cores_cache_ttl(PyObject* self, PyObject *args)
 {
     UNUSED(self);
@@ -697,6 +720,10 @@ static PyMethodDef ZstdMethods[] = {
     {"ZSTD_version_loaded",  py_zstd_library_version_loaded, METH_NOARGS, NULL},
     {"ZSTD_version_number",  py_zstd_library_version_int, METH_NOARGS, ZSTD_INT_VERSION_DOCSTRING},
     {"ZSTD_threads_count",  py_zstd_threads_count, METH_NOARGS, ZSTD_THREADS_COUNT_DOCSTRING},
+#if defined(__linux__)
+    {"ZSTD_cpu_count_sysconf",  py_zstd_cpu_count_sysconf, METH_NOARGS, ZSTD_THREADS_COUNT_DOCSTRING},
+    {"ZSTD_cpu_count_cpuinfo",  py_zstd_cpu_count_cpuinfo, METH_NOARGS, ZSTD_THREADS_COUNT_DOCSTRING},
+#endif
     {"ZSTD_max_threads_count",  py_zstd_max_threads_count, METH_NOARGS, ZSTD_MAX_THREADS_COUNT_DOCSTRING},
     {"ZSTD_min_compression_level",  py_zstd_min_compression_level, METH_NOARGS, ZSTD_MIN_COMPRESSION_LEVEL_DOCSTRING},
     {"ZSTD_max_compression_level",  py_zstd_max_compression_level, METH_NOARGS, ZSTD_MAX_COMPRESSION_LEVEL_DOCSTRING},
