@@ -14,12 +14,12 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - name: Ubuntu 24+22 amd64 CPython 3.13-nogil
+          - name: Ubuntu 24+16 amd64 CPython 3.13-nogil
             runs-on: ubuntu-latest
             matrix: linux
             arch: amd64
             tag_arch: x86_64
-            release: xenian
+            release: xenial
             mirror: http://azure.archive.ubuntu.com/ubuntu
             getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
             pypkg: python3.13-nogil
