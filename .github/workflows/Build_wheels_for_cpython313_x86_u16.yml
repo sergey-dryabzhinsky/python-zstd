@@ -24,7 +24,7 @@ jobs:
             getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
             pypkg: python3.13
             pyengine_tag: cp313-cp313
-            libc_tag: manylinux_2_14
+            libc_tag: manylinux_2_4
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
