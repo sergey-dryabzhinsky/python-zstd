@@ -27,7 +27,7 @@ jobs:
             pypkg: python3.15
             #pypkgadd: python3.13-distutils
             pyengine_tag: cp315-cp315
-            libc_tag: manylinux_2_14
+            libc_tag: manylinux_2_4
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
