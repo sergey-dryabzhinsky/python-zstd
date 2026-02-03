@@ -29,7 +29,7 @@ jobs:
             pypkgexe: python3.14t
             #pypkgadd: python3.13-distutils
             pyengine_tag: cp314-cp314t
-            libc_tag: manylinux_2_14
+            libc_tag: manylinux_2_4
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
