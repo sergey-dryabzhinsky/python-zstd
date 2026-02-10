@@ -298,7 +298,7 @@ jobs:
           CIBW_BUILD: ${{ matrix.cibw.build }}
           CIBW_BUILD_VERBOSITY: 2
           # Skip 32-bit builds // NO
-          # CIBW_SKIP: '*-win32 *_i686'
+          CIBW_SKIP: 'cp36-win* cp38-win*'
           CIBW_MANYLINUX_I686_IMAGE: ${{ matrix.cibw.manylinux }}
           CIBW_MANYLINUX_X86_64_IMAGE: ${{ matrix.cibw.manylinux }}
           CIBW_MUSLLINUX_I686_IMAGE: ${{ matrix.cibw.musllinux }}
@@ -330,7 +330,7 @@ jobs:
           CIBW_BUILD: ${{ matrix.cibw.build }}
           CIBW_BUILD_VERBOSITY: 2
           # Skip 32-bit builds // NO
-          # CIBW_SKIP: '*-win32 *_i686'
+          CIBW_SKIP: 'cp36-win* cp38-win*'
           CIBW_MANYLINUX_I686_IMAGE: ${{ matrix.cibw.manylinux }}
           CIBW_MANYLINUX_X86_64_IMAGE: ${{ matrix.cibw.manylinux }}
           CIBW_MANYLINUX_AARCH64_IMAGE: ${{ matrix.cibw.manylinux }}
@@ -363,7 +363,7 @@ jobs:
           CIBW_BUILD: ${{ matrix.cibw.build }}
           CIBW_BUILD_VERBOSITY: 2
           # Skip 32-bit builds // NO
-          # CIBW_SKIP: '*-win32 *_i686'
+          CIBW_SKIP: 'cp36-win* cp38-win*'
           CIBW_MANYLINUX_I686_IMAGE: ${{ matrix.cibw.manylinux }}
           CIBW_MANYLINUX_X86_64_IMAGE: ${{ matrix.cibw.manylinux }}
           CIBW_MANYLINUX_AARCH64_IMAGE: ${{ matrix.cibw.manylinux }}
