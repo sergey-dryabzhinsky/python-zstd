@@ -1,4 +1,4 @@
-name: Build wheels for CPython2.7 x86 on Ubuntu16 with GCC-5 with All warnings, test external build
+name: Build wheels for CPython2.7 x86 on Ubuntu18 with GCC-7 with All warnings, test external build
 
 on: [push, pull_request]
 
@@ -19,7 +19,7 @@ jobs:
             matrix: linux
             arch: i386
             tag_arch: i686
-            release: xenial
+            release: bionic
             mirror: http://azure.archive.ubuntu.com/ubuntu
             #version: 1.5.6.7
             #pyver: "2.7"
