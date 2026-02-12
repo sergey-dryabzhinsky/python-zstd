@@ -14,7 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - name: Ubuntu 24+16 i386 CPython 2.7
+          - name: Ubuntu 24+18 i386 CPython 2.7
             runs-on: ubuntu-latest
             matrix: linux
             arch: i386
@@ -88,10 +88,9 @@ jobs:
       - name: Pepare for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
         run: |
-           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt-cache madison clang-18
            sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt install -y ${{matrix.os.pypkg}}-dev gcc pkg-config ${{matrix.os.pypkgadd}}
            sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "wget ${{matrix.os.getpipurl}} -O get-pip.py && ${{matrix.os.pypkg}} get-pip.py"
-           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "${{matrix.os.pypkg}} -m pip install -U 'setuptools'" 
+           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "${{matrix.os.pypkg}} -m pip install -U 'setuptools<72'" 
                     
       - name: Pepare source and build wheel for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
@@ -103,8 +102,8 @@ jobs:
           false && sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} env
           
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} pkg-config libzstd --modversion 
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} echo GCC-5
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} gcc-5 -v
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} echo GCC-7
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} gcc-7 -v
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version && _CC=clang-20 ZSTD_ASM=1 ZSTD_WARNINGS=1 ZSTD_WERRORS=1 _ZSTD_SMALL=1 _ZSTD_ASM_BMI2=1 ZSTD_THREADS=1 ZSTD_EXTERNAL=1 CC=gcc-5 ${{matrix.os.pypkg}} setup.py bdist_wheel "
 
       - name: Test wheel for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
