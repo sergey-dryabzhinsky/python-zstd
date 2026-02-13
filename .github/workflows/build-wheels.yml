@@ -188,6 +188,8 @@ jobs:
               matrix: windows
             cibw:
               build: cp27-*
+              build: cp36-*
+              build: cp38-*
           - os:
               matrix: macos
             cibw:
