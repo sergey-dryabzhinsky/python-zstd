@@ -67,11 +67,11 @@ extern "C" {
 #endif
 
 #if defined(_WIN32) || defined(WIN32)
- static int numLogicalCores = 1;
+ static int numLogicalCores = 0;
  static time_t lastTimeCached = 0;
  static int util_cpuCoresCacheTTL = 60;
 #else
-__attribute__((unused)) static int numLogicalCores = 1;
+__attribute__((unused)) static int numLogicalCores = 0;
 __attribute__((unused)) static time_t lastTimeCached = 0;
 __attribute__((unused)) static int util_cpuCoresCacheTTL = 60;
 #endif

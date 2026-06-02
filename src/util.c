@@ -40,7 +40,11 @@ typedef BOOL(WINAPI* LPFN_GLPI)(PSYSTEM_LOGICAL_PROCESSOR_INFORMATION, PDWORD);
 int UTIL_countAvailableCores(void)
 {
     time_t currTime = time(NULL);
-    if (lastTimeCached && currTime-lastTimeCached>util_cpuCoresCacheTTL) numLogicalCores = 0;
+    if (lastTimeCached && currTime-lastTimeCached>util_cpuCoresCacheTTL) {
+        printdn("Cache reach TTL. Drop numLogicalCores.", numLogicalCores);
+        numLogicalCores = 0;
+    }
+
     if (numLogicalCores != 0) return numLogicalCores;
 
     {   LPFN_GLPI glpi;
@@ -120,7 +124,11 @@ failed:
 int UTIL_countAvailableCores(void)
 {
     time_t currTime = time(NULL);
-    if (lastTimeCached && currTime-lastTimeCached>util_cpuCoresCacheTTL) numLogicalCores = 0;
+    if (lastTimeCached && currTime-lastTimeCached>util_cpuCoresCacheTTL) {
+        printdn("Cache reach TTL. Drop numLogicalCores.", numLogicalCores);
+        numLogicalCores = 0;
+    }
+
     if (numLogicalCores != 0) return numLogicalCores;
 
     {   size_t size = sizeof(int32_t);
@@ -147,7 +155,10 @@ int UTIL_countAvailableCores(void)
 int UTIL_countAvailableCores_posix_sysconf(void)
 {
     time_t currTime = time(NULL);
-    if (lastTimeCached && currTime-lastTimeCached>util_cpuCoresCacheTTL) numLogicalCores = 0;
+    if (lastTimeCached && currTime-lastTimeCached>util_cpuCoresCacheTTL) {
+        printdn("Cache reach TTL. Drop numLogicalCores.", numLogicalCores);
+        numLogicalCores = 0;
+    }
 
     if (numLogicalCores != 0) {
         printdn("Stored static numLogicalCores: %d\n", numLogicalCores);
@@ -177,7 +188,10 @@ int UTIL_countAvailableCores(void) {
 int UTIL_countAvailableCores_parse_cpuinfo(void)
 {
     time_t currTime = time(NULL);
-    if (lastTimeCached && currTime-lastTimeCached>util_cpuCoresCacheTTL) numLogicalCores = 0;
+    if (lastTimeCached && currTime-lastTimeCached>util_cpuCoresCacheTTL) {
+        printdn("Cache reach TTL. Drop numLogicalCores.", numLogicalCores);
+        numLogicalCores = 0;
+    }
 
     if (numLogicalCores != 0) {
         printdn("Stored static numLogicalCores: %d\n", numLogicalCores);
@@ -269,7 +283,10 @@ failed:
 int UTIL_countAvailableCores(void)
 {
     time_t currTime = time(NULL);
-    if (lastTimeCached && currTime-lastTimeCached>util_cpuCoresCacheTTL) numLogicalCores = 0;
+    if (lastTimeCached && currTime-lastTimeCached>util_cpuCoresCacheTTL) {
+        printdn("Cache reach TTL. Drop numLogicalCores.", numLogicalCores);
+        numLogicalCores = 0;
+    }
 
     if (numLogicalCores != 0) return numLogicalCores;
 
@@ -302,7 +319,10 @@ int UTIL_countAvailableCores(void)
 int UTIL_countAvailableCores(void)
 {
     time_t currTime = time(NULL);
-    if (lastTimeCached && currTime-lastTimeCached>util_cpuCoresCacheTTL) numLogicalCores = 0;
+    if (lastTimeCached && currTime-lastTimeCached>util_cpuCoresCacheTTL) {
+        printdn("Cache reach TTL. Drop numLogicalCores.", numLogicalCores);
+        numLogicalCores = 0;
+    }
 
     if (numLogicalCores != 0) return numLogicalCores;
 
