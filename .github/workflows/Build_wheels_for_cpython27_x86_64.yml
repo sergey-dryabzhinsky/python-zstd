@@ -122,15 +122,15 @@ jobs:
            sudo cp -v ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/zstd-$version/dist/* ./dist
            sudo ls -lh ./dist/* 
            sudo mv -v ./dist/"zstd-$version-${{matrix.os.pyengine_tag}}-linux_${{matrix.os.tag_arch}}.whl" ./dist/"zstd-$version-${{matrix.os.pyengine_tag}}-${{matrix.os.libc_tag}}_${{matrix.os.tag_arch}}.whl"
-           
 
-#      - name: Upload artifacts
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: wheels
-#.         path: ./dist
-#          compression-level: 0
-          
+      - name: Test module for SIMD instructions
+        if: matrix.os.matrix == 'linux'
+        run: |
+          version=`cat version`
+          echo version=$version
+          sudo cp -v simd-check ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/zstd-$version/
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash-c "cd /build_wheel/zstd-$version/ ; echo LLH; ls -lh build/*/zstd.so; echo SIMD; bash ./simd-check build/*/zstd.so"
+
       - name: Test for secrets access
         id: check_secrets
         # If a third party makes a pull request
