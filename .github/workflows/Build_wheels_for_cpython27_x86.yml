@@ -111,12 +111,19 @@ jobs:
       - name: Test wheel for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
         run: |
-          false && sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} find /build_wheel/
           version=`cat version`
           echo version=$version
           sudo cp -v glibc-check.sh ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/zstd-$version/
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version/ ; echo LLH; ls -lh build/*/zstd.so; echo LDD; ldd build/*/zstd.so;echo FILE; file build/*/zstd.so; echo LIBC; bash ./glibc-check.sh build/*/zstd.so"
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version && ${{matrix.os.pypkg}} setup.py test"
+
+      - name: Test module for SIMD instructions, ${{matrix.os.pypkg}} ${{matrix.os.arch}}
+        if: matrix.os.matrix == 'linux'
+        run: |
+          version=`cat version`
+          echo version=$version
+          sudo cp -v simd-check ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/zstd-$version/
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version/ ; echo LLH; ls -lh build/*/zstd.so; echo SIMD; bash ./simd-check build/*/zstd.so"
 
       - name: Pepare wheel for upload
         if: matrix.os.matrix == 'linux'
