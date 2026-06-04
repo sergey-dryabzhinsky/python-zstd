@@ -21,7 +21,7 @@ jobs:
             tag_arch: x86_64
             release: xenial
             mirror: http://azure.archive.ubuntu.com/ubuntu
-            getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
+            getpipurl: https://bootstrap.pypa.io/pip/3.9/get-pip.py
             pypkg: pypy3.9
             pypkgdev: pypy3.9-bin-dev
             pyengine_tag: pp39-pypy39_pp73

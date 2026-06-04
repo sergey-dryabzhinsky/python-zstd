@@ -23,7 +23,7 @@ jobs:
             mirror: http://azure.archive.ubuntu.com/ubuntu
             #version: 1.5.6.7
             #pyver: "3.9"
-            getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
+            getpipurl: https://bootstrap.pypa.io/pip/3.9/get-pip.py
             pypkg: python3.9
             pypkgadd: python3.9-distutils
             pyengine_tag: cp39-cp39
