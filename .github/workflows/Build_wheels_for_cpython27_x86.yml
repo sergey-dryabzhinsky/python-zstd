@@ -117,7 +117,7 @@ jobs:
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version/ ; echo LLH; ls -lh build/*/zstd.so; echo LDD; ldd build/*/zstd.so;echo FILE; file build/*/zstd.so; echo LIBC; bash ./glibc-check.sh build/*/zstd.so"
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version && ${{matrix.os.pypkg}} setup.py test"
 
-      - name: Test module for SIMD instructions, ${{matrix.os.pypkg}} ${{matrix.os.arch}}
+      - name: Test module for SIMD instructions
         if: matrix.os.matrix == 'linux'
         run: |
           version=`cat version`
