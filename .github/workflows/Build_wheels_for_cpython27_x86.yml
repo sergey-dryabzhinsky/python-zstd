@@ -85,7 +85,7 @@ jobs:
       - name: Pepare dev files
         if: matrix.os.matrix == 'linux'
         run: |
-           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt install -y libzstd-dev
+           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt install -y python3
 
       - name: Pepare for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
@@ -123,7 +123,7 @@ jobs:
           version=`cat version`
           echo version=$version
           echo cpuinfo
-          cat /proc/cpuinfo
+          ./simd-cklheck-cpuinfo.py
           sudo cp -v simd-check ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/zstd-$version/
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version/ ; echo LLH; ls -lh build/*/zstd.so; echo SIMD; bash ./simd-check build/*/zstd.so"
 

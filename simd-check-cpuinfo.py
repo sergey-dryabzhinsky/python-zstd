@@ -23,7 +23,7 @@ if not flagsln:
 
 flags = flagsln.split(':')[1].strip().split()
 #print("found flags:")
-print(flags)
+#print(flags)
 
 sys.stdout.write("SSE: ")
 if 'sse' in flags:
