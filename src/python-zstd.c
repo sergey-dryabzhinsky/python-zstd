@@ -203,9 +203,9 @@ static PyObject *py_zstd_compress_mt2(PyObject* self, PyObject *args)
     size_t cSize;
 //    size_t sum=0;
     int32_t level = ZSTD_CLEVEL_DEFAULT;
-	static int32_t lastLevel =0;
     int32_t threads = 0;
     int32_t strict = 0;
+    ZSTD_CCtx* cctx = NULL;
 
 #if PY_MAJOR_VERSION >= 3
     if (!PyArg_ParseTuple(args, "y#|iii", &source, &source_size, &level, &threads, &strict))
@@ -272,14 +272,20 @@ static PyObject *py_zstd_compress_mt2(PyObject* self, PyObject *args)
     if (source_size >= 0) {
         dest = PyBytes_AS_STRING(result);
 
-		if(level != lastLevel) {
-			reset_cContext(threads, level);
-		}
+        cctx = ZSTD_createCCtx();
+        if (cctx == NULL) {
+            PyErr_Format(ZstdError, "Could not create compression context");
+            Py_CLEAR(result);
+            return NULL;
+        }
+        ZSTD_CCtx_setParameter(cctx, ZSTD_c_compressionLevel, level);
+        ZSTD_CCtx_setParameter(cctx, ZSTD_c_nbWorkers, threads);
 
         Py_BEGIN_ALLOW_THREADS
-        cSize = ZSTD_compress2(m_cctx, dest, (size_t)dest_size, source, (size_t)source_size);
+        cSize = ZSTD_compress2(cctx, dest, (size_t)dest_size, source, (size_t)source_size);
         Py_END_ALLOW_THREADS
-		lastLevel = level;
+
+        ZSTD_freeCCtx(cctx);
 
         printdn("Compression result: %d\n", cSize);
         if (ZSTD_isError(cSize)) {
