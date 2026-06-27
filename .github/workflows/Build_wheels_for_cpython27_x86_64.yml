@@ -115,6 +115,17 @@ jobs:
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version/ && ls -lh build/*/zstd.so; ldd build/*/zstd.so ; file build/*/zstd.so; bash ./glibc-check.sh build/*/zstd.so"
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version && ${{matrix.os.pypkg}} setup.py test"
 
+      - name: Test module for SIMD instructions
+        if: matrix.os.matrix == 'linux'
+        run: |
+          version=`cat version`
+          echo version=$version
+          echo cpuinfo
+          ./simd-check-cpuinfo.py
+          sudo cp -v simd-check ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/zstd-$version/
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash
+-c "cd /build_wheel/zstd-$version/ ; echo LLH; ls -lh build/*/zstd.so; echo SIMD; bash ./simd-check build/*/zstd.so"
+
       - name: Pepare wheel for upload
         if: matrix.os.matrix == 'linux'
         run: |
