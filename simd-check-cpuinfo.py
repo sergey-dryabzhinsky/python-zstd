@@ -25,6 +25,12 @@ flags = flagsln.split(':')[1].strip().split()
 #print("found flags:")
 #print(flags)
 
+sys.stdout.write("MMX: ")
+if 'mmx' in flags:
+  sys.stdout.write("yes\n")
+else:
+  sys.stdout.write("no\n")
+
 sys.stdout.write("SSE: ")
 if 'sse' in flags:
   sys.stdout.write("yes\n")

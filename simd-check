@@ -7,6 +7,14 @@ echo "File:$1"
 echo " dump ASM instructions..."
 objdump -d $1>$tmpf
 
+echo -en "count MMX registers:"
+
+grep -c -E '\bmm[0-7]\b' $tmpf
+
+echo -en "count MMX opcodes:"
+
+grep -c -E '(padd|psub|pmul|movq)' $tmpf
+
 echo -en "count SSE lines:"
 # Source - https://stackoverflow.com/a/50056059
 # Posted by Andriy Makukha, modified by community. See post 'Timeline' for change history
