@@ -155,7 +155,11 @@ static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args)
             Py_CLEAR(result);
             return NULL;
         }
-        Py_SET_SIZE(result, cSize);
+        if (cSize < (size_t)dest_size) {
+            if (_PyBytes_Resize(&result, (Py_ssize_t)cSize) < 0) {
+                return NULL;
+            }
+        }
     }
     return result;
 }
@@ -284,7 +288,11 @@ static PyObject *py_zstd_compress_mt2(PyObject* self, PyObject *args)
             Py_CLEAR(result);
             return NULL;
         }
-        Py_SET_SIZE(result, cSize);
+        if (cSize < (size_t)dest_size) {
+            if (_PyBytes_Resize(&result, (Py_ssize_t)cSize) < 0) {
+                return NULL;
+            }
+        }
     }
     return result;
 }
@@ -301,10 +309,10 @@ static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args)
 
     PyObject    *result;
     const char  *source, *src;
-    Py_ssize_t  source_size, ss, seek_frame;
-    uint64_t    dest_size, frame_size;
+    Py_ssize_t  source_size;
+    uint64_t    dest_size, frame_size, allocated_size;
     char        error = 0, streamed = 0;
-    size_t      cSize = 0, processed = 0;
+    size_t      total_output = 0;
 
 #if PY_MAJOR_VERSION >= 3
     if (!PyArg_ParseTuple(args, "y#", &source, &source_size))
@@ -326,50 +334,45 @@ static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args)
 	    // known block 
 
 	// Find real dest_size across multiple frames
-	ss = source_size;
-	seek_frame = ss - 1;
+	size_t ss = (size_t)source_size;
+	size_t seek_frame;
 	src = source;
-	while (seek_frame < ss) {
-		seek_frame = ZSTD_findFrameCompressedSize(src, ss);
-		if (ZSTD_isError(seek_frame)) break;
+	seek_frame = ZSTD_findFrameCompressedSize(src, ss);
+	while (!ZSTD_isError(seek_frame) && seek_frame <= ss) {
 		src += seek_frame;
 		ss -= seek_frame;
-		if (ss <=0) break;
+		if (ss == 0) break;
 		frame_size = (uint64_t) ZSTD_getFrameContentSize(src, ss);
 		if (ZSTD_isError(frame_size)) break;
 		dest_size += frame_size;
+		seek_frame = ZSTD_findFrameCompressedSize(src, ss);
 	}
     }
-    result = PyBytes_FromStringAndSize(NULL, dest_size);
+
+    allocated_size = dest_size;
+    result = PyBytes_FromStringAndSize(NULL, (Py_ssize_t)allocated_size);
 
     if (result != NULL) {
         char *dest = PyBytes_AS_STRING(result);
+        size_t cSize = 0;
 
         Py_BEGIN_ALLOW_THREADS
-	if (streamed) {
-		ZSTD_DStream* zds;
-		zds = ZSTD_createDStream();
-		// buffers create and decompress 
-		ZSTD_initDStream(zds);
-		ZSTD_outBuffer out;
-		ZSTD_inBuffer in;
-		in.src = source;
-		in.pos = 0;
-		in.size = source_size;
-		out.dst = dest;
-		out.pos = 0;
-		out.size = dest_size;
-		processed = ZSTD_decompressStream(zds, &out, &in);
-		if (processed==0) {
-			cSize=out.pos;
-			if (cSize) dest_size=cSize;
-		}
-		ZSTD_freeDStream(zds);
-	}
-	else {
-		cSize = ZSTD_decompress(dest, dest_size, source, source_size);
-	}
-        
+        if (streamed) {
+            ZSTD_DStream* zds = ZSTD_createDStream();
+            ZSTD_initDStream(zds);
+            ZSTD_outBuffer out = { dest, (size_t)allocated_size, 0 };
+            ZSTD_inBuffer in = { source, (size_t)source_size, 0 };
+            
+            size_t processed = ZSTD_decompressStream(zds, &out, &in);
+            if (ZSTD_isError(processed)) {
+                cSize = processed;
+            } else {
+                cSize = out.pos;
+            }
+            ZSTD_freeDStream(zds);
+        } else {
+            cSize = ZSTD_decompress(dest, (size_t)allocated_size, source, (size_t)source_size);
+        }
         Py_END_ALLOW_THREADS
 
         if (ZSTD_isError(cSize)) {
@@ -381,28 +384,30 @@ static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args)
             	PyErr_Format(ZstdError, "Decompression error: %s", errStr);
             	error = 1;
 //			}
-        } else if (cSize != dest_size) {
-		//if (sizeof(uint64_t)==sizeof(unsigned long)) {
-			PyErr_Format(ZstdError, "Decompression error: length mismatch -> decomp %lu != %lu [header]", (unsigned long)cSize,  (unsigned long)dest_size);
-		//} 
-		//else if (sizeof(uint64_t)==sizeof(unsigned long long))
-		//{ //unsigned long long?! x86?!
-                //        PyErr_Format(ZstdError, "Decompression error: length mismatch -> decomp %llu != %llu [header]", (uint64_t)cSize,  (uint64_t)dest_size);
-		//}
-            error = 1;
+        } else {
+            total_output = cSize;
+            // Using %llu is safe for Python 3.3+ on all platforms (Win/Linux/32/64) 
+            // as it is handled by Python's own internal formatter.
+            if (!streamed && total_output != (size_t)dest_size) {
+                PyErr_Format(ZstdError, "Decompression error: length mismatch -> decomp %llu != %llu [header]", 
+                             (unsigned long long)total_output, (unsigned long long)dest_size);
+                error = 1;
+            }
         }
     } else {
-         error = 1;
+        error = 1;
     }
 
     if (error) {
         Py_CLEAR(result);
-        result = NULL;
+        return NULL;
     }
 
-	if (!error) {
-    	Py_SET_SIZE(result, cSize);
-	}
+    if (total_output < (size_t)allocated_size) {
+        if (_PyBytes_Resize(&result, (Py_ssize_t)total_output) < 0) {
+            return NULL;
+        }
+    }
 
     return result;
 }
@@ -777,19 +782,28 @@ static int init_py_zstd(PyObject *module) {
 #if PY_MAJOR_VERSION >= 3
 
 static int myextension_traverse(PyObject *m, visitproc visit, void *arg) {
-    Py_VISIT(GETSTATE(m)->error);
+    struct module_state *state = GETSTATE(m);
+    if (state != NULL) {
+        Py_VISIT(state->error);
+    }
     printdi("ZSTD module->traverse\n",0);
     return 0;
 }
 
 static int myextension_clear(PyObject *self) {
-    Py_CLEAR(GETSTATE(self)->error);
+    struct module_state *state = GETSTATE(self);
+    if (state != NULL) {
+        Py_CLEAR(state->error);
+    }
     printdi("ZSTD module->clear\n",0);
     return 0;
 }
 
 static void myextension_free(void *self) {
-    Py_CLEAR(GETSTATE((PyObject *)self)->error);
+    struct module_state *state = GETSTATE((PyObject *)self);
+    if (state != NULL) {
+        Py_CLEAR(state->error);
+    }
 	free_cContext();
     printdi("ZSTD module->free\n",0);
     return;
@@ -823,15 +837,12 @@ static struct PyModuleDef moduledef = {
 //        NULL
         myextension_free,
 };
+#endif
 
-
-
-PyObject *PyInit_zstd(void)
-
+#if PY_MAJOR_VERSION >= 3
+PyMODINIT_FUNC PyInit_zstd(void)
 #else
-
-void initzstd(void)
-
+PyMODINIT_FUNC initzstd(void)
 #endif
 {
 #if PY_MAJOR_VERSION >= 3
