@@ -40,6 +40,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <Python.h>
+#include "pythread.h"
 #include "pythoncapi_compat.h"    // Py_SET_SIZE() for Python 3.8 and older
 
 #include "bytesobject.h"
@@ -164,22 +165,81 @@ static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args)
     return result;
 }
 
-void init_cContext( int32_t threads, int32_t level)
+/* Pool of reusable ZSTD_CCtx objects. */
+static PyThread_type_lock cctx_pool_lock = NULL;
+static ZSTD_CCtx** cctx_pool = NULL;
+static size_t cctx_pool_count = 0;
+static size_t cctx_pool_capacity = 0;
+
+void init_cctx_pool(void)
 {
-    m_cctx = ZSTD_createCCtx();
-    ZSTD_CCtx_setParameter(m_cctx, ZSTD_c_compressionLevel, level);
-    ZSTD_CCtx_setParameter(m_cctx, ZSTD_c_nbWorkers, threads);
+    if (cctx_pool_lock == NULL) {
+        cctx_pool_lock = PyThread_allocate_lock();
+    }
 }
 
-void free_cContext(void)
+void free_cctx_pool(void)
 {
-    ZSTD_freeCCtx(m_cctx);
+    if (cctx_pool_lock != NULL) {
+        PyThread_acquire_lock(cctx_pool_lock, WAIT_LOCK);
+    }
+    for (size_t i = 0; i < cctx_pool_count; i++) {
+        ZSTD_freeCCtx(cctx_pool[i]);
+    }
+    free(cctx_pool);
+    cctx_pool = NULL;
+    cctx_pool_count = 0;
+    cctx_pool_capacity = 0;
+    if (cctx_pool_lock != NULL) {
+        PyThread_release_lock(cctx_pool_lock);
+        PyThread_free_lock(cctx_pool_lock);
+        cctx_pool_lock = NULL;
+    }
 }
 
-void reset_cContext(int32_t threads, int32_t level)
+static ZSTD_CCtx* cctx_pool_acquire(void)
 {
-	free_cContext();
-	init_cContext(threads, level);
+    ZSTD_CCtx* cctx = NULL;
+
+    if (cctx_pool_lock != NULL) {
+        PyThread_acquire_lock(cctx_pool_lock, WAIT_LOCK);
+        if (cctx_pool_count > 0) {
+            cctx = cctx_pool[--cctx_pool_count];
+        }
+        PyThread_release_lock(cctx_pool_lock);
+    }
+
+    if (cctx == NULL) {
+        cctx = ZSTD_createCCtx();
+    }
+    return cctx;
+}
+
+static void cctx_pool_release(ZSTD_CCtx* cctx)
+{
+    if (cctx == NULL) {
+        return;
+    }
+
+    if (cctx_pool_lock == NULL) {
+        ZSTD_freeCCtx(cctx);
+        return;
+    }
+
+    PyThread_acquire_lock(cctx_pool_lock, WAIT_LOCK);
+    if (cctx_pool_count == cctx_pool_capacity) {
+        size_t new_capacity = cctx_pool_capacity ? cctx_pool_capacity * 2 : 8;
+        ZSTD_CCtx** new_pool = (ZSTD_CCtx**)realloc(cctx_pool, new_capacity * sizeof(ZSTD_CCtx*));
+        if (new_pool == NULL) {
+            PyThread_release_lock(cctx_pool_lock);
+            ZSTD_freeCCtx(cctx);
+            return;
+        }
+        cctx_pool = new_pool;
+        cctx_pool_capacity = new_capacity;
+    }
+    cctx_pool[cctx_pool_count++] = cctx;
+    PyThread_release_lock(cctx_pool_lock);
 }
 
 /**
@@ -272,12 +332,15 @@ static PyObject *py_zstd_compress_mt2(PyObject* self, PyObject *args)
     if (source_size >= 0) {
         dest = PyBytes_AS_STRING(result);
 
-        cctx = ZSTD_createCCtx();
+        cctx = cctx_pool_acquire();
         if (cctx == NULL) {
             PyErr_Format(ZstdError, "Could not create compression context");
             Py_CLEAR(result);
             return NULL;
         }
+        /* Context may have been used before: drop any leftover session state
+         * and parameters before configuring it for this call. */
+        ZSTD_CCtx_reset(cctx, ZSTD_reset_session_and_parameters);
         ZSTD_CCtx_setParameter(cctx, ZSTD_c_compressionLevel, level);
         ZSTD_CCtx_setParameter(cctx, ZSTD_c_nbWorkers, threads);
 
@@ -285,7 +348,7 @@ static PyObject *py_zstd_compress_mt2(PyObject* self, PyObject *args)
         cSize = ZSTD_compress2(cctx, dest, (size_t)dest_size, source, (size_t)source_size);
         Py_END_ALLOW_THREADS
 
-        ZSTD_freeCCtx(cctx);
+        cctx_pool_release(cctx);
 
         printdn("Compression result: %d\n", cSize);
         if (ZSTD_isError(cSize)) {
@@ -775,7 +838,7 @@ static int init_py_zstd(PyObject *module) {
 
 	int32_t threads = UTIL_countAvailableCores();
 	UNUSED(threads);
-	init_cContext(1, 3);
+	init_cctx_pool();
     return 0;
 }
 
@@ -810,7 +873,7 @@ static void myextension_free(void *self) {
     if (state != NULL) {
         Py_CLEAR(state->error);
     }
-	free_cContext();
+	free_cctx_pool();
     printdi("ZSTD module->free\n",0);
     return;
 }
