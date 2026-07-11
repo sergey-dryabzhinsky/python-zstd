@@ -1,4 +1,4 @@
-name: Build wheels for CPython3.5 x86_64 on Ubuntu16 with GCC-5 All warnings errors 
+name: Build wheels for CPython3.14-nogil x86 on Ubuntu18 with GCC-7 All warnings
 
 on: [push, pull_request]
 
@@ -14,19 +14,22 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - name: Ubuntu 24+16 amd64 CPython 3.5
+          - name: Ubuntu 24+18 i386 CPython 3.14-nogil
             runs-on: ubuntu-latest
             matrix: linux
-            arch: amd64
-            tag_arch: x86_64
-            release: xenial
+            arch: i386
+            tag_arch: i686
+            release: bionic
             mirror: http://azure.archive.ubuntu.com/ubuntu
             #version: 1.5.6.7
-            #pyver: "3.5"
-            getpipurl: https://bootstrap.pypa.io/pip/3.5/get-pip.py
-            pypkg: python3.5
-            pyengine_tag: cp35-cp35m
-            libc_tag: manylinux_2_14
+            # pyver: "3.7"
+            getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
+            pypkg: python3.14-nogil
+            pypkgdev: python3.14-dev
+            pypkgexe: python3.14t
+            #pypkgadd: python3.13-distutils
+            pyengine_tag: cp314-cp314t
+            libc_tag: manylinux_2_4
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -67,8 +70,10 @@ jobs:
           echo " deb [trusted=yes] http://packages.rusoft.ru/ppa/rusoft/backports ubuntu-${{matrix.os.release}} main" > rusoft-backports.list
           echo " deb [trusted=yes] http://packages.rusoft.ru/ppa/rusoft/packages ubuntu-${{matrix.os.release}} main" > rusoft-packages.list
           echo " deb [trusted=yes] http://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu ${{matrix.os.release}} main" > deadsnakes.list
+          false && sudo find ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} -iname apt
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt update
           sudo cp -v ./*.list ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/etc/apt/sources.list.d
+          false && sudo rm -fv ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/etc/apt/trusted.gpg.d/* && sudo rm -fv ./ubuntu-xenial-x86/etc/apt/trusted.gpg
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c 'cd /etc/apt/trusted.gpg.d && wget http://packages.rusoft.ru/apt/public.gpg -Orusoft.gpg'
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c 'cd /etc/apt/trusted.gpg.d && wget http://packages.rusoft.ru/apt/public-old.gpg -Orusoft-old.gpg'
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c 'apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys A2CE4BCCC50209DD || true'
@@ -81,33 +86,35 @@ jobs:
       - name: Pepare dev files
         if: matrix.os.matrix == 'linux'
         run: |
-           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt install -y libzstd-dev
+           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt install -y aptitude
+           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/aptitude install -y libzstd-dev file
 
       - name: Pepare for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
         run: |
-           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt install -y ${{matrix.os.pypkg}}-dev gcc pkg-config ${{matrix.os.pypkgadd}}
-           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "wget ${{matrix.os.getpipurl}} -O get-pip.py && ${{matrix.os.pypkg}} get-pip.py || true"
-           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "${{matrix.os.pypkg}} -m pip install -U 'setuptools<72.0'" 
-                    
+           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/aptitude install -y ${{matrix.os.pypkgdev}} ${{matrix.os.pypkg}} gcc pkg-config ${{matrix.os.pypkgadd}}
+           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "wget ${{matrix.os.getpipurl}} -O get-pip.py && ${{matrix.os.pypkgexe}} get-pip.py || true"
+           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "${{matrix.os.pypkgexe}} -m pip install -U 'setuptools<72.0'"
+
       - name: Pepare source and build wheel for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
         run: |
           version=`cat version`
           sudo mkdir -p ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/
           sudo tar -xvf dist/zstd-$version.tar.gz -C ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/
-          false && sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} env 
+          false && sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} env
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} pkg-config libzstd --modversion 
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} echo GCC-5
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} echo GCC
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} gcc -v
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version/ && ZSTD_ASM=1 ZSTD_WARNINGS=1 ZSTD_WERRORS=1 _ZSTD_ASM_BMI2=1 ZSTD_THREADS=1 _ZSTD_EXTERNAL=0 ${{matrix.os.pypkg}} setup.py bdist_wheel "
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version/ && ZSTD_ASM=1 ZSTD_WARNINGS=1 _ZSTD_SMALL=1 LDFLAGS='-Wl,--as-needed -Wl,-s' ZSTD_BUILD_STRIP=1 _ZSTD_SPEED=0 _ZSTD_SPEEDMAX=0 _ZSTD_ASM_BMI2=1 ZSTD_THREADS=1 _ZSTD_EXTERNAL=0 ZSTD_WERRORS=1 CC=gcc CXX=g++ LD=ld ${{matrix.os.pypkgexe}} setup.py bdist_wheel"
 
       - name: Test wheel for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
         run: |
           version=`cat version`
+          false && sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} find /build_wheel/
           sudo cp -v glibc-check.sh ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/zstd-$version/
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version/; echo LLH; ls -lh build/lib*/zstd.*.so; echo LDD; ldd build/lib*/zstd.*.so ; file build/lib*/zstd.*.so; bash ./glibc-check.sh build/lib*/zstd.*.so"
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version/ && echo LLH; ls -lh build/lib*/zstd.*.so; ldd build/lib*/zstd.*.so ; file build/lib*/zstd.*.so; bash ./glibc-check.sh build/lib*/zstd.*.so"
           
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version/ && ${{matrix.os.pypkg}} setup.py test"
 
@@ -119,76 +126,6 @@ jobs:
            sudo ls -lh ./dist/* 
            sudo mv -v ./dist/"zstd-$version-${{matrix.os.pyengine_tag}}-linux_${{matrix.os.tag_arch}}.whl" ./dist/"zstd-$version-${{matrix.os.pyengine_tag}}-${{matrix.os.libc_tag}}_${{matrix.os.tag_arch}}.whl"
 
-      
-      - name: Build ${{ matrix.os.name }} wheels and test (old)
-        uses: pypa/cibuildwheel@v1.12.0
-        if: matrix.cibw.group == 'old'
-        with:
-          output-dir: dist
-        env:
-          CIBW_BUILD: ${{ matrix.cibw.build }}
-          # Skip 32-bit builds // NO
-          # CIBW_SKIP: '*-win32 *_i686'
-          CIBW_MANYLINUX_I686_IMAGE: manylinux1
-          CIBW_MANYLINUX_X86_64_IMAGE: manylinux1
-          CIBW_MUSLLINUX_I686_IMAGE: musllinux_1_2
-          CIBW_MUSLLINUX_X86_64_IMAGE: musllinux_1_2
-          # Only build on x86 and arm64 for linux
-          CIBW_ARCHS_LINUX: i686 x86_64
-          CIBW_BEFORE_ALL_LINUX: >
-            python -m pip install --upgrade pip
-          # CIBW_ARCHS_MACOS: x86_64 arm64 universal2
-          # Building two wheels for MacOS and skipping Universal
-          CIBW_ARCHS_MACOS: x86_64
-          # Skip testing Apple Silicon until there are GH runners
-          CIBW_TEST_SKIP: '*_arm64 *_universal2:arm64'
-          CIBW_BEFORE_ALL_MACOS: >
-            python -m pip install --upgrade pip
-          # CIBW_ENVIRONMENT_MACOS: MACOSX_DEPLOYMENT_TARGET=11.7
-          CIBW_BUILD_VERBOSITY_MACOS: 0
-          CIBW_BEFORE_ALL_WINDOWS: >
-            python -m pip install --upgrade pip
-          CIBW_TEST_COMMAND: >
-            python -m unittest discover -v -s {package}
-
-      - name: Build ${{ matrix.os.name }} wheels and test (new)
-        uses: joerick/cibuildwheel@v2.23.3
-        if: matrix.cibw.group == 'new'
-        with:
-          output-dir: dist
-        env:
-          CIBW_BUILD: ${{ matrix.cibw.build }}
-          # Skip 32-bit builds // NO
-          # CIBW_SKIP: '*-win32 *_i686'
-          CIBW_MANYLINUX_I686_IMAGE: manylinux2014
-          CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
-          CIBW_MANYLINUX_AARCH64_IMAGE: manylinux2014
-          CIBW_MUSLLINUX_I686_IMAGE: musllinux_1_1
-          CIBW_MUSLLINUX_X86_64_IMAGE: musllinux_1_1
-          # Only build on x86 and arm64 for linux
-          CIBW_ARCHS_LINUX: auto aarch64
-          CIBW_BEFORE_ALL_LINUX: >
-            python -m pip install --upgrade pip
-          # CIBW_ARCHS_MACOS: x86_64 arm64 universal2
-          # Building two wheels for MacOS and skipping Universal
-          CIBW_ARCHS_MACOS: x86_64 arm64
-          # Skip testing Apple Silicon until there are GH runners
-          CIBW_TEST_SKIP: '*_arm64 *_universal2:arm64'
-          CIBW_BEFORE_ALL_MACOS: >
-            python -m pip install --upgrade pip
-          # CIBW_ENVIRONMENT_MACOS: MACOSX_DEPLOYMENT_TARGET=11.7
-          CIBW_BUILD_VERBOSITY_MACOS: 0
-          CIBW_BEFORE_ALL_WINDOWS: >
-            python -m pip install --upgrade pip
-          CIBW_TEST_COMMAND: >
-            python -m unittest discover -v -s {package}
-            
-#      - name: Upload artifacts
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: wheels
-#.         path: ./dist
-#          compression-level: 0
           
       - name: Test for secrets access
         id: check_secrets
@@ -208,7 +145,7 @@ jobs:
           SECRET_TEST: "${{ secrets.test_pypi_password }}"
 
       - name: Install twine
-        run: pip install twine==6.0.1
+        run: pip install 'twine<=6.0.1'
 
       - name: Publish distribution to PyPI
         if: >

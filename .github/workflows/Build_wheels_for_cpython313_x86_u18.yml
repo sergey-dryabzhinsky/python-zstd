@@ -1,4 +1,4 @@
-name: Build wheels for CPython3.14 x86 on Ubuntu16 with GCC-5 All warnings
+name: Build wheels for CPython3.13 x86 on Ubuntu18 with GCC-7 All warnings
 
 on: [push, pull_request]
 
@@ -14,17 +14,17 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - name: Ubuntu 24+16 x86 CPython 3.14
+          - name: Ubuntu 24+18 x86 CPython 3.13
             runs-on: ubuntu-latest
             matrix: linux
             arch: i386
             tag_arch: i686
-            release: xenial
+            release: bionic
             mirror: http://azure.archive.ubuntu.com/ubuntu
             getpipurl: https://bootstrap.pypa.io/pip/get-pip.py
-            pypkg: python3.14
-            pyengine_tag: cp314-cp314
-            libc_tag: manylinux_2_14
+            pypkg: python3.13
+            pyengine_tag: cp313-cp313
+            libc_tag: manylinux_2_4
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -34,8 +34,7 @@ jobs:
       - name: Update and upgrade Ubuntu 24
         if: matrix.os.matrix == 'linux'
         run: |
-          sudo which apt
-          sudo apt update; 
+          sudo apt update;
           sudo apt purge -y firefox lxd snapd;
           sudo apt install -y zram-config;
           sudo apt list --upgradable;
@@ -52,7 +51,7 @@ jobs:
       - name: Debootstrap Ubuntu ${{matrix.os.release}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
         run: |
-          sudo debootstrap --no-merged-usr --verbose --include=sudo,wget,curl,ca-certificates --arch=${{matrix.os.arch}} ${{matrix.os.release}} ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} ${{matrix.os.mirror}} || tail ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/debootstrap/debootstrap.log
+          sudo debootstrap --no-merged-usr --verbose --include=sudo,wget,curl,gnupg,ca-certificates --arch=${{matrix.os.arch}} ${{matrix.os.release}} ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} ${{matrix.os.mirror}} || tail ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/debootstrap/debootstrap.log
      
       - name: Update and Upgrade Ubuntu ${{matrix.os.release}}
         if: matrix.os.matrix == 'linux'
@@ -64,11 +63,9 @@ jobs:
           echo " deb [trusted=yes] http://packages.rusoft.ru/ppa/rusoft/python ubuntu-${{matrix.os.release}} main" > rusoft-python.list
           echo " deb [trusted=yes] http://packages.rusoft.ru/ppa/rusoft/backports ubuntu-${{matrix.os.release}} main" > rusoft-backports.list
           echo " deb [trusted=yes] http://packages.rusoft.ru/ppa/rusoft/packages ubuntu-${{matrix.os.release}} main" > rusoft-packages.list
-          echo " deb [trusted=yes] http://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu ${{matrix.os.release}} main" > deadsnakes.list
-          false && sudo find ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} -iname apt
+          echo "# deb [trusted=yes] http://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu ${{matrix.os.release}} main" > deadsnakes.list
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /usr/bin/apt update
           sudo cp -v ./*.list ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/etc/apt/sources.list.d
-          false && sudo rm -fv ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/etc/apt/trusted.gpg.d/* && sudo rm -fv ./ubuntu-xenial-x86/etc/apt/trusted.gpg
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c 'cd /etc/apt/trusted.gpg.d && wget http://packages.rusoft.ru/apt/public.gpg -Orusoft.gpg'
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c 'cd /etc/apt/trusted.gpg.d && wget http://packages.rusoft.ru/apt/public-old.gpg -Orusoft-old.gpg'
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c 'apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys A2CE4BCCC50209DD || true'
@@ -98,9 +95,9 @@ jobs:
           sudo tar -xvf dist/zstd-$version.tar.gz -C ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}}/build_wheel/
           false && sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} env 
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} pkg-config libzstd --modversion 
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} echo GCC
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} echo GCC-5
           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} gcc -v
-          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version/ && ZSTD_ASM=1 LDFLAGS='-Wl,--as-needed -Wl,-s' _ZSTD_SMALL=1 ZSTD_WARNINGS=1 _ZSTD_ASM_BMI2=1 ZSTD_THREADS=1 _ZSTD_EXTERNAL=0 CC=gcc CXX=g++ LD=ld ${{matrix.os.pypkg}} setup.py bdist_wheel"
+          sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build_wheel/zstd-$version/ && ZSTD_ASM=1 ZSTD_WARNINGS=1 _ZSTD_SMALL=1 LDFLAGS='-Wl,--as-needed -Wl,-s' ZSTD_BUILD_STRIP=1 _ZSTD_SPEED=0 _ZSTD_SPEEDMAX=0 _ZSTD_ASM_BMI2=1 ZSTD_THREADS=1 _ZSTD_EXTERNAL=0 ${{matrix.os.pypkg}} setup.py bdist_wheel"
 
       - name: Test wheel for ${{matrix.os.pypkg}} ${{matrix.os.arch}}
         if: matrix.os.matrix == 'linux'
@@ -120,6 +117,7 @@ jobs:
            sudo ls -lh ./dist/* 
            sudo mv -v ./dist/"zstd-$version-${{matrix.os.pyengine_tag}}-linux_${{matrix.os.tag_arch}}.whl" ./dist/"zstd-$version-${{matrix.os.pyengine_tag}}-${{matrix.os.libc_tag}}_${{matrix.os.tag_arch}}.whl"
 
+          
       - name: Test for secrets access
         id: check_secrets
         # If a third party makes a pull request
@@ -166,3 +164,14 @@ jobs:
           TWINE_PASSWORD: "${{ secrets.test_pypi_password }}"
         run: twine upload --non-interactive --skip-existing --verbose 'dist/*'
         
+      - name: Create Release and Upload Assets
+        if: >
+         startsWith(github.event.ref, 'refs/tags') &&
+         steps.check_secrets.outputs.HAS_SECRET
+        # This uses a community action for creating and uploading to a release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/*.whl
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # The default GITHUB_TOKEN has sufficient permissions
