@@ -571,6 +571,7 @@ def my_test_suite():
     test_suite.addTest(unittest.defaultTestLoader.loadTestsFromName("tests.test_decompress"))
     test_suite.addTest(unittest.defaultTestLoader.loadTestsFromName("tests.test_version"))
     test_suite.addTest(unittest.defaultTestLoader.loadTestsFromName("tests.test_speed"))
+    test_suite.addTest(unittest.defaultTestLoader.loadTestsFromName("tests.test_thread_safety"))
     return test_suite
 
 test_func_name = "setup.my_test_suite"
