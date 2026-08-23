@@ -555,6 +555,7 @@ if not SUP_EXTERNAL:
 # files needed always, even for external
 zstdFiles.append('src/debug.c')
 zstdFiles.append('src/util.c')
+zstdFiles.append('src/cctx_pool.c')
 zstdFiles.append('src/python-zstd.c')
 
 
@@ -570,6 +571,7 @@ def my_test_suite():
     test_suite.addTest(unittest.defaultTestLoader.loadTestsFromName("tests.test_decompress"))
     test_suite.addTest(unittest.defaultTestLoader.loadTestsFromName("tests.test_version"))
     test_suite.addTest(unittest.defaultTestLoader.loadTestsFromName("tests.test_speed"))
+    test_suite.addTest(unittest.defaultTestLoader.loadTestsFromName("tests.test_thread_safety"))
     return test_suite
 
 test_func_name = "setup.my_test_suite"

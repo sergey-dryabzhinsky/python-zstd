@@ -46,6 +46,7 @@
 #include "util.h"
 #include "debug.h"
 #include "python-zstd.h"
+#include "cctx_pool.h"
 
 /**
  * @deprecated, use *mt2 instead.
@@ -164,24 +165,6 @@ static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args)
     return result;
 }
 
-void init_cContext( int32_t threads, int32_t level)
-{
-    m_cctx = ZSTD_createCCtx();
-    ZSTD_CCtx_setParameter(m_cctx, ZSTD_c_compressionLevel, level);
-    ZSTD_CCtx_setParameter(m_cctx, ZSTD_c_nbWorkers, threads);
-}
-
-void free_cContext(void)
-{
-    ZSTD_freeCCtx(m_cctx);
-}
-
-void reset_cContext(int32_t threads, int32_t level)
-{
-	free_cContext();
-	init_cContext(threads, level);
-}
-
 /**
  * New function for multi-threaded compression.
  * Uses origin zstd header, nothing more.
@@ -203,9 +186,9 @@ static PyObject *py_zstd_compress_mt2(PyObject* self, PyObject *args)
     size_t cSize;
 //    size_t sum=0;
     int32_t level = ZSTD_CLEVEL_DEFAULT;
-	static int32_t lastLevel =0;
     int32_t threads = 0;
     int32_t strict = 0;
+    ZSTD_CCtx* cctx = NULL;
 
 #if PY_MAJOR_VERSION >= 3
     if (!PyArg_ParseTuple(args, "y#|iii", &source, &source_size, &level, &threads, &strict))
@@ -272,14 +255,23 @@ static PyObject *py_zstd_compress_mt2(PyObject* self, PyObject *args)
     if (source_size >= 0) {
         dest = PyBytes_AS_STRING(result);
 
-		if(level != lastLevel) {
-			reset_cContext(threads, level);
-		}
+        cctx = cctx_pool_acquire();
+        if (cctx == NULL) {
+            PyErr_Format(ZstdError, "Could not create compression context");
+            Py_CLEAR(result);
+            return NULL;
+        }
+        /* Context may have been used before: drop any leftover session state
+         * and parameters before configuring it for this call. */
+        ZSTD_CCtx_reset(cctx, ZSTD_reset_session_and_parameters);
+        ZSTD_CCtx_setParameter(cctx, ZSTD_c_compressionLevel, level);
+        ZSTD_CCtx_setParameter(cctx, ZSTD_c_nbWorkers, threads);
 
         Py_BEGIN_ALLOW_THREADS
-        cSize = ZSTD_compress2(m_cctx, dest, (size_t)dest_size, source, (size_t)source_size);
+        cSize = ZSTD_compress2(cctx, dest, (size_t)dest_size, source, (size_t)source_size);
         Py_END_ALLOW_THREADS
-		lastLevel = level;
+
+        cctx_pool_release(cctx);
 
         printdn("Compression result: %d\n", cSize);
         if (ZSTD_isError(cSize)) {
@@ -769,7 +761,7 @@ static int init_py_zstd(PyObject *module) {
 
 	int32_t threads = UTIL_countAvailableCores();
 	UNUSED(threads);
-	init_cContext(1, 3);
+	init_cctx_pool();
     return 0;
 }
 
@@ -804,7 +796,7 @@ static void myextension_free(void *self) {
     if (state != NULL) {
         Py_CLEAR(state->error);
     }
-	free_cContext();
+	free_cctx_pool();
     printdi("ZSTD module->free\n",0);
     return;
 }
