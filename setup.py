@@ -555,6 +555,7 @@ if not SUP_EXTERNAL:
 # files needed always, even for external
 zstdFiles.append('src/debug.c')
 zstdFiles.append('src/util.c')
+zstdFiles.append('src/cctx_pool.c')
 zstdFiles.append('src/python-zstd.c')
 
 

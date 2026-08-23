@@ -127,9 +127,6 @@ typedef unsigned long long  U64;
 
 static PyObject *ZstdError;
 
-void init_cctx_pool(void);
-void free_cctx_pool(void);
-
 static PyObject *py_zstd_compress_mt(PyObject* self, PyObject *args);
 static PyObject *py_zstd_compress_mt2(PyObject* self, PyObject *args);
 static PyObject *py_zstd_uncompress(PyObject* self, PyObject *args);
