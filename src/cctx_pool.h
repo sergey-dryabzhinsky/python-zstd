@@ -9,9 +9,10 @@
  * thread-safe. Each acquired context is owned by exactly one caller
  * until it is released back into the pool.
  *
- * The pool has no fixed upper bound: it grows on demand up to the peak
- * number of concurrent callers, and never shrinks until free_cctx_pool
- * is invoked at module teardown.
+ * The pool grows on demand but its size is bounded by the peak number of
+ * threads that have ever been concurrently inside py_zstd_compress_mt2,
+ * one context per in-flight call and no more.
+ * The pool never shrinks; it is only freed at module teardown.
  */
 
 /* Initialize the pool. Safe to call more than once. */

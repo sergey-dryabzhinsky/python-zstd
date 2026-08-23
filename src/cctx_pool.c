@@ -69,6 +69,8 @@ void cctx_pool_release(ZSTD_CCtx* cctx)
 
     PyThread_acquire_lock(cctx_pool_lock, WAIT_LOCK);
     if (cctx_pool_count == cctx_pool_capacity) {
+        /* Grow the pool by doubling capacity whenever a  released context does not fit.
+         * The maximum size of the pool is bounded by the peak number of threads.  */
         size_t new_capacity = cctx_pool_capacity ? cctx_pool_capacity * 2 : 8;
         ZSTD_CCtx** new_pool = (ZSTD_CCtx**)realloc(cctx_pool, new_capacity * sizeof(ZSTD_CCtx*));
         if (new_pool == NULL) {
